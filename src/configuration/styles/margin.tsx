@@ -1,12 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-type KeySignature = {
-  [key: string]: {
-    [subKey: string]: number;
-  };
-};
-
-const margin: KeySignature = StyleSheet.create({
+const margin = StyleSheet.create({
   margin5: {
     margin: 5,
   },

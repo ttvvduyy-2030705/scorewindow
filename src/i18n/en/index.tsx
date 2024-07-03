@@ -60,6 +60,11 @@ const en = {
   txtReset: 'Reset',
   txtRetry: 'Retry',
   txtOr: 'Or',
+  txtStartNewGame: 'Start new game',
+  txtHistory: 'History',
+  msgAppName: 'Digital Score Board',
+  msgIntroTitle: 'Entertainment',
+  msgIntroDescription: 'Professional - Accuracy - Multi media',
 
   month: 'month',
   year: 'year',

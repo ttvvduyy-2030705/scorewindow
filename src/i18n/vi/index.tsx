@@ -63,6 +63,11 @@ const vi = {
   txtCopied: 'Đã sao chép {{message}}',
   txtRetry: 'Thử lại',
   txtOr: 'Hoặc',
+  txtStartNewGame: 'Bắt đầu trận mới',
+  txtHistory: 'Lịch sử',
+  msgAppName: 'Digital Score Board',
+  msgIntroTitle: 'Nâng tầm giải trí',
+  msgIntroDescription: 'Chuyện nghiệp - Chính xác - Đa tiện ích',
 
   month: 'tháng',
   year: 'năm',

@@ -1,12 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-type KeySignature = {
-  [key: string]: {
-    [subKey: string]: string;
-  };
-};
-
-const justify: KeySignature = StyleSheet.create({
+const justify = StyleSheet.create({
   justify_start: {
     justifyContent: 'flex-start',
   },

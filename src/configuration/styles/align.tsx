@@ -1,12 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-type KeySignature = {
-  [key: string]: {
-    [subKey: string]: string;
-  };
-};
-
-const alignment: KeySignature = StyleSheet.create({
+const alignment = StyleSheet.create({
   alignItems_start: {
     alignItems: 'flex-start',
   },

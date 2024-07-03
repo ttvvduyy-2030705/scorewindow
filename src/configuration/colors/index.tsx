@@ -1,9 +1,9 @@
 import {Colors} from 'types/color';
 
 let colors: Colors = {
-  primary: '#EF8829',
-  lightPrimary1: '#ed9442',
-  lightPrimary2: '#e8aa6f',
+  primary: '#c0e048',
+  lightPrimary1: '#ecfab9',
+  lightPrimary2: '#d9ed91',
   statusBar: '#c47021',
   primaryOverlay: 'rgba(239, 136, 41, 0.5)',
   error: '#F12121',

@@ -1,12 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-type KeySignature = {
-  [key: string]: {
-    [subKey: string]: number;
-  };
-};
-
-const padding: KeySignature = StyleSheet.create({
+const padding = StyleSheet.create({
   padding5: {
     padding: 5,
   },
@@ -45,6 +39,9 @@ const padding: KeySignature = StyleSheet.create({
   paddingVertical20: {
     paddingVertical: 20,
   },
+  paddingVertical30: {
+    paddingVertical: 30,
+  },
 
   paddingTop5: {
     paddingTop: 5,
@@ -70,6 +67,9 @@ const padding: KeySignature = StyleSheet.create({
   },
   paddingLeft20: {
     paddingLeft: 20,
+  },
+  paddingLeft30: {
+    paddingLeft: 30,
   },
 
   paddingBottom5: {

@@ -49,8 +49,8 @@ const GameSettingsViewModel = (props: Props) => {
     dispatch(
       gameActions.updateGameSettings({
         category,
-        gameSettingsMode,
-        playerSettings,
+        mode: gameSettingsMode,
+        players: playerSettings,
       }),
     );
     props.navigate(screens.gamePlay);

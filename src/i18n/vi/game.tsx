@@ -42,6 +42,15 @@ const game = {
   player3: 'Người chơi 3',
   player4: 'Người chơi 4',
   player5: 'Người chơi 5',
+  remote: 'Điều khiển',
+  proMode: 'PRO Mode',
+  refresh: 'Làm mới',
+  delay: 'Độ trễ',
+  reWatch: 'Xem lại',
+  switchTurn: 'Đổi bi',
+  switchPlayer: 'Đổi người',
+  pause: 'Tạm dừng',
+  stop: 'Kết thúc',
 };
 
 export default game;

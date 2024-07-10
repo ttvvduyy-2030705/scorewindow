@@ -7,6 +7,16 @@ const images: Images = {
   offline: require('./images/offline.png'),
   startGame: require('./images/start-game.png'),
   history: require('./images/history.png'),
+  game: {
+    edit: require('./images/game/edit.png'),
+    soundOn: require('./images/game/sound-on.png'),
+    soundOff: require('./images/game/sound-off.png'),
+  },
+  webcam: {
+    refresh: require('./images/webcam/refresh.png'),
+    delay: require('./images/webcam/delay.png'),
+    watch: require('./images/webcam/watch.png'),
+  },
 };
 
 export default images;

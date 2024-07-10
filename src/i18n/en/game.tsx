@@ -42,6 +42,15 @@ const game = {
   player3: 'Player 3',
   player4: 'Player 4',
   player5: 'Player 5',
+  remote: 'Remote',
+  proMode: 'PRO Mode',
+  refresh: 'Refresh',
+  delay: 'Delay',
+  reWatch: 'Re-watch',
+  switchTurn: 'Switch turn',
+  switchPlayer: 'Switch players',
+  pause: 'Pause',
+  stop: 'End',
 };
 
 export default game;

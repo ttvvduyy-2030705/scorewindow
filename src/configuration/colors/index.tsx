@@ -4,7 +4,7 @@ let colors: Colors = {
   primary: '#c0e048',
   lightPrimary1: '#ecfab9',
   lightPrimary2: '#d9ed91',
-  statusBar: '#c47021',
+  statusBar: '#83a308',
   primaryOverlay: 'rgba(239, 136, 41, 0.5)',
   error: '#F12121',
   border: '#EAEAEA',

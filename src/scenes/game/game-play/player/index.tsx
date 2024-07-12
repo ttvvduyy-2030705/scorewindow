@@ -190,7 +190,7 @@ const GamePlayer = (props: Props) => {
             ) : (
               <View />
             )}
-            <View style={styles.totalPointInTurn} paddingVertical={'20'}>
+            <View style={styles.totalPointInTurn} paddingVertical={'10'}>
               <Text fontSize={40} fontWeight={'bold'}>
                 {viewModel.totalPointInTurn}
               </Text>

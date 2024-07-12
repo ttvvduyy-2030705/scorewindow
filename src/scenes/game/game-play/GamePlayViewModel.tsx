@@ -43,6 +43,13 @@ const GamePlayViewModel = () => {
       });
     }
 
+    if (gameSettings?.mode.mode === 'fast') {
+      countdownOffsetX.value = -COUNTDOWN_WIDTH;
+      setCountdownTime(gameSettings?.mode.countdownTime || 0);
+      setIsPaused(false);
+      clearInterval(countdownInterval);
+    }
+
     return () => {
       clearInterval(countdownInterval);
     };
@@ -84,7 +91,8 @@ const GamePlayViewModel = () => {
       }
 
       countdownOffsetX.value = withTiming(0, {
-        duration: countdownTime * 1000,
+        duration:
+          (isResume ? countdownTime : gameSettings.mode.countdownTime) * 1000,
         easing: Easing.linear,
         reduceMotion: ReduceMotion.System,
       });

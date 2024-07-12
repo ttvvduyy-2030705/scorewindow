@@ -30,17 +30,20 @@ const GamePlay = () => {
             onEndTurn={viewModel.onEndTurn}
           />
           {bottomIndex ? (
-            <GamePlayer
-              index={bottomIndex}
-              isOnTurn={viewModel.currentPlayerIndex === bottomIndex}
-              isPaused={viewModel.isPaused}
-              totalTurns={viewModel.totalTurns}
-              gameSettings={viewModel.gameSettings!}
-              player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
-              onEditPlayerName={viewModel.onEditPlayerName}
-              onChangePlayerPoint={viewModel.onChangePlayerPoint}
-              onEndTurn={viewModel.onEndTurn}
-            />
+            <View flex={'1'}>
+              <View marginTop={'20'} />
+              <GamePlayer
+                index={bottomIndex}
+                isOnTurn={viewModel.currentPlayerIndex === bottomIndex}
+                isPaused={viewModel.isPaused}
+                totalTurns={viewModel.totalTurns}
+                gameSettings={viewModel.gameSettings!}
+                player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
+                onEditPlayerName={viewModel.onEditPlayerName}
+                onChangePlayerPoint={viewModel.onChangePlayerPoint}
+                onEndTurn={viewModel.onEndTurn}
+              />
+            </View>
           ) : (
             <View />
           )}
@@ -127,7 +130,8 @@ const GamePlay = () => {
           viewModel.playerSettings.playingPlayers[3] ? 3 : undefined,
         )}
       </View>
-      {viewModel.gameSettings.mode.countdownTime ? (
+      {viewModel.gameSettings.mode.mode !== 'fast' &&
+      viewModel.gameSettings.mode.countdownTime ? (
         <View direction={'row'} alignItems={'center'} marginRight={'20'}>
           <View flex={'1'} paddingHorizontal={'20'}>
             <Text fontSize={48}>{viewModel.countdownTime}</Text>

@@ -1,9 +1,15 @@
 import React, {memo, useCallback} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated from 'react-native-reanimated';
 import Container from 'components/Container';
 import View from 'components/View';
+import colors from 'configuration/colors';
 import GamePlayViewModel from './GamePlayViewModel';
 import GamePlayer from './player';
 import GameConsole from './console';
+import {END, START} from './constants';
+import styles from './styles';
+import Text from 'components/Text';
 
 const GamePlay = () => {
   const viewModel = GamePlayViewModel();
@@ -15,6 +21,7 @@ const GamePlay = () => {
           <GamePlayer
             index={topIndex}
             isOnTurn={viewModel.currentPlayerIndex === topIndex}
+            isPaused={viewModel.isPaused}
             totalTurns={viewModel.totalTurns}
             gameSettings={viewModel.gameSettings!}
             player={viewModel.playerSettings!.playingPlayers[topIndex]}
@@ -26,6 +33,7 @@ const GamePlay = () => {
             <GamePlayer
               index={bottomIndex}
               isOnTurn={viewModel.currentPlayerIndex === bottomIndex}
+              isPaused={viewModel.isPaused}
               totalTurns={viewModel.totalTurns}
               gameSettings={viewModel.gameSettings!}
               player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
@@ -41,6 +49,7 @@ const GamePlay = () => {
     },
     [
       viewModel.currentPlayerIndex,
+      viewModel.isPaused,
       viewModel.totalTurns,
       viewModel.gameSettings,
       viewModel.onChangePlayerPoint,
@@ -59,6 +68,7 @@ const GamePlay = () => {
       <GamePlayer
         index={4}
         isOnTurn={viewModel.currentPlayerIndex === 4}
+        isPaused={viewModel.isPaused}
         totalTurns={viewModel.totalTurns}
         gameSettings={viewModel.gameSettings!}
         player={viewModel.playerSettings!.playingPlayers[4]}
@@ -69,6 +79,7 @@ const GamePlay = () => {
     );
   }, [
     viewModel.currentPlayerIndex,
+    viewModel.isPaused,
     viewModel.totalTurns,
     viewModel.gameSettings,
     viewModel.playerSettings,
@@ -100,9 +111,10 @@ const GamePlay = () => {
           gameSettings={viewModel.gameSettings}
           currentMode={viewModel.gameSettings.mode}
           totalPlayers={viewModel.playerSettings.playingPlayers.length}
-          countdownTime={'00:35:45'}
+          totalTime={viewModel.totalTime}
           totalTurns={viewModel.totalTurns}
           goal={viewModel.gameSettings.players.goal.goal}
+          isPaused={viewModel.isPaused}
           onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
           onSwitchTurn={viewModel.onSwitchTurn}
           onSwapPlayers={viewModel.onSwapPlayers}
@@ -115,6 +127,26 @@ const GamePlay = () => {
           viewModel.playerSettings.playingPlayers[3] ? 3 : undefined,
         )}
       </View>
+      {viewModel.gameSettings.mode.countdownTime ? (
+        <View direction={'row'} alignItems={'center'} marginRight={'20'}>
+          <View flex={'1'} paddingHorizontal={'20'}>
+            <Text fontSize={48}>{viewModel.countdownTime}</Text>
+          </View>
+          <View style={styles.countdownWrapper}>
+            <LinearGradient
+              style={styles.countdownLinear}
+              colors={[colors.green, colors.yellow, colors.red]}
+              start={START}
+              end={END}
+            />
+            <Animated.View
+              style={[styles.countdown, viewModel.COUNTDOWN_TIME_STYLE]}
+            />
+          </View>
+        </View>
+      ) : (
+        <View />
+      )}
     </Container>
   );
 };

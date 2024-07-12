@@ -50,6 +50,7 @@ const game = {
   switchTurn: 'Đổi bi',
   switchPlayer: 'Đổi người',
   pause: 'Tạm dừng',
+  resume: 'Tiếp tục',
   stop: 'Kết thúc',
   turn: 'Tới lượt',
   totalTurns: 'Số lượt',

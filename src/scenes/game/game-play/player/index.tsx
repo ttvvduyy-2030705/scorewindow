@@ -85,11 +85,7 @@ const GamePlayer = (props: Props) => {
   }, [props]);
 
   return (
-    <View
-      flex={'1'}
-      style={styles.container}
-      marginHorizontal={'20'}
-      marginBottom={'20'}>
+    <View flex={'1'} style={styles.container} marginHorizontal={'20'}>
       <View
         direction={'row'}
         alignItems={'center'}

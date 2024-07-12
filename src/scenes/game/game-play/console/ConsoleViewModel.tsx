@@ -5,14 +5,16 @@ import {ReactNode, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {GameSettings, GameSettingsMode} from 'types/settings';
+import {formatTotalTime} from 'utils/date';
 
 export interface Props {
   gameSettings: GameSettings;
   currentMode: GameSettingsMode;
   totalPlayers: number;
-  countdownTime: string;
   totalTurns: number;
+  totalTime: number;
   goal: number;
+  isPaused: boolean;
   onPressGiveMoreTime: () => void;
   onSwitchTurn: () => void;
   onSwapPlayers: () => void;
@@ -44,6 +46,15 @@ const ConsoleViewModel = (props: Props) => {
       .toUpperCase()}`;
   }, [gameSettings]);
 
+  const displayTotalTime = useCallback(() => {
+    const {hours, minutes, seconds} = formatTotalTime(props.totalTime);
+    const _hours = hours < 10 ? `0${hours}` : hours;
+    const _minutes = minutes < 10 ? `0${minutes}` : minutes;
+    const _seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${_hours}:${_minutes}:${_seconds}`;
+  }, [props]);
+
   const toggleProMode = useCallback(() => {
     setProModeEnabled(prev => !prev);
     dispatch(
@@ -58,11 +69,15 @@ const ConsoleViewModel = (props: Props) => {
   }, [dispatch, props]);
 
   const onPressGiveMoreTime = useCallback(() => {
+    if (props.isPaused) {
+      return;
+    }
+
     props.onPressGiveMoreTime();
   }, [props]);
 
   const onSwitchTurn = useCallback(() => {
-    if (props.totalPlayers > 2) {
+    if (props.totalPlayers > 2 || props.isPaused) {
       return;
     }
 
@@ -92,6 +107,7 @@ const ConsoleViewModel = (props: Props) => {
       proModeEnabled,
       gameSettings,
       buildGameModeTitle,
+      displayTotalTime,
       onToggleSound: onToggleValue(setSoundEnabled),
       onToggleRemote: onToggleValue(setRemoteEnabled),
       onToggleProMode: toggleProMode,
@@ -107,6 +123,7 @@ const ConsoleViewModel = (props: Props) => {
     proModeEnabled,
     gameSettings,
     buildGameModeTitle,
+    displayTotalTime,
     onToggleValue,
     toggleProMode,
     onPressGiveMoreTime,

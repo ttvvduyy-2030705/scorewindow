@@ -52,16 +52,8 @@ const GameConsole = (props: Props) => {
     );
   }, [props, viewModel.onPressGiveMoreTime]);
 
-  const STYLE = useMemo(() => {
-    if (props.totalPlayers === 5) {
-      return styles.marginTop;
-    }
-
-    return styles.marginVertical;
-  }, [props]);
-
   return (
-    <View flex={'1'} style={STYLE}>
+    <View flex={'1'} style={styles.marginTop}>
       <View style={styles.container} flex={'1'} direction={'row'}>
         <View flex={'1'}>
           <View
@@ -80,7 +72,7 @@ const GameConsole = (props: Props) => {
               <Text fontSize={16}>{viewModel.buildGameModeTitle()}</Text>
               <View marginTop={'10'}>
                 <Text fontSize={32} fontWeight={'bold'} color={colors.primary}>
-                  {props.countdownTime}
+                  {viewModel.displayTotalTime()}
                 </Text>
               </View>
             </View>
@@ -120,7 +112,7 @@ const GameConsole = (props: Props) => {
                 style={[styles.button, styles.pauseButton]}
                 onPress={viewModel.onPause}>
                 <Text fontWeight={'bold'} letterSpacing={1.2}>
-                  {i18n.t('pause')}
+                  {i18n.t(props.isPaused ? 'resume' : 'pause')}
                 </Text>
               </Button>
             </View>

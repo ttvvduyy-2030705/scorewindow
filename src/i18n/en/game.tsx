@@ -50,6 +50,7 @@ const game = {
   switchTurn: 'Switch turn',
   switchPlayer: 'Switch players',
   pause: 'Pause',
+  resume: 'Resume',
   stop: 'End',
   turn: 'On turn',
   totalTurns: 'Total turns',

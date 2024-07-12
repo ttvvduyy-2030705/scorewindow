@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
     height: 55,
     paddingBottom: 1,
   },
+  inputStyle: {
+    fontSize: 24,
+  },
   stepWrapper: {
     borderWidth: 0.5,
     borderRadius: 20,

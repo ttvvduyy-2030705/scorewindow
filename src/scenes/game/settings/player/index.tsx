@@ -95,6 +95,7 @@ const PlayerSettingsComponent = (props: Props) => {
             <View flex={'1'}>
               <TextInput
                 style={styles.input}
+                inputStyle={styles.inputStyle}
                 value={player.name}
                 onChange={(value: string) =>
                   props.onChangePlayerName(value, index)

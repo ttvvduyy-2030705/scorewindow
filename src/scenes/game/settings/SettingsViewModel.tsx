@@ -19,7 +19,7 @@ export interface Props extends Navigation {}
 const GameSettingsViewModel = (props: Props) => {
   const dispatch = useDispatch();
 
-  const [category, setCategory] = useState<BilliardCategory>('one-cushion');
+  const [category, setCategory] = useState<BilliardCategory>('three-cusion');
   const [gameSettingsMode, setGameSettingsMode] = useState<GameSettingsMode>({
     mode: 'fast',
   });
@@ -64,34 +64,36 @@ const GameSettingsViewModel = (props: Props) => {
     setCategory(selectedCategory);
   }, []);
 
-  const onSelectGameMode = useCallback(
-    (selectedGameMode: GameMode) => {
-      switch (selectedGameMode) {
-        case 'fast':
-          setGameSettingsMode({mode: selectedGameMode});
-          break;
-        case 'time':
-          setGameSettingsMode({
-            mode: selectedGameMode,
-            extraTimeTurns: gameSettingsMode.extraTimeTurns,
-            countdownTime: gameSettingsMode.countdownTime,
-          });
-          break;
-        case 'eliminate':
-          setGameSettingsMode({
-            mode: selectedGameMode,
-            countdownTime: gameSettingsMode.countdownTime,
-          });
-          break;
-        case 'pro':
-          setGameSettingsMode({...gameSettingsMode, mode: selectedGameMode});
-          break;
-        default:
-          break;
-      }
-    },
-    [gameSettingsMode],
-  );
+  const onSelectGameMode = useCallback((selectedGameMode: GameMode) => {
+    switch (selectedGameMode) {
+      case 'fast':
+        setGameSettingsMode({mode: selectedGameMode});
+        break;
+      case 'time':
+        setGameSettingsMode({
+          mode: selectedGameMode,
+          extraTimeTurns: 3,
+          countdownTime: 40,
+        });
+        break;
+      case 'eliminate':
+        setGameSettingsMode({
+          mode: selectedGameMode,
+          countdownTime: 40,
+        });
+        break;
+      case 'pro':
+        setGameSettingsMode({
+          mode: selectedGameMode,
+          extraTimeTurns: 3,
+          countdownTime: 40,
+          warmUpTime: 120,
+        });
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   const onSelectExtraTimeTurns = useCallback(
     (extraTimeTurns: GameExtraTimeTurns) => {

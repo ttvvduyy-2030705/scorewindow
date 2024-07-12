@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from 'data/redux/reducers';
 import {Player, PlayerSettings} from 'types/player';
 import {goBack} from 'utils/navigation';
@@ -12,10 +12,12 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {COUNTDOWN_WIDTH} from './styles';
+import {gameActions} from 'data/redux/actions/game';
 
 let countdownInterval: NodeJS.Timeout;
 
 const GamePlayViewModel = () => {
+  const dispatch = useDispatch();
   const {updateGameSettings} = useSelector((state: RootState) => state.UI.game);
   const {gameSettings} = useSelector((state: RootState) => state.game);
 
@@ -204,8 +206,9 @@ const GamePlayViewModel = () => {
   }, [isPaused, countdownOffsetX, _resetCountdown]);
 
   const onStop = useCallback(() => {
+    dispatch(gameActions.updateGameSettings(undefined));
     goBack();
-  }, []);
+  }, [dispatch]);
 
   return useMemo(() => {
     return {

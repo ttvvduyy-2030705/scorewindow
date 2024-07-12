@@ -47,12 +47,8 @@ const GamePlayViewModel = () => {
       countdownOffsetX.value = -COUNTDOWN_WIDTH;
       setCountdownTime(gameSettings?.mode.countdownTime || 0);
       setIsPaused(false);
-      clearInterval(countdownInterval);
     }
 
-    return () => {
-      clearInterval(countdownInterval);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameSettings]);
 

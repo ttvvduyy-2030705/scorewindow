@@ -13,6 +13,8 @@ import colors from 'configuration/colors';
 import PlayerViewModel, {Props} from './PlayerViewModel';
 import styles from './styles';
 import i18n from 'i18n';
+import {responsiveDimension} from 'utils/helper';
+import {dims} from 'configuration';
 
 const GamePlayer = (props: Props) => {
   const viewModel = PlayerViewModel(props);
@@ -41,7 +43,11 @@ const GamePlayer = (props: Props) => {
                 key={`game-step-${index}`}
                 style={[
                   styles.buttonStep,
-                  {paddingVertical: PAIR_PLAY ? 15 : 10},
+                  {
+                    paddingVertical: PAIR_PLAY
+                      ? responsiveDimension(15)
+                      : responsiveDimension(10),
+                  },
                 ]}
                 onPress={viewModel.onPressPointStep.bind(
                   GamePlayer,
@@ -128,16 +134,26 @@ const GamePlayer = (props: Props) => {
         alignItems={'center'}
         justify={'center'}>
         {props.gameSettings.mode.mode !== 'fast' ? (
-          <View marginLeft={'15'}>
-            <View>
-              <Text fontWeight={'bold'}>{'HR'}</Text>
-              <Text fontSize={48} fontWeight={'bold'} lineHeight={60}>
+          <View marginLeft={'15'} marginTop={'10'} justify={'center'}>
+            <View flex={'1'} justify={'end'}>
+              <Text fontWeight={'bold'} fontSize={dims.screenWidth * 0.01}>
+                {'HR'}
+              </Text>
+              <Text
+                fontSize={dims.screenWidth * 0.03}
+                lineHeight={dims.screenWidth * 0.0325}
+                fontWeight={'bold'}>
                 {viewModel.highestRate}
               </Text>
             </View>
-            <View>
-              <Text fontWeight={'bold'}>{'AVG'}</Text>
-              <Text fontSize={48} fontWeight={'bold'} lineHeight={60}>
+            <View flex={'1'}>
+              <Text fontWeight={'bold'} fontSize={dims.screenWidth * 0.01}>
+                {'AVG'}
+              </Text>
+              <Text
+                fontSize={dims.screenWidth * 0.03}
+                lineHeight={dims.screenWidth * 0.0325}
+                fontWeight={'bold'}>
                 {viewModel.averagePoint}
               </Text>
             </View>
@@ -147,18 +163,8 @@ const GamePlayer = (props: Props) => {
         )}
         <View flex={'1'} alignItems={'center'} justify={'center'}>
           <Text
-            style={{
-              lineHeight: PAIR_PLAY ? 592 : 310,
-            }}
-            fontSize={
-              props.player.totalPoint >= 100
-                ? 304
-                : PAIR_PLAY
-                ? props.player.totalPoint >= 10
-                  ? 304
-                  : 512
-                : 304
-            }
+            fontSize={512}
+            adjustsFontSizeToFit={true}
             color={colors.statusBar}>
             {props.player.totalPoint}
           </Text>
@@ -183,15 +189,13 @@ const GamePlayer = (props: Props) => {
               <Button
                 style={styles.buttonEndTurn}
                 onPress={viewModel.onEndTurn}>
-                <Text fontSize={40} fontWeight={'bold'}>
-                  {i18n.t('turn')}
-                </Text>
+                <Text fontSize={dims.screenWidth * 0.02}>{i18n.t('turn')}</Text>
               </Button>
             ) : (
               <View />
             )}
             <View style={styles.totalPointInTurn} paddingVertical={'10'}>
-              <Text fontSize={40} fontWeight={'bold'}>
+              <Text fontSize={dims.screenWidth * 0.02} fontWeight={'bold'}>
                 {viewModel.totalPointInTurn}
               </Text>
             </View>

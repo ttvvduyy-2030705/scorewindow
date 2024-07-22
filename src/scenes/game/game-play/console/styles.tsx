@@ -1,5 +1,6 @@
 import colors from 'configuration/colors';
 import {StyleSheet} from 'react-native';
+import {responsiveDimension} from 'utils/helper';
 
 const styles = StyleSheet.create({
   container: {
@@ -7,17 +8,17 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   icon: {
-    width: 32,
-    height: 32,
+    width: responsiveDimension(32),
+    height: responsiveDimension(32),
   },
   buttonSound: {
-    padding: 15,
+    padding: responsiveDimension(15),
   },
   button: {
     flex: 1,
     borderWidth: 0.5,
     borderRadius: 10,
-    paddingVertical: 10,
+    paddingVertical: responsiveDimension(10),
     borderColor: colors.gray,
     alignItems: 'center',
     justifyContent: 'center',
@@ -33,10 +34,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   marginTop: {
-    marginTop: 20,
+    marginTop: responsiveDimension(20),
   },
   marginVertical: {
-    marginVertical: 20,
+    marginVertical: responsiveDimension(20),
   },
   buttonGiveMoreTime: {
     flex: 1,

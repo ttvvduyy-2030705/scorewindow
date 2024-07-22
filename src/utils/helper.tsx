@@ -1,6 +1,7 @@
 import {dims} from 'configuration';
 
 import Numeral from 'numeral';
+import {Alert} from 'react-native';
 
 let timeout: any = null;
 const {screenWidth} = dims;
@@ -17,23 +18,11 @@ const debounce = (callback = () => {}, duration = 1000) => {
 };
 
 const responsiveFontSize = (fontSize: number) => {
-  if (screenWidth > 500) {
-    return fontSize + 4;
-  }
+  return screenWidth * 0.0007 * fontSize;
+};
 
-  if (screenWidth > 375) {
-    return fontSize + 2;
-  }
-
-  if (screenWidth > 360) {
-    return fontSize + 1;
-  }
-
-  if (screenWidth > 340) {
-    return fontSize;
-  }
-
-  return fontSize - 2;
+const responsiveDimension = (size: number) => {
+  return screenWidth * 0.0005 * size;
 };
 
 const numberFormat = (number: string | number | undefined) => {
@@ -57,4 +46,10 @@ const getCurrency = (locale: string) => {
   }
 };
 
-export {debounce, responsiveFontSize, numberFormat, getCurrency};
+export {
+  debounce,
+  responsiveFontSize,
+  responsiveDimension,
+  numberFormat,
+  getCurrency,
+};

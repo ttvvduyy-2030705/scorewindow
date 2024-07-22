@@ -1,5 +1,7 @@
+import {dims} from 'configuration';
 import colors from 'configuration/colors';
 import {StyleSheet} from 'react-native';
+import {responsiveDimension, responsiveFontSize} from 'utils/helper';
 
 const styles = StyleSheet.create({
   container: {
@@ -7,8 +9,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   editIcon: {
-    width: 24,
-    height: 24,
+    width: responsiveDimension(24),
+    height: responsiveDimension(24),
   },
   buttonEdit: {
     padding: 10,
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: colors.gray,
     borderRadius: 20,
-    paddingBottom: 10,
+    paddingBottom: responsiveDimension(10),
   },
   stepsWrapper: {
     flexWrap: 'wrap',
@@ -31,19 +33,19 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: colors.gray,
     borderRadius: 20,
-    paddingHorizontal: 45,
-    paddingVertical: 15,
-    marginRight: 15,
+    paddingHorizontal: responsiveDimension(40),
+    paddingVertical: responsiveDimension(15),
+    marginRight: responsiveDimension(15),
   },
   input: {
-    fontSize: 24,
+    fontSize: responsiveFontSize(24),
   },
   extraTimeTurnsWrapper: {
-    marginTop: 10,
+    marginTop: responsiveDimension(10),
   },
   extraTimeTurns: {
-    width: 32,
-    height: 32,
+    width: dims.screenWidth * 0.01,
+    height: dims.screenWidth * 0.01,
     borderRadius: 16,
     backgroundColor: colors.primary,
   },
@@ -51,13 +53,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grayBlue,
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 20,
-    paddingHorizontal: 30,
+    paddingHorizontal: responsiveDimension(30),
   },
   buttonEndTurn: {
     backgroundColor: colors.notification,
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
-    paddingHorizontal: 30,
+    paddingHorizontal: responsiveDimension(30),
   },
 });
 

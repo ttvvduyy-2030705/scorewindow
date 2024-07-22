@@ -7,6 +7,8 @@ import {Player, PlayerNumber, PlayerSettings} from 'types/player';
 import {PLAYER_NUMBER, PLAYER_POINT_STEPS} from 'constants/player';
 import styles from './styles';
 import TextInput from 'components/TextInput';
+import {ScrollView} from 'react-native';
+import {responsiveDimension, responsiveFontSize} from 'utils/helper';
 
 interface Props {
   playerSettings: PlayerSettings;
@@ -87,7 +89,14 @@ const PlayerSettingsComponent = (props: Props) => {
   const renderPlayerItem = useCallback(
     (player: Player, index: number) => {
       return (
-        <View style={styles.playerItem} padding={'15'}>
+        <View
+          style={[
+            styles.playerItem,
+            index % 2 === 0
+              ? {marginLeft: responsiveDimension(20)}
+              : {marginRight: responsiveFontSize(20)},
+          ]}
+          padding={'15'}>
           <View direction={'row'} alignItems={'center'}>
             <View style={styles.avatar} marginRight={'15'}>
               <Text>{player.name[0]}</Text>
@@ -143,59 +152,64 @@ const PlayerSettingsComponent = (props: Props) => {
 
   const renderPlayers = useCallback(() => {
     return (
-      <View marginTop={'20'} paddingTop={'20'}>
-        <View direction={'row'} alignItems={'center'} marginBottom={'10'}>
-          <View flex={'1'}>
-            {renderPlayerItem(props.playerSettings.playingPlayers[0], 0)}
-          </View>
-          <View marginHorizontal={'15'} />
-          <View flex={'1'}>
-            {renderPlayerItem(props.playerSettings.playingPlayers[1], 1)}
-          </View>
-        </View>
-        <View
-          direction={'row'}
-          alignItems={'center'}
-          marginTop={'20'}
-          marginBottom={'10'}>
-          {props.playerSettings.playingPlayers[2] && (
+      <View flex={'1'} direction={'row'} marginTop={'20'}>
+        <ScrollView>
+          <View direction={'row'} alignItems={'center'} marginBottom={'10'}>
             <View flex={'1'}>
-              {renderPlayerItem(props.playerSettings.playingPlayers[2], 2)}
+              {renderPlayerItem(props.playerSettings.playingPlayers[0], 0)}
             </View>
-          )}
-          <View marginHorizontal={'15'} />
-          {props.playerSettings.playingPlayers[3] ? (
+            <View marginHorizontal={'15'} />
             <View flex={'1'}>
-              {renderPlayerItem(props.playerSettings.playingPlayers[3], 3)}
+              {renderPlayerItem(props.playerSettings.playingPlayers[1], 1)}
             </View>
-          ) : (
+          </View>
+          <View
+            direction={'row'}
+            alignItems={'center'}
+            marginTop={'20'}
+            marginBottom={'10'}>
+            {props.playerSettings.playingPlayers[2] && (
+              <View flex={'1'}>
+                {renderPlayerItem(props.playerSettings.playingPlayers[2], 2)}
+              </View>
+            )}
+            <View marginHorizontal={'15'} />
+            {props.playerSettings.playingPlayers[3] ? (
+              <View flex={'1'}>
+                {renderPlayerItem(props.playerSettings.playingPlayers[3], 3)}
+              </View>
+            ) : (
+              <View flex={'1'} />
+            )}
+          </View>
+          <View direction={'row'} alignItems={'center'} marginTop={'20'}>
+            {props.playerSettings.playingPlayers[4] && (
+              <View flex={'1'} paddingBottom={'20'}>
+                {renderPlayerItem(props.playerSettings.playingPlayers[4], 4)}
+              </View>
+            )}
+            <View marginHorizontal={'15'} />
             <View flex={'1'} />
-          )}
-        </View>
-        <View direction={'row'} alignItems={'center'} marginTop={'20'}>
-          {props.playerSettings.playingPlayers[4] && (
-            <View flex={'1'}>
-              {renderPlayerItem(props.playerSettings.playingPlayers[4], 4)}
-            </View>
-          )}
-          <View marginHorizontal={'15'} />
-          <View flex={'1'} />
-        </View>
+          </View>
+        </ScrollView>
       </View>
     );
   }, [props, renderPlayerItem]);
 
   return (
     <View flex={'1'}>
-      <Text fontSize={24} fontWeight={'bold'} letterSpacing={1.2}>
-        {i18n.t('player')}
-      </Text>
+      <View paddingHorizontal={'20'} paddingTop={'20'}>
+        <Text fontSize={24} fontWeight={'bold'} letterSpacing={1.2}>
+          {i18n.t('player')}
+        </Text>
+      </View>
       <View direction={'row'}>
         <View
           flex={'1'}
           direction={'row'}
           alignItems={'center'}
-          justify={'between'}>
+          justify={'between'}
+          paddingHorizontal={'20'}>
           {renderPlayerNumber()}
           {renderPlayGoal()}
         </View>

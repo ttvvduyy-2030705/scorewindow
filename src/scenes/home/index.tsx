@@ -41,9 +41,15 @@ const Home = (props: Props) => {
           <Button
             style={styles.buttonHistory}
             onPress={viewModel.onPressHistory}>
-            <View direction={'row'} alignItems={'center'} marginRight={'20'}>
-              <Image source={images.history} style={styles.image} />
-              <Text fontSize={24}>{i18n.t('txtHistory')}</Text>
+            <View direction={'row'} alignItems={'center'}>
+              <Image
+                source={images.history}
+                style={styles.image}
+                resizeMode={'contain'}
+              />
+              <View flex={'1'}>
+                <Text fontSize={24}>{i18n.t('txtHistory')}</Text>
+              </View>
             </View>
           </Button>
         </View>
@@ -52,7 +58,11 @@ const Home = (props: Props) => {
           <View flex={'1'} />
           <Button style={styles.button} onPress={viewModel.onStartNewGame}>
             <View direction={'row'} alignItems={'center'}>
-              <Image source={images.startGame} style={styles.image} />
+              <Image
+                source={images.startGame}
+                style={styles.image}
+                resizeMode={'contain'}
+              />
               <Text fontSize={32}>{i18n.t('txtStartNewGame')}</Text>
             </View>
           </Button>

@@ -8,6 +8,7 @@ import GameSettingsViewModel, {Props} from './SettingsViewModel';
 import CategorySettings from './category';
 import PlayerSettings from './player';
 import styles from './styles';
+import {ScrollView} from 'react-native';
 
 const GameSettings = (props: Props) => {
   const viewModel = GameSettingsViewModel(props);
@@ -16,35 +17,44 @@ const GameSettings = (props: Props) => {
     <Container>
       <View flex={'1'} direction={'row'} style={styles.container}>
         <View flex={'1'} padding={'20'} style={styles.wrapper}>
-          <CategorySettings
-            category={viewModel.category}
-            gameMode={viewModel.gameMode}
-            gameSettingsMode={viewModel.gameSettingsMode}
-            extraTimeTurnsEnabled={viewModel.extraTimeTurnsEnabled}
-            countdownEnabled={viewModel.countdownEnabled}
-            warmUpEnabled={viewModel.warmUpEnabled}
-            onSelectCategory={viewModel.onSelectCategory}
-            onSelectGameMode={viewModel.onSelectGameMode}
-            onSelectExtraTimeTurns={viewModel.onSelectExtraTimeTurns}
-            onSelectCountdown={viewModel.onSelectCountdown}
-            onSelectWarmUp={viewModel.onSelectWarmUp}
-          />
+          <View flex={'1'} direction={'row'}>
+            <ScrollView>
+              <CategorySettings
+                category={viewModel.category}
+                gameMode={viewModel.gameMode}
+                gameSettingsMode={viewModel.gameSettingsMode}
+                extraTimeTurnsEnabled={viewModel.extraTimeTurnsEnabled}
+                countdownEnabled={viewModel.countdownEnabled}
+                warmUpEnabled={viewModel.warmUpEnabled}
+                onSelectCategory={viewModel.onSelectCategory}
+                onSelectGameMode={viewModel.onSelectGameMode}
+                onSelectExtraTimeTurns={viewModel.onSelectExtraTimeTurns}
+                onSelectCountdown={viewModel.onSelectCountdown}
+                onSelectWarmUp={viewModel.onSelectWarmUp}
+              />
+            </ScrollView>
+          </View>
         </View>
-        <View flex={'1'} padding={'20'} style={styles.wrapper}>
-          <PlayerSettings
-            playerSettings={viewModel.playerSettings}
-            onSelectPlayerNumber={viewModel.onSelectPlayerNumber}
-            onSelectPlayerGoal={viewModel.onSelectPlayerGoal}
-            onChangePlayerName={viewModel.onChangePlayerName}
-            onChangePlayerPoint={viewModel.onChangePlayerPoint}
-          />
+        <View flex={'1'} style={styles.wrapper}>
+          <View flex={'1'} direction={'row'}>
+            <ScrollView>
+              <PlayerSettings
+                playerSettings={viewModel.playerSettings}
+                onSelectPlayerNumber={viewModel.onSelectPlayerNumber}
+                onSelectPlayerGoal={viewModel.onSelectPlayerGoal}
+                onChangePlayerName={viewModel.onChangePlayerName}
+                onChangePlayerPoint={viewModel.onChangePlayerPoint}
+              />
+            </ScrollView>
+          </View>
         </View>
       </View>
       <View
         direction={'row'}
         alignItems={'center'}
         justify={'end'}
-        padding={'20'}>
+        paddingHorizontal={'20'}
+        paddingBottom={'20'}>
         <Button style={styles.buttonCancel} onPress={viewModel.onCancel}>
           <Text textDecorationLine={'underline'}>{i18n.t('txtCancel')}</Text>
         </Button>

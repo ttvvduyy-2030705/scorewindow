@@ -35,6 +35,8 @@ interface TextProps {
   ellipsizeMode?: 'clip' | 'head' | 'middle' | 'tail';
   textAlign?: 'center' | 'justify' | 'left' | 'right';
   color?: string;
+  adjustsFontSizeToFit?: boolean;
+  includeFontPadding?: boolean;
   onLayout?: (e: LayoutChangeEvent) => void;
 }
 
@@ -53,6 +55,7 @@ const Text = (props: TextProps) => {
     ellipsizeMode = 'tail',
     textAlign = 'left',
     color = colors.lightBlack,
+    adjustsFontSizeToFit,
     onLayout,
   } = props;
 
@@ -70,7 +73,7 @@ const Text = (props: TextProps) => {
     }
 
     if (lineHeight) {
-      result.push({lineHeight});
+      result.push({lineHeight: responsiveFontSize(lineHeight)});
     }
 
     if (fontWeight === 'bold') {
@@ -108,6 +111,7 @@ const Text = (props: TextProps) => {
       style={textStyle}
       numberOfLines={numberOfLines}
       ellipsizeMode={ellipsizeMode}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
       onLayout={onLayout}>
       {children}
     </RNText>

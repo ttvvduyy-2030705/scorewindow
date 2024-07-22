@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
   image: StyleSheet.flatten([
     globalStyles.margin.marginRight20,
     {
-      width: 40,
-      height: 40,
+      width: '12%',
+      height: '100%',
     },
   ]),
   buttonHistory: StyleSheet.flatten([

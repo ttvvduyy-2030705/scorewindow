@@ -1,13 +1,14 @@
 import colors from 'configuration/colors';
 import {StyleSheet} from 'react-native';
+import {responsiveDimension, responsiveFontSize} from 'utils/helper';
 
 const styles = StyleSheet.create({
   button: {
     borderWidth: 0.5,
     borderColor: colors.gray,
     borderRadius: 50,
-    width: 48,
-    height: 48,
+    width: responsiveDimension(48),
+    height: responsiveDimension(48),
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 2,
@@ -28,10 +29,11 @@ const styles = StyleSheet.create({
     elevation: 4,
     borderRadius: 20,
     backgroundColor: colors.white,
+    marginTop: responsiveDimension(20),
   },
   avatar: {
-    width: 56,
-    height: 56,
+    width: responsiveDimension(56),
+    height: responsiveDimension(56),
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
@@ -41,11 +43,11 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: colors.gray,
     borderRadius: 20,
-    height: 55,
+    height: responsiveDimension(55),
     paddingBottom: 1,
   },
   inputStyle: {
-    fontSize: 24,
+    fontSize: responsiveFontSize(24),
   },
   stepWrapper: {
     borderWidth: 0.5,
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
   },
   stepItem: {
     width: '11%',
-    height: 48,
+    height: responsiveDimension(48),
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 2,

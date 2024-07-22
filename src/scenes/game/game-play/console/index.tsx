@@ -10,6 +10,7 @@ import ConsoleViewModel, {Props} from './ConsoleViewModel';
 import styles from './styles';
 import colors from 'configuration/colors';
 import Webcam from './webcam';
+import {dims} from 'configuration';
 
 const GameConsole = (props: Props) => {
   const viewModel = ConsoleViewModel(props);
@@ -28,18 +29,24 @@ const GameConsole = (props: Props) => {
         <View direction={'row'} alignItems={'center'}>
           <View flex={'1'} alignItems={'center'} justify={'center'}>
             <Text>{i18n.t('totalTurns')}</Text>
-            <Text fontSize={96} color={colors.grayBlue} fontWeight={'bold'}>
+            <Text
+              fontSize={dims.screenWidth * 0.05}
+              color={colors.grayBlue}
+              fontWeight={'bold'}>
               {props.totalTurns}
             </Text>
           </View>
           <View flex={'1'} alignItems={'center'} justify={'center'}>
             <Text>{i18n.t('goal')}</Text>
-            <Text fontSize={96} color={colors.grayBlue} fontWeight={'bold'}>
+            <Text
+              fontSize={dims.screenWidth * 0.05}
+              color={colors.grayBlue}
+              fontWeight={'bold'}>
               {props.goal}
             </Text>
           </View>
         </View>
-        <View direction={'row'} marginHorizontal={'20'} marginVertical={'20'}>
+        <View direction={'row'} marginHorizontal={'20'} marginTop={'20'}>
           <Button
             onPress={viewModel.onPressGiveMoreTime}
             style={styles.buttonGiveMoreTime}>

@@ -1,3 +1,4 @@
+import {dims} from 'configuration';
 import colors from 'configuration/colors';
 import globalStyles from 'configuration/styles';
 import {StyleSheet} from 'react-native';
@@ -32,6 +33,10 @@ const styles = StyleSheet.create({
       backgroundColor: colors.lightPrimary1,
     },
   ]),
+  logo: {
+    height: dims.screenHeight * 0.1,
+    width: dims.screenWidth * 0.2,
+  },
 });
 
 export default styles;

@@ -5,6 +5,9 @@ export type Images = {
   offline: number;
   startGame: number;
   history: number;
+  logo: number;
+  logoOutlined: number;
+  logoFilled: number;
   game: {
     edit: number;
     soundOn: number;

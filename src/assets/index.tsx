@@ -7,6 +7,9 @@ const images: Images = {
   offline: require('./images/offline.png'),
   startGame: require('./images/start-game.png'),
   history: require('./images/history.png'),
+  logo: require('./images/logo.png'),
+  logoOutlined: require('./images/logo-outlined.png'),
+  logoFilled: require('./images/logo-filled.png'),
   game: {
     edit: require('./images/game/edit.png'),
     soundOn: require('./images/game/sound-on.png'),

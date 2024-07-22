@@ -29,29 +29,38 @@ const Home = (props: Props) => {
         end={END}>
         <View direction={'row'} alignItems={'center'} justify={'between'}>
           <View>
-            <Text fontWeight={'bold'} fontSize={48} letterSpacing={3}>
-              {viewModel.helloText}
-            </Text>
+            <Image
+              source={images.logo}
+              style={styles.logo}
+              resizeMode={'contain'}
+            />
             <View marginTop={'15'}>
               <Text fontSize={32} letterSpacing={2}>
                 {i18n.t('msgAppName')}
               </Text>
             </View>
           </View>
-          <Button
-            style={styles.buttonHistory}
-            onPress={viewModel.onPressHistory}>
-            <View direction={'row'} alignItems={'center'}>
-              <Image
-                source={images.history}
-                style={styles.image}
-                resizeMode={'contain'}
-              />
-              <View flex={'1'}>
-                <Text fontSize={24}>{i18n.t('txtHistory')}</Text>
-              </View>
+          <View alignItems={'end'}>
+            <View>
+              <Text fontWeight={'bold'} fontSize={32} letterSpacing={3}>
+                {viewModel.helloText}
+              </Text>
             </View>
-          </Button>
+            <View marginTop={'10'}>
+              <Button
+                style={styles.buttonHistory}
+                onPress={viewModel.onPressHistory}>
+                <View direction={'row'} alignItems={'center'}>
+                  <Image
+                    source={images.history}
+                    style={styles.image}
+                    resizeMode={'contain'}
+                  />
+                  <Text fontSize={24}>{i18n.t('txtHistory')}</Text>
+                </View>
+              </Button>
+            </View>
+          </View>
         </View>
 
         <View flex={'1'} alignItems={'center'} justify={'center'}>

@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import SoundPlayer from 'react-native-sound-player';
 import {RootState} from 'data/redux/reducers';
 import {Player, PlayerSettings} from 'types/player';
 import {goBack} from 'utils/navigation';
@@ -47,6 +48,21 @@ const GamePlayViewModel = () => {
       );
     }, 1000);
   }, [isPaused]);
+
+  useEffect(() => {
+    try {
+      if (countdownTime === 0) {
+        SoundPlayer.playSoundFile('timeout', 'm4a');
+        return;
+      }
+
+      if (countdownTime > 0) {
+        SoundPlayer.playSoundFile('beep', 'wav');
+      }
+    } catch (e) {
+      console.log('Cannot play the sound file', e);
+    }
+  }, [countdownTime]);
 
   const getCountdownWidthItem = useCallback(() => {
     if (!gameSettings?.mode.countdownTime) {

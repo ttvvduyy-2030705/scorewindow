@@ -160,9 +160,11 @@ const GamePlay = () => {
           totalTurns={viewModel.totalTurns}
           goal={viewModel.gameSettings.players.goal.goal}
           isPaused={viewModel.isPaused}
+          soundEnabled={viewModel.soundEnabled}
           onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
           onSwitchTurn={viewModel.onSwitchTurn}
           onSwapPlayers={viewModel.onSwapPlayers}
+          onToggleSound={viewModel.onToggleSound}
           renderLastPlayer={renderLastPlayer}
           onPause={viewModel.onPause}
           onStop={viewModel.onStop}

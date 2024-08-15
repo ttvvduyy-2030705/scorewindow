@@ -15,9 +15,11 @@ export interface Props {
   totalTime: number;
   goal: number;
   isPaused: boolean;
+  soundEnabled: boolean;
   onPressGiveMoreTime: () => void;
   onSwitchTurn: () => void;
   onSwapPlayers: () => void;
+  onToggleSound: () => void;
   renderLastPlayer: () => ReactNode;
   onPause: () => void;
   onStop: () => void;
@@ -27,7 +29,6 @@ const ConsoleViewModel = (props: Props) => {
   const dispatch = useDispatch();
   const {gameSettings} = useSelector((state: RootState) => state.game);
 
-  const [soundEnabled, setSoundEnabled] = useState(false);
   const [remoteEnabled, setRemoteEnabled] = useState(false);
   const [proModeEnabled, setProModeEnabled] = useState(
     props.currentMode.mode !== 'fast',
@@ -102,13 +103,11 @@ const ConsoleViewModel = (props: Props) => {
 
   return useMemo(() => {
     return {
-      soundEnabled,
       remoteEnabled,
       proModeEnabled,
       gameSettings,
       buildGameModeTitle,
       displayTotalTime,
-      onToggleSound: onToggleValue(setSoundEnabled),
       onToggleRemote: onToggleValue(setRemoteEnabled),
       onToggleProMode: toggleProMode,
       onPressGiveMoreTime,
@@ -118,7 +117,6 @@ const ConsoleViewModel = (props: Props) => {
       onStop,
     };
   }, [
-    soundEnabled,
     remoteEnabled,
     proModeEnabled,
     gameSettings,

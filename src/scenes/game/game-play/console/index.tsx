@@ -69,10 +69,20 @@ const GameConsole = (props: Props) => {
             marginHorizontal={'15'}
             marginTop={'15'}>
             <View flex={'1'} justify={'center'}>
-              <Button
-                onPress={viewModel.onToggleSound}
-                style={styles.buttonSound}>
-                <Image source={images.game.soundOn} style={styles.icon} />
+              <Button onPress={props.onToggleSound} style={styles.buttonSound}>
+                {props.soundEnabled ? (
+                  <Image
+                    key={'sound-on'}
+                    source={images.game.soundOn}
+                    style={styles.icon}
+                  />
+                ) : (
+                  <Image
+                    key={'sound-off'}
+                    source={images.game.soundOff}
+                    style={styles.icon}
+                  />
+                )}
               </Button>
             </View>
             <View flex={'1'} alignItems={'center'} justify={'center'}>

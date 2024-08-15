@@ -20,6 +20,7 @@ const GamePlayViewModel = () => {
   const [totalTime, setTotalTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState<number>(0);
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>();
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
@@ -50,6 +51,10 @@ const GamePlayViewModel = () => {
   }, [isPaused]);
 
   useEffect(() => {
+    if (!soundEnabled) {
+      return;
+    }
+
     try {
       if (countdownTime === 0) {
         SoundPlayer.playSoundFile('timeout', 'm4a');
@@ -62,7 +67,7 @@ const GamePlayViewModel = () => {
     } catch (e) {
       console.log('Cannot play the sound file', e);
     }
-  }, [countdownTime]);
+  }, [soundEnabled, countdownTime]);
 
   const getCountdownWidthItem = useCallback(() => {
     if (!gameSettings?.mode.countdownTime) {
@@ -186,6 +191,10 @@ const GamePlayViewModel = () => {
     setCurrentPlayerIndex(prev => (prev === 0 ? 1 : 0));
   }, [_resetCountdown]);
 
+  const onToggleSound = useCallback(() => {
+    setSoundEnabled(prev => !prev);
+  }, []);
+
   const onEndTurn = useCallback(() => {
     if (!gameSettings) {
       return;
@@ -237,6 +246,7 @@ const GamePlayViewModel = () => {
       countdownTime,
       updateGameSettings,
       isPaused,
+      soundEnabled,
       getCountdownWidthItem,
       getCountdownColor,
       onEditPlayerName,
@@ -244,6 +254,7 @@ const GamePlayViewModel = () => {
       onPressGiveMoreTime,
       onSwitchTurn,
       onSwapPlayers,
+      onToggleSound,
       onEndTurn,
       onPause,
       onStop,
@@ -257,6 +268,7 @@ const GamePlayViewModel = () => {
     countdownTime,
     updateGameSettings,
     isPaused,
+    soundEnabled,
     getCountdownWidthItem,
     getCountdownColor,
     onEditPlayerName,
@@ -264,6 +276,7 @@ const GamePlayViewModel = () => {
     onPressGiveMoreTime,
     onSwitchTurn,
     onSwapPlayers,
+    onToggleSound,
     onEndTurn,
     onPause,
     onStop,

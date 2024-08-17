@@ -11,6 +11,9 @@ import styles from './styles';
 import colors from 'configuration/colors';
 import Webcam from './webcam';
 import {dims} from 'configuration';
+import Ball from 'components/Ball';
+import {isPoolGame} from 'utils/game';
+import {ScrollView} from 'react-native';
 
 const GameConsole = (props: Props) => {
   const viewModel = ConsoleViewModel(props);
@@ -62,6 +65,28 @@ const GameConsole = (props: Props) => {
       </View>
     );
   }, [props, viewModel.onPressGiveMoreTime]);
+
+  const BALLS_VIEW = useMemo(() => {
+    return (
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
+        <View
+          style={styles.ballsWrapper}
+          direction={'row'}
+          alignItems={'center'}
+          marginRight={'15'}>
+          {viewModel.balls.map((ball, index) => {
+            return (
+              <View key={`ball-${index}`} marginTop={'15'}>
+                <Ball data={ball} onPress={viewModel.onSelectBall} />
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+    );
+  }, [viewModel.balls, viewModel.onSelectBall]);
 
   return (
     <View flex={'1'} style={styles.marginTop}>
@@ -178,7 +203,7 @@ const GameConsole = (props: Props) => {
             <View />
           )}
 
-          {GAME_INFO}
+          {isPoolGame(props.gameSettings.category) ? BALLS_VIEW : GAME_INFO}
 
           {props.totalPlayers === 5 ? (
             <View flex={'1'} direction={'row'}>

@@ -50,6 +50,10 @@ let colors: Colors = {
 
   orange: '#d1801d',
 
+  purple: '#8532a8',
+
+  brown: '#591e00',
+
   red: '#DE5346',
   lightRed: '#f7766a',
   lightRed2: '#ff998f',

@@ -21,4 +21,12 @@ const isPool15Game = (category?: BilliardCategory) => {
   return false;
 };
 
-export {isPoolGame, isPool15Game};
+const isPool10Game = (category?: BilliardCategory) => {
+  if (category === '10-ball') {
+    return true;
+  }
+
+  return false;
+};
+
+export {isPoolGame, isPool10Game, isPool15Game};

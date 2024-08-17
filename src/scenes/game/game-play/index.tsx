@@ -27,6 +27,7 @@ const GamePlay = () => {
             player={viewModel.playerSettings!.playingPlayers[topIndex]}
             onEditPlayerName={viewModel.onEditPlayerName}
             onChangePlayerPoint={viewModel.onChangePlayerPoint}
+            onViolate={viewModel.onViolate}
             onEndTurn={viewModel.onEndTurn}
           />
           {bottomIndex ? (
@@ -42,6 +43,7 @@ const GamePlay = () => {
                 player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
                 onEditPlayerName={viewModel.onEditPlayerName}
                 onChangePlayerPoint={viewModel.onChangePlayerPoint}
+                onViolate={viewModel.onViolate}
                 onEndTurn={viewModel.onEndTurn}
               />
             </View>
@@ -59,6 +61,7 @@ const GamePlay = () => {
       viewModel.gameSettings,
       viewModel.onChangePlayerPoint,
       viewModel.onEditPlayerName,
+      viewModel.onViolate,
       viewModel.playerSettings,
       viewModel.onEndTurn,
     ],
@@ -80,6 +83,7 @@ const GamePlay = () => {
         player={viewModel.playerSettings!.playingPlayers[4]}
         onEditPlayerName={viewModel.onEditPlayerName}
         onChangePlayerPoint={viewModel.onChangePlayerPoint}
+        onViolate={viewModel.onViolate}
         onEndTurn={viewModel.onEndTurn}
       />
     );
@@ -92,6 +96,7 @@ const GamePlay = () => {
     viewModel.playerSettings,
     viewModel.onChangePlayerPoint,
     viewModel.onEditPlayerName,
+    viewModel.onViolate,
     viewModel.onEndTurn,
   ]);
 
@@ -205,6 +210,7 @@ const GamePlay = () => {
           onSwitchTurn={viewModel.onSwitchTurn}
           onSwapPlayers={viewModel.onSwapPlayers}
           onToggleSound={viewModel.onToggleSound}
+          onPoolScore={viewModel.onPoolScore}
           renderLastPlayer={renderLastPlayer}
           onStart={viewModel.onStart}
           onPause={viewModel.onPause}

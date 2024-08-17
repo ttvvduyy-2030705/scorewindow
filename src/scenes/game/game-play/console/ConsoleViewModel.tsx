@@ -1,11 +1,14 @@
+import {BALLS_10, BALLS_15, BALLS_9} from 'constants/balls';
 import {gameActions} from 'data/redux/actions/game';
 import {RootState} from 'data/redux/reducers';
 import i18n from 'i18n';
 import {ReactNode, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
+import {PoolBallType} from 'types/ball';
 import {GameSettings, GameSettingsMode} from 'types/settings';
 import {formatTotalTime} from 'utils/date';
+import {isPool10Game, isPool15Game} from 'utils/game';
 
 export interface Props {
   gameSettings: GameSettings;
@@ -23,6 +26,7 @@ export interface Props {
   onSwitchTurn: () => void;
   onSwapPlayers: () => void;
   onToggleSound: () => void;
+  onPoolScore: (ball: PoolBallType) => void;
   renderLastPlayer: () => ReactNode;
   onStart: () => void;
   onPause: () => void;
@@ -34,6 +38,13 @@ const ConsoleViewModel = (props: Props) => {
   const {gameSettings} = useSelector((state: RootState) => state.game);
 
   const [remoteEnabled, setRemoteEnabled] = useState(false);
+  const [balls, setBalls] = useState(
+    isPool15Game(gameSettings?.category)
+      ? BALLS_15
+      : isPool10Game(gameSettings?.category)
+      ? BALLS_10
+      : BALLS_9,
+  );
   const [proModeEnabled, setProModeEnabled] = useState(
     props.currentMode.mode !== 'fast',
   );
@@ -97,6 +108,18 @@ const ConsoleViewModel = (props: Props) => {
     props.onSwapPlayers();
   }, [props]);
 
+  const onSelectBall = useCallback(
+    (selectedBall: PoolBallType) => {
+      const newBalls = balls.filter(
+        ball => ball.number !== selectedBall.number,
+      );
+
+      setBalls(newBalls);
+      props.onPoolScore(selectedBall);
+    },
+    [props, balls],
+  );
+
   const onWarmUp = useCallback(() => {
     props.onWarmUp();
   }, [props]);
@@ -115,6 +138,7 @@ const ConsoleViewModel = (props: Props) => {
 
   return useMemo(() => {
     return {
+      balls,
       remoteEnabled,
       proModeEnabled,
       gameSettings,
@@ -125,12 +149,14 @@ const ConsoleViewModel = (props: Props) => {
       onPressGiveMoreTime,
       onSwitchTurn,
       onSwapPlayers,
+      onSelectBall,
       onWarmUp,
       onStart,
       onPause,
       onStop,
     };
   }, [
+    balls,
     remoteEnabled,
     proModeEnabled,
     gameSettings,
@@ -141,6 +167,7 @@ const ConsoleViewModel = (props: Props) => {
     onPressGiveMoreTime,
     onSwitchTurn,
     onSwapPlayers,
+    onSelectBall,
     onWarmUp,
     onStart,
     onPause,

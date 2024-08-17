@@ -47,6 +47,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grayBlue,
     borderRadius: 20,
   },
+  ballsWrapper: {
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
+    backgroundColor: colors.lightGray2,
+  },
 });
 
 export default styles;

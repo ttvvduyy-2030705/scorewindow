@@ -51,6 +51,10 @@ export type Colors = {
 
   orange: string;
 
+  purple: string;
+
+  brown: string;
+
   red: string;
   lightRed: string;
   lightRed2: string;

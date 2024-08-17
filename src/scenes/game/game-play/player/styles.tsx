@@ -74,6 +74,18 @@ const styles = StyleSheet.create({
   buttonEndTurnEmpty: {
     paddingHorizontal: responsiveDimension(30),
   },
+  buttonViolate: {
+    width: 48,
+    height: 48,
+    borderRadius: 100,
+    backgroundColor: colors.red,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ballsWrapper: {
+    flexWrap: 'wrap',
+    maxWidth: '17%',
+  },
 });
 
 export default styles;

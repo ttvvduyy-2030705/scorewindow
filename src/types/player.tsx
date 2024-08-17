@@ -1,3 +1,4 @@
+import {PoolBallType} from './ball';
 import {GameExtraTimeTurns} from './settings';
 
 export type PlayerPointStep = -10 | -50 | -1 | -5 | 0 | 1 | 5 | 10 | 50;
@@ -21,6 +22,8 @@ export type Player = {
   color: string;
   totalPoint: number;
   proMode?: PlayerProMode;
+  violate?: number;
+  scoredBalls?: PoolBallType[];
 };
 
 export type PlayerSettings = {

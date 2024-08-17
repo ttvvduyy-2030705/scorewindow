@@ -16,6 +16,7 @@ export interface Props {
     index: number,
     stepIndex: number,
   ) => void;
+  onViolate: (playerIndex: number) => void;
   onEndTurn: () => void;
 }
 
@@ -77,12 +78,16 @@ const PlayerViewModel = (props: Props) => {
     [props],
   );
 
+  const onViolate = useCallback(() => {
+    props.onViolate(props.index);
+  }, [props]);
+
   const onEndTurn = useCallback(() => {
     if (totalPointInTurn > highestRate) {
       setHighestRate(totalPointInTurn);
     }
 
-    setAveragePoint(props.player.totalPoint / props.totalTurns);
+    setAveragePoint(Math.floor(props.player.totalPoint / props.totalTurns));
     setTotalPointInTurn(0);
 
     props.onEndTurn();
@@ -99,6 +104,7 @@ const PlayerViewModel = (props: Props) => {
       onIncreasePoint,
       onDecreasePoint,
       onPressPointStep,
+      onViolate,
       onEndTurn,
     };
   }, [
@@ -111,6 +117,7 @@ const PlayerViewModel = (props: Props) => {
     onIncreasePoint,
     onDecreasePoint,
     onPressPointStep,
+    onViolate,
     onEndTurn,
   ]);
 };

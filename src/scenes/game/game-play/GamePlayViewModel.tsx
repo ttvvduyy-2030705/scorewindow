@@ -7,6 +7,8 @@ import {goBack} from 'utils/navigation';
 import {gameActions} from 'data/redux/actions/game';
 import {COUNTDOWN_WIDTH} from './styles';
 import colors from 'configuration/colors';
+import {isPoolGame} from 'utils/game';
+import {PoolBallType} from 'types/ball';
 
 let countdownInterval: NodeJS.Timeout, warmUpCountdownInterval: NodeJS.Timeout;
 
@@ -215,6 +217,63 @@ const GamePlayViewModel = () => {
     setPlayerSettings({...playerSettings, playingPlayers: newPlayingPlayers});
   }, [isStarted, playerSettings, currentPlayerIndex, _resetCountdown]);
 
+  const onViolate = useCallback(
+    (playerIndex: number) => {
+      if (
+        !isStarted ||
+        !playerSettings ||
+        playerIndex !== currentPlayerIndex ||
+        !isPoolGame(gameSettings?.category)
+      ) {
+        return;
+      }
+
+      const newPlayingPlayers = playerSettings.playingPlayers.map(
+        (player, index) => {
+          if (playerIndex === index) {
+            return {
+              ...player,
+              violate: player.violate ? player.violate + 1 : 1,
+            } as Player;
+          }
+
+          return player;
+        },
+      );
+
+      setPlayerSettings({...playerSettings, playingPlayers: newPlayingPlayers});
+    },
+    [isStarted, currentPlayerIndex, gameSettings, playerSettings],
+  );
+
+  const onPoolScore = useCallback(
+    (ball: PoolBallType) => {
+      if (
+        !isStarted ||
+        !playerSettings ||
+        !isPoolGame(gameSettings?.category)
+      ) {
+        return;
+      }
+
+      const newPlayingPlayers = playerSettings.playingPlayers.map(
+        (player, index) => {
+          if (currentPlayerIndex === index) {
+            return {
+              ...player,
+              scoredBalls: [...(player.scoredBalls || []), ball],
+            } as Player;
+          }
+
+          return player;
+        },
+      );
+
+      setPlayerSettings({...playerSettings, playingPlayers: newPlayingPlayers});
+    },
+    [currentPlayerIndex, gameSettings?.category, isStarted, playerSettings],
+  );
+
   const onSwitchTurn = useCallback(() => {
     _resetCountdown();
 
@@ -338,12 +397,14 @@ const GamePlayViewModel = () => {
       onEditPlayerName,
       onChangePlayerPoint,
       onPressGiveMoreTime,
+      onViolate,
       getWarmUpTimeString,
       onWarmUp,
       onEndWarmUp,
       onSwitchTurn,
       onSwapPlayers,
       onToggleSound,
+      onPoolScore,
       onStart,
       onEndTurn,
       onPause,
@@ -367,12 +428,14 @@ const GamePlayViewModel = () => {
     onEditPlayerName,
     onChangePlayerPoint,
     onPressGiveMoreTime,
+    onViolate,
     getWarmUpTimeString,
     onWarmUp,
     onEndWarmUp,
     onSwitchTurn,
     onSwapPlayers,
     onToggleSound,
+    onPoolScore,
     onStart,
     onEndTurn,
     onPause,

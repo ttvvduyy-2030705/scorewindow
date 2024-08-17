@@ -14,6 +14,9 @@ import styles from './styles';
 import i18n from 'i18n';
 import {responsiveDimension} from 'utils/helper';
 import {dims} from 'configuration';
+import {isPoolGame} from 'utils/game';
+import colors from 'configuration/colors';
+import Ball from 'components/Ball';
 
 const GamePlayer = (props: Props) => {
   const viewModel = PlayerViewModel(props);
@@ -93,6 +96,118 @@ const GamePlayer = (props: Props) => {
     );
   }, [props]);
 
+  const PRO_MODE_VIEW = useMemo(() => {
+    return (
+      <View direction={'row'}>
+        <View
+          flex={'1'}
+          direction={'row'}
+          justify={'between'}
+          alignItems={'end'}>
+          {props.isOnTurn ? (
+            <Button style={styles.buttonEndTurn} onPress={viewModel.onEndTurn}>
+              <Text fontSize={dims.screenWidth * 0.02}>{i18n.t('turn')}</Text>
+            </Button>
+          ) : (
+            <View style={styles.buttonEndTurnEmpty} />
+          )}
+          <View style={styles.totalPointInTurn} paddingVertical={'10'}>
+            <Text fontSize={dims.screenWidth * 0.02} fontWeight={'bold'}>
+              {viewModel.totalPointInTurn}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }, [props.isOnTurn, viewModel.onEndTurn, viewModel.totalPointInTurn]);
+
+  const ADDITIONAL_POINTS = useMemo(() => {
+    return (
+      <View marginLeft={'15'} marginTop={'10'} justify={'center'}>
+        <View flex={'1'} justify={'end'}>
+          <Text fontWeight={'bold'} fontSize={dims.screenWidth * 0.01}>
+            {'HR'}
+          </Text>
+          <View flex={'1'}>
+            <Text
+              fontSize={dims.screenWidth * 0.03}
+              lineHeight={dims.screenWidth * 0.0325}
+              fontWeight={'bold'}>
+              {viewModel.highestRate}
+            </Text>
+          </View>
+        </View>
+        <View flex={'1'}>
+          <Text fontWeight={'bold'} fontSize={dims.screenWidth * 0.01}>
+            {'AVG'}
+          </Text>
+          <Text
+            fontSize={dims.screenWidth * 0.03}
+            lineHeight={dims.screenWidth * 0.0325}
+            fontWeight={'bold'}>
+            {viewModel.averagePoint}
+          </Text>
+        </View>
+      </View>
+    );
+  }, [viewModel.averagePoint, viewModel.highestRate]);
+
+  const BALLS_VIEW = useMemo(() => {
+    return (
+      <View
+        style={styles.ballsWrapper}
+        direction={'row'}
+        marginLeft={'15'}
+        marginTop={'10'}
+        justify={'around'}>
+        {props.player.scoredBalls?.map((ball, index) => {
+          return (
+            <Ball key={`selected-ball-${index}`} data={ball} size={'small'} />
+          );
+        })}
+      </View>
+    );
+  }, [props]);
+
+  const POOL_MODE_VIEW = useMemo(() => {
+    return (
+      <View direction={'row'}>
+        <View
+          flex={'1'}
+          direction={'row'}
+          justify={'between'}
+          alignItems={'end'}>
+          {props.isOnTurn ? (
+            <Button style={styles.buttonEndTurn} onPress={viewModel.onEndTurn}>
+              <Text fontSize={dims.screenWidth * 0.02}>{i18n.t('turn')}</Text>
+            </Button>
+          ) : (
+            <View style={styles.buttonEndTurnEmpty} />
+          )}
+          <View
+            direction={'row'}
+            alignItems={'center'}
+            marginRight={'15'}
+            marginBottom={'10'}>
+            <Button style={styles.buttonViolate} onPress={viewModel.onViolate}>
+              <Text color={colors.white} fontWeight={'bold'}>
+                {'X'}
+              </Text>
+            </Button>
+            <View marginLeft={'10'}>
+              <Text fontSize={32}>{props.player.violate || 0}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }, [
+    props.isOnTurn,
+    props.player.violate,
+    viewModel.onEndTurn,
+    viewModel.onViolate,
+  ]);
+
   return (
     <View
       flex={'1'}
@@ -139,33 +254,11 @@ const GamePlayer = (props: Props) => {
         direction={'row'}
         alignItems={'center'}
         justify={'center'}>
-        {props.gameSettings.mode.mode !== 'fast' ? (
-          <View marginLeft={'15'} marginTop={'10'} justify={'center'}>
-            <View flex={'1'} justify={'end'}>
-              <Text fontWeight={'bold'} fontSize={dims.screenWidth * 0.01}>
-                {'HR'}
-              </Text>
-              <View flex={'1'}>
-                <Text
-                  fontSize={dims.screenWidth * 0.03}
-                  lineHeight={dims.screenWidth * 0.0325}
-                  fontWeight={'bold'}>
-                  {viewModel.highestRate}
-                </Text>
-              </View>
-            </View>
-            <View flex={'1'}>
-              <Text fontWeight={'bold'} fontSize={dims.screenWidth * 0.01}>
-                {'AVG'}
-              </Text>
-              <Text
-                fontSize={dims.screenWidth * 0.03}
-                lineHeight={dims.screenWidth * 0.0325}
-                fontWeight={'bold'}>
-                {viewModel.averagePoint}
-              </Text>
-            </View>
-          </View>
+        {props.gameSettings.mode.mode !== 'fast' &&
+        !isPoolGame(props.gameSettings.category) ? (
+          ADDITIONAL_POINTS
+        ) : isPoolGame(props.gameSettings.category) ? (
+          BALLS_VIEW
         ) : (
           <View />
         )}
@@ -181,32 +274,12 @@ const GamePlayer = (props: Props) => {
         )}
       </View>
 
-      {props.gameSettings.mode.mode === 'fast' ? (
-        POINT_STEPS
-      ) : (
-        <View direction={'row'}>
-          <View
-            flex={'1'}
-            direction={'row'}
-            justify={'between'}
-            alignItems={'end'}>
-            {props.isOnTurn ? (
-              <Button
-                style={styles.buttonEndTurn}
-                onPress={viewModel.onEndTurn}>
-                <Text fontSize={dims.screenWidth * 0.02}>{i18n.t('turn')}</Text>
-              </Button>
-            ) : (
-              <View style={styles.buttonEndTurnEmpty} />
-            )}
-            <View style={styles.totalPointInTurn} paddingVertical={'10'}>
-              <Text fontSize={dims.screenWidth * 0.02} fontWeight={'bold'}>
-                {viewModel.totalPointInTurn}
-              </Text>
-            </View>
-          </View>
-        </View>
-      )}
+      {props.gameSettings.mode.mode === 'fast' &&
+      !isPoolGame(props.gameSettings.category)
+        ? POINT_STEPS
+        : isPoolGame(props.gameSettings.category)
+        ? POOL_MODE_VIEW
+        : PRO_MODE_VIEW}
     </View>
   );
 };

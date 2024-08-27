@@ -12,7 +12,7 @@ import colors from 'configuration/colors';
 import Webcam from './webcam';
 import {dims} from 'configuration';
 import Ball from 'components/Ball';
-import {isPool15OnlyGame, isPoolGame} from 'utils/game';
+import {isPool15Game, isPool15OnlyGame, isPoolGame} from 'utils/game';
 import {ScrollView} from 'react-native';
 import {BALLS_15} from 'constants/balls';
 
@@ -185,25 +185,47 @@ const GameConsole = (props: Props) => {
       );
     }
 
-    // return (
-    //   <ScrollView
-    //     showsHorizontalScrollIndicator={false}
-    //     showsVerticalScrollIndicator={false}>
-    //     <View
-    //       style={styles.ballsWrapper}
-    //       direction={'row'}
-    //       alignItems={'center'}
-    //       marginRight={'15'}>
-    //       {viewModel.balls.map((ball, index) => {
-    //         return (
-    //           <View key={`ball-${index}`} marginTop={'15'}>
-    //             <Ball data={ball} onPress={viewModel.onSelectBall} />
-    //           </View>
-    //         );
-    //       })}
-    //     </View>
-    //   </ScrollView>
-    // );
+    if (isPool15Game(props.gameSettings.category)) {
+      if (viewModel.balls.length === 0) {
+        return (
+          <View
+            flex={'1'}
+            direction={'row'}
+            justify={'center'}
+            alignItems={'end'}
+            marginBottom={'15'}>
+            <View flex={'1'} alignItems={'center'}>
+              <Button
+                style={styles.buttonRestart}
+                onPress={viewModel.onRestart}>
+                <Text>{i18n.t('restart')}</Text>
+              </Button>
+            </View>
+          </View>
+        );
+      }
+
+      return (
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}>
+          <View
+            style={styles.ballsWrapper}
+            direction={'row'}
+            alignItems={'center'}
+            marginRight={'15'}>
+            {viewModel.balls.map((ball, index) => {
+              return (
+                <View key={`ball-${index}`} marginTop={'15'}>
+                  <Ball data={ball} onPress={viewModel.onSelectBall} />
+                </View>
+              );
+            })}
+          </View>
+        </ScrollView>
+      );
+    }
+
     return (
       <View flex={'1'} justify={'center'}>
         <View
@@ -224,7 +246,7 @@ const GameConsole = (props: Props) => {
   }, [
     props.winner,
     props.gameSettings.category,
-    // viewModel.balls,
+    viewModel.balls,
     viewModel.pool15OnlyPointLeft,
     viewModel.ballLeft,
     viewModel.onSelectBall,

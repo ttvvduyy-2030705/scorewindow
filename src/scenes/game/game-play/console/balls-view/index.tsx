@@ -1,0 +1,201 @@
+import Button from 'components/Button';
+import Text from 'components/Text';
+import View from 'components/View';
+import colors from 'configuration/colors';
+import i18n from 'i18n';
+import React, {memo} from 'react';
+import {PoolBallType} from 'types/ball';
+import {Player} from 'types/player';
+import {GameSettings} from 'types/settings';
+import {isPool15Game, isPool15OnlyGame} from 'utils/game';
+import styles from './styles';
+import {BALLS_15} from 'constants/balls';
+import images from 'assets';
+import Ball from 'components/Ball';
+import {ScrollView} from 'react-native';
+import Image from 'components/Image';
+
+interface Props {
+  winner?: Player;
+  gameSettings: GameSettings;
+  balls: PoolBallType[];
+  ballLeft: PoolBallType;
+  ballRight: PoolBallType;
+  colorLeft: string;
+  colorRight: string;
+  arrowColorLeft: string;
+  arrowColorRight: string;
+  pool15OnlyPointLeft: number;
+  pool15OnlyPointRight: number;
+  onSelectBall: (selectedBall: PoolBallType) => void;
+  onPressGiveMoreTime: () => void;
+  onRestart: () => void;
+}
+
+const BallsView = (props: Props) => {
+  if (props.winner) {
+    return (
+      <View flex={'1'} marginBottom={'15'} style={styles.ballPool15OnlyWrapper}>
+        <View flex={'1'} />
+        <View direction={'row'}>
+          <View flex={'1'} alignItems={'center'} justify={'center'}>
+            <Text fontSize={24}>
+              {i18n.t('msgPool15OnlyWinner', {
+                name: props.winner.name,
+              })}
+            </Text>
+          </View>
+        </View>
+        <View
+          flex={'1'}
+          direction={'row'}
+          justify={'center'}
+          alignItems={'end'}
+          marginBottom={'15'}>
+          <View flex={'1'} alignItems={'center'}>
+            <Button style={styles.buttonRestart} onPress={props.onRestart}>
+              <Text>{i18n.t('restart')}</Text>
+            </Button>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  if (isPool15OnlyGame(props.gameSettings.category)) {
+    return (
+      <View flex={'1'} marginBottom={'15'} style={styles.ballPool15OnlyWrapper}>
+        <View flex={'1'} />
+
+        <View flex={'1'} direction={'row'} alignItems={'center'}>
+          <View flex={'1'}>
+            <View
+              paddingRight={'10'}
+              paddingVertical={'10'}
+              style={[
+                styles.ballsLeft,
+                {
+                  backgroundColor: props.colorLeft,
+                  paddingLeft: `${props.pool15OnlyPointLeft * 2.8}%`,
+                },
+              ]}>
+              <View direction={'row'} alignItems={'center'}>
+                <View marginRight={'10'}>
+                  <Text fontSize={56}>{props.pool15OnlyPointLeft}</Text>
+                </View>
+                <Ball data={props.ballLeft} onPress={props.onSelectBall} />
+                <View direction={'row'} alignItems={'center'}>
+                  <Image
+                    source={images.doubleArrow}
+                    style={[
+                      styles.doubleArrowLeft,
+                      {tintColor: props.arrowColorLeft},
+                    ]}
+                    resizeMode={'contain'}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+          <View>
+            <Ball data={BALLS_15[7]} onPress={props.onSelectBall} />
+          </View>
+          <View flex={'1'} alignItems={'end'}>
+            <View
+              paddingVertical={'10'}
+              paddingLeft={'10'}
+              style={[
+                styles.ballsRight,
+                {
+                  backgroundColor: props.colorRight,
+                  paddingRight: `${props.pool15OnlyPointRight * 2.8}%`,
+                },
+              ]}>
+              <View direction={'row'} alignItems={'center'}>
+                <View direction={'row'} alignItems={'center'}>
+                  <Image
+                    source={images.doubleArrow}
+                    style={[
+                      styles.doubleArrowRight,
+                      {tintColor: props.arrowColorRight},
+                    ]}
+                    resizeMode={'contain'}
+                  />
+                </View>
+                <Ball data={props.ballRight} onPress={props.onSelectBall} />
+                <View marginLeft={'10'}>
+                  <Text fontSize={56}>{props.pool15OnlyPointRight}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View flex={'1'} />
+      </View>
+    );
+  }
+
+  if (isPool15Game(props.gameSettings.category)) {
+    if (props.balls.length === 0) {
+      return (
+        <View
+          flex={'1'}
+          direction={'row'}
+          justify={'center'}
+          alignItems={'end'}
+          marginBottom={'15'}>
+          <View flex={'1'} alignItems={'center'}>
+            <Button style={styles.buttonRestart} onPress={props.onRestart}>
+              <Text>{i18n.t('restart')}</Text>
+            </Button>
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
+        <View
+          style={styles.ballsWrapper}
+          direction={'row'}
+          alignItems={'center'}
+          marginRight={'15'}>
+          {props.balls.map((ball, index) => {
+            return (
+              <View key={`ball-${index}`} marginTop={'15'}>
+                <Ball data={ball} onPress={props.onSelectBall} />
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+    );
+  }
+
+  if (props.gameSettings.mode.mode === 'pro') {
+    return (
+      <View flex={'1'} justify={'center'}>
+        <View
+          direction={'row'}
+          marginHorizontal={'20'}
+          marginTop={'20'}
+          marginBottom={'15'}>
+          <Button
+            onPress={props.onPressGiveMoreTime}
+            style={styles.buttonGiveMoreTime}>
+            <Text color={colors.white} fontSize={16}>
+              {i18n.t('giveMoreTime')}
+            </Text>
+          </Button>
+        </View>
+      </View>
+    );
+  }
+
+  return <View />;
+};
+
+export default memo(BallsView);

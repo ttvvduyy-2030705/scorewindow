@@ -211,6 +211,8 @@ const GamePlay = () => {
           isStarted={viewModel.isStarted}
           isPaused={viewModel.isPaused}
           soundEnabled={viewModel.soundEnabled}
+          poolBreakEnabled={viewModel.poolBreakEnabled}
+          onPoolBreak={viewModel.onPoolBreak}
           onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
           onWarmUp={viewModel.onWarmUp}
           onSwitchTurn={viewModel.onSwitchTurn}

@@ -24,6 +24,8 @@ export interface Props {
   isStarted: boolean;
   isPaused: boolean;
   soundEnabled: boolean;
+  poolBreakEnabled: boolean;
+  onPoolBreak: () => void;
   onPressGiveMoreTime: () => void;
   onWarmUp: () => void;
   onSwitchTurn: () => void;

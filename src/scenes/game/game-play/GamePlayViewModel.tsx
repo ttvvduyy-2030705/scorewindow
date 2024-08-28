@@ -22,6 +22,7 @@ const GamePlayViewModel = () => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [totalTurns, setTotalTurns] = useState(1);
   const [totalTime, setTotalTime] = useState(0);
+  const [poolBreakEnabled, setPoolBreakEnabled] = useState<boolean>(false);
   const [countdownTime, setCountdownTime] = useState<number>(0);
   const [warmUpCount, setWarmUpCount] = useState<number>();
   const [warmUpCountdownTime, setWarmUpCountdownTime] = useState<number>();
@@ -54,6 +55,13 @@ const GamePlayViewModel = () => {
     if (gameSettings?.mode.mode === 'fast') {
       setCountdownTime(gameSettings?.mode.countdownTime || 0);
       setIsPaused(false);
+    }
+
+    if (
+      isPoolGame(gameSettings?.category) &&
+      gameSettings?.mode.countdownTime
+    ) {
+      setPoolBreakEnabled(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameSettings]);
@@ -384,6 +392,16 @@ const GamePlayViewModel = () => {
     setSoundEnabled(prev => !prev);
   }, []);
 
+  const onPoolBreak = useCallback(() => {
+    if (!gameSettings || !gameSettings.mode.countdownTime) {
+      return;
+    }
+
+    setCountdownTime(gameSettings.mode.countdownTime! * 2);
+    setPoolBreakEnabled(false);
+    setIsStarted(true);
+  }, [gameSettings]);
+
   const getWarmUpTimeString = useCallback(() => {
     if (!warmUpCountdownTime) {
       return '';
@@ -492,6 +510,7 @@ const GamePlayViewModel = () => {
       isStarted,
       isPaused,
       soundEnabled,
+      poolBreakEnabled,
       getCountdownWidthItem,
       getCountdownColor,
       onEditPlayerName,
@@ -507,6 +526,7 @@ const GamePlayViewModel = () => {
       onPoolScore,
       onSelectWinner,
       onClearWinner,
+      onPoolBreak,
       onStart,
       onEndTurn,
       onPause,
@@ -526,6 +546,7 @@ const GamePlayViewModel = () => {
     isStarted,
     isPaused,
     soundEnabled,
+    poolBreakEnabled,
     getCountdownWidthItem,
     getCountdownColor,
     onEditPlayerName,
@@ -541,6 +562,7 @@ const GamePlayViewModel = () => {
     onPoolScore,
     onSelectWinner,
     onClearWinner,
+    onPoolBreak,
     onStart,
     onEndTurn,
     onPause,

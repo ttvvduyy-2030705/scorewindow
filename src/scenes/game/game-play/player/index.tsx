@@ -37,8 +37,7 @@ const GamePlayer = (props: Props) => {
           direction={'row'}
           alignItems={'center'}
           justify={'center'}
-          marginLeft={'15'}
-          marginBottom={'15'}>
+          marginLeft={'15'}>
           {Object.keys(STEPS).map((key, index) => {
             return (
               <Button

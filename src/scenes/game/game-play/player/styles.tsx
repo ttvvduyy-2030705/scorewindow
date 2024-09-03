@@ -34,9 +34,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: colors.deepGray,
     borderRadius: 20,
-    paddingHorizontal: responsiveDimension(40),
+    paddingHorizontal: responsiveDimension(35),
     paddingVertical: responsiveDimension(15),
     marginRight: responsiveDimension(15),
+    marginBottom: responsiveDimension(15),
   },
   input: {
     fontSize: responsiveFontSize(24),

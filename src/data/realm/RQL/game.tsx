@@ -1,0 +1,59 @@
+import Realm, {BSON} from 'realm';
+import {GameSchema} from '../models/game';
+import {GameSettings} from 'types/settings';
+import {useQuery} from '@realm/react';
+
+const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
+  const now = new Date();
+  // const id = new BSON.ObjectId();
+
+  realm.write(() => {
+    realm.create(GameSchema, {
+      // id,
+      createdAt: now,
+      updatedAt: now,
+      category: gameSettings.category,
+      mode: gameSettings.mode,
+      players: gameSettings.players,
+    });
+  });
+};
+
+const ReadGames = (params?: {length?: number}): GameSettings[] => {
+  const games = useQuery(GameSchema);
+
+  return games.slice(0, params?.length || 20).map(
+    game =>
+      ({
+        category: game.category,
+        mode: game.mode,
+        players: game.players,
+      } as GameSettings),
+  );
+};
+
+const UpdateGame = (
+  realm: Realm,
+  id: BSON.ObjectId,
+  gameSettings: GameSettings,
+) => {
+  const toUpdate = realm.objects(GameSchema).filtered('_id == $0', id);
+
+  const now = new Date();
+  realm.write(() => {
+    toUpdate[0].updatedAt = now;
+    toUpdate[0].category = gameSettings.category;
+    toUpdate[0].mode = gameSettings.mode;
+    toUpdate[0].players = gameSettings.players;
+  });
+};
+
+const DeleteGame = (realm: Realm, id: BSON.ObjectId) => {
+  const toDelete = realm.objects(GameSchema).filtered('_id == $0', id);
+
+  realm.write(() => {
+    realm.delete(toDelete);
+  });
+};
+
+export {CreateGame, ReadGames, UpdateGame, DeleteGame};

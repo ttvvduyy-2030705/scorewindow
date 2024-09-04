@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import {useRealm} from '@realm/react';
 import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
 import colors from 'configuration/colors';
@@ -15,10 +16,12 @@ import {RemoteControlKeys} from 'types/bluetooth';
 import {BallType, PoolBallType} from 'types/ball';
 import i18n from 'i18n';
 import {COUNTDOWN_WIDTH} from './styles';
+import {CreateGame} from 'data/realm/RQL/game';
 
 let countdownInterval: NodeJS.Timeout, warmUpCountdownInterval: NodeJS.Timeout;
 
 const GamePlayViewModel = () => {
+  const realm = useRealm();
   const dispatch = useDispatch();
   const {updateGameSettings} = useSelector((state: RootState) => state.UI.game);
   const {gameSettings} = useSelector((state: RootState) => state.game);
@@ -591,12 +594,12 @@ const GamePlayViewModel = () => {
       {
         text: i18n.t('stop'),
         onPress: () => {
+          dispatch(gameActions.endGame({realm, gameSettings}));
           goBack();
-          dispatch(gameActions.updateGameSettings(undefined));
         },
       },
     ]);
-  }, [dispatch]);
+  }, [dispatch, realm, gameSettings]);
 
   const onReset = useCallback(() => {
     const newPlayerSettings = {

@@ -5,6 +5,7 @@
  * @format
  */
 
+import 'react-native-get-random-values';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -14,6 +15,15 @@ import {StackScreens} from 'scenes';
 import {navigationRef} from 'utils/navigation';
 import storage, {persistor} from 'data/redux';
 import {loadLanguage} from 'i18n';
+import {RealmProvider} from '@realm/react';
+import {GameSchema, GameSettingsModeSchema} from 'data/realm/models/game';
+import {PoolBallSchema} from 'data/realm/models/ball';
+import {
+  PlayerSchema,
+  PlayerProModeSchema,
+  PlayerSettingsSchema,
+  PlayerGoalSchema,
+} from 'data/realm/models/player';
 // import {BLEService} from 'utils/bluetooth';
 
 const App = (): React.JSX.Element => {
@@ -52,16 +62,27 @@ const App = (): React.JSX.Element => {
   }, []);
 
   return (
-    <Provider store={storage}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer ref={navigationRef}>
-          <LanguageContext.Provider
-            value={{language: currentLanguage, onChangeCurrentLanguage}}>
-            <StackScreens />
-          </LanguageContext.Provider>
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <RealmProvider
+      schema={[
+        GameSchema,
+        GameSettingsModeSchema,
+        PlayerSettingsSchema,
+        PlayerSchema,
+        PlayerProModeSchema,
+        PlayerGoalSchema,
+        PoolBallSchema,
+      ]}>
+      <Provider store={storage}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer ref={navigationRef}>
+            <LanguageContext.Provider
+              value={{language: currentLanguage, onChangeCurrentLanguage}}>
+              <StackScreens />
+            </LanguageContext.Provider>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </RealmProvider>
   );
 };
 

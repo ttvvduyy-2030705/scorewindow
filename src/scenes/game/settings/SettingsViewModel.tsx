@@ -107,7 +107,7 @@ const GameSettingsViewModel = (props: Props) => {
           mode: selectedGameMode,
           extraTimeTurns: 2,
           countdownTime: 40,
-          warmUpTime: 120,
+          warmUpTime: 300,
         });
         break;
       default:

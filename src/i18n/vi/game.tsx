@@ -3,7 +3,7 @@ const game = {
   carom: 'Carom',
   pool: 'Bi',
   mode: 'Chế độ',
-  extraTimeTurns: 'Time out',
+  extraTimeTurns: 'Lượt thêm giờ',
   countdown: 'Đếm ngược',
   warmUp: 'Khởi động',
   player: 'Người chơi',

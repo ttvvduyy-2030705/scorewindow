@@ -13,6 +13,7 @@ import {
   GameWarmUpTime,
 } from 'types/settings';
 import {CUSHION, LIBRE, POOL} from 'constants/category';
+import colors from 'configuration/colors';
 import {
   GAME_COUNT_DOWN_TIME,
   GAME_EXTRA_TIME_TURN,
@@ -64,9 +65,9 @@ const CategorySettings = (props: Props) => {
           direction={'row'}
           alignItems={'center'}
           marginTop={'20'}
-          paddingTop={'20'}>
+          marginBottom={'10'}>
           <View flex={'1'}>
-            <Text fontSize={20} letterSpacing={1.2}>
+            <Text fontSize={18} letterSpacing={1.2} color={colors.deepGray}>
               {title}
             </Text>
           </View>

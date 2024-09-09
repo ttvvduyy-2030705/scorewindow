@@ -27,7 +27,15 @@ const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
 const ReadGames = (params?: {
   length?: number;
 }): (GameSettings & {createdAt: Date; updatedAt: Date})[] => {
-  const games = useQuery(GameSchema);
+  // const games = useQuery(GameSchema);
+
+  const games = useQuery(
+    GameSchema,
+    gamesQuery => {
+      return gamesQuery.sorted('updatedAt', true);
+    },
+    [],
+  );
 
   return games.slice(0, params?.length || 20).map(
     game =>

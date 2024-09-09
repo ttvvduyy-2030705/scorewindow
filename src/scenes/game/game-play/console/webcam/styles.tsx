@@ -5,7 +5,9 @@ import {responsiveDimension} from 'utils/helper';
 
 const styles = StyleSheet.create({
   container: {
-    height: dims.screenHeight * 0.29,
+    height: dims.screenHeight * 0.3,
+    aspectRatio: 1.77777,
+    alignSelf: 'center',
   },
   video: {
     // height: dims.screenHeight * 0.3,

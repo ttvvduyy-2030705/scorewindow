@@ -20,7 +20,11 @@ const GameConsole = (props: Props) => {
 
   return (
     <View flex={'1'} style={styles.marginTop}>
-      <View style={styles.container} flex={'1'} direction={'row'}>
+      <View
+        style={styles.container}
+        flex={'1'}
+        direction={'row'}
+        alignItems={'end'}>
         <View flex={'1'}>
           <View
             direction={'row'}
@@ -44,7 +48,7 @@ const GameConsole = (props: Props) => {
                 )}
               </Button>
             </View>
-            <View flex={'1'} alignItems={'center'} justify={'center'}>
+            <View flex={'2'} alignItems={'center'} justify={'center'}>
               <Text fontSize={16}>{viewModel.buildGameModeTitle()}</Text>
               <View marginTop={'10'}>
                 <Text fontSize={32} fontWeight={'bold'} color={colors.primary}>

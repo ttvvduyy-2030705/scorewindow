@@ -19,6 +19,5 @@ export type Images = {
     refresh: number;
     delay: number;
     watch: number;
-    IP: number;
   };
 };

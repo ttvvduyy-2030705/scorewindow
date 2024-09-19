@@ -21,7 +21,6 @@ const images: Images = {
     refresh: require('./images/webcam/refresh.png'),
     delay: require('./images/webcam/delay.png'),
     watch: require('./images/webcam/watch.png'),
-    IP: require('./images/webcam/ip-location.png'),
   },
 };
 

@@ -30,7 +30,6 @@ const WebCamViewModel = (props: Props) => {
   const [webcamIP, setWebcamIP] = useState<string>('');
   const [autoConnect, setAutoConnect] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [webcamEnabled, setWebcamEnabled] = useState<boolean>(false);
   const [url, setUrl] = useState<string | undefined>();
 
   useEffect(() => {
@@ -39,7 +38,6 @@ const WebCamViewModel = (props: Props) => {
         if (!error && result) {
           setWebcamIP(result);
           setAutoConnect(false);
-          setWebcamEnabled(true);
         }
       });
     };
@@ -48,7 +46,7 @@ const WebCamViewModel = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!webcamEnabled) {
+    if (!autoConnect) {
       return;
     }
 
@@ -64,7 +62,7 @@ const WebCamViewModel = (props: Props) => {
       props.updateWebcamFolderName(now);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webcamIP, webcamEnabled]);
+  }, [webcamIP, autoConnect]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -81,16 +79,8 @@ const WebCamViewModel = (props: Props) => {
     navigate(screens.playback, {webcamFolderName: props.webcamFolderName});
   }, [props]);
 
-  const onToggleWebcamEnabled = useCallback(() => {
-    setWebcamEnabled(prev => !prev);
-  }, []);
-
   const onReconnectWebcam = useCallback(() => {
     setAutoConnect(true);
-  }, []);
-
-  const onChangeWebcamIP = useCallback((value: string) => {
-    setWebcamIP(value);
   }, []);
 
   const onFullscreenPlayerDidPresent = useCallback(() => {}, []);
@@ -113,7 +103,6 @@ const WebCamViewModel = (props: Props) => {
 
   const onWebcamError = useCallback((e: OnVideoErrorData) => {
     console.log('On webcam error', e);
-    setWebcamEnabled(false);
     setWebcamIP('');
   }, []);
 
@@ -122,11 +111,8 @@ const WebCamViewModel = (props: Props) => {
       videoRef,
       refreshing,
       autoConnect,
-      webcamEnabled,
       webcamIP,
       source: {uri: url, type: 'rtsp'},
-      onChangeWebcamIP,
-      onToggleWebcamEnabled,
       onReconnectWebcam,
       onRefresh,
       onDelay,
@@ -143,11 +129,8 @@ const WebCamViewModel = (props: Props) => {
     videoRef,
     refreshing,
     autoConnect,
-    webcamEnabled,
     webcamIP,
     url,
-    onChangeWebcamIP,
-    onToggleWebcamEnabled,
     onReconnectWebcam,
     onRefresh,
     onDelay,

@@ -6,7 +6,6 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import Image from 'components/Image';
 import Divider from 'components/Divider';
-import TextInput from 'components/TextInput';
 import Loading from 'components/Loading';
 
 import images from 'assets';
@@ -35,34 +34,6 @@ const WebCam = (props: Props) => {
     );
   }, []);
 
-  const WEBCAM_INPUT = useMemo(() => {
-    return (
-      <View
-        flex={'1'}
-        direction={'row'}
-        alignItems={'center'}
-        justify={'center'}>
-        <TextInput
-          containerStyle={styles.textInputContainer}
-          inputStyle={styles.textInput}
-          value={viewModel.webcamIP}
-          placeholder={i18n.t('txtEnterWebcamIPAddress')}
-          onChange={viewModel.onChangeWebcamIP}
-        />
-        <Button
-          style={styles.buttonIP}
-          onPress={viewModel.onToggleWebcamEnabled}>
-          <Text>{i18n.t('txtFind')}</Text>
-          <Image style={styles.iconIP} source={images.webcam.IP} />
-        </Button>
-      </View>
-    );
-  }, [
-    viewModel.webcamIP,
-    viewModel.onChangeWebcamIP,
-    viewModel.onToggleWebcamEnabled,
-  ]);
-
   const CONNECT_WEBCAM = useMemo(() => {
     return (
       <View
@@ -73,7 +44,6 @@ const WebCam = (props: Props) => {
         justify={'center'}>
         <Button style={styles.buttonIP} onPress={viewModel.onReconnectWebcam}>
           <Text>{i18n.t('txtReconnect')}</Text>
-          <Image style={styles.iconIP} source={images.webcam.IP} />
         </Button>
       </View>
     );
@@ -89,8 +59,6 @@ const WebCam = (props: Props) => {
         <View flex={'1'}>
           {viewModel.refreshing ? (
             WEBCAM_LOADER
-          ) : !viewModel.webcamEnabled ? (
-            WEBCAM_INPUT
           ) : !viewModel.autoConnect ? (
             CONNECT_WEBCAM
           ) : (

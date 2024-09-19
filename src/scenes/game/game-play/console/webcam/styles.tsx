@@ -20,26 +20,14 @@ const styles = StyleSheet.create({
     width: responsiveDimension(24),
     height: responsiveDimension(24),
   },
+  fullWidth: {
+    width: '100%',
+  },
   buttonIP: {
     flexDirection: 'row',
     padding: responsiveDimension(10),
     backgroundColor: colors.whiteDarkerOverlay,
     borderRadius: 20,
-  },
-  iconIP: {
-    width: responsiveDimension(32),
-    height: responsiveDimension(32),
-    marginLeft: responsiveDimension(5),
-  },
-  textInput: {
-    borderRadius: 20,
-    backgroundColor: colors.whiteDarkerOverlay,
-  },
-  textInputContainer: {
-    width: '70%',
-  },
-  fullWidth: {
-    width: '100%',
   },
 });
 

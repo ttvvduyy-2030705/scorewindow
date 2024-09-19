@@ -67,6 +67,7 @@ const App = (): React.JSX.Element => {
 
   return (
     <RealmProvider
+      deleteRealmIfMigrationNeeded
       schema={[
         GameSchema,
         GameSettingsModeSchema,

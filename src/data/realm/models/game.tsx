@@ -30,7 +30,7 @@ export class GameSchema extends Realm.Object<GameSettings> {
   category!: string;
   mode!: GameSettingsMode;
   players!: PlayerSettings;
-  webcamFileName?: string;
+  webcamFolderName?: string;
 
   static schema: ObjectSchema = {
     name: 'Game',
@@ -42,7 +42,7 @@ export class GameSchema extends Realm.Object<GameSettings> {
       category: {type: 'string'},
       mode: {type: 'object', objectType: 'GameSettingsMode'},
       players: {type: 'object', objectType: 'PlayerSettings'},
-      webcamFileName: 'string?',
+      webcamFolderName: 'string?',
     },
     // primaryKey: 'id',
   };

@@ -1,5 +1,4 @@
 import React, {memo, useMemo} from 'react';
-import {ActivityIndicator} from 'react-native';
 import Video from 'react-native-video';
 
 import View from 'components/View';
@@ -8,10 +7,15 @@ import Text from 'components/Text';
 import Image from 'components/Image';
 import Divider from 'components/Divider';
 import TextInput from 'components/TextInput';
+import Loading from 'components/Loading';
 
-import colors from 'configuration/colors';
 import images from 'assets';
 import i18n from 'i18n';
+
+import {
+  WEBCAM_BUFFER_CONFIG,
+  WEBCAM_SELECTED_VIDEO_TRACK,
+} from 'constants/webcam';
 
 import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
@@ -26,7 +30,7 @@ const WebCam = (props: Props) => {
         style={styles.fullWidth}
         alignItems={'center'}
         justify={'center'}>
-        <ActivityIndicator size={'large'} color={colors.white} />
+        <Loading isLoading size={'large'} showPlainLoading />
       </View>
     );
   }, []);
@@ -95,8 +99,8 @@ const WebCam = (props: Props) => {
               ref={viewModel.videoRef}
               style={styles.webcam}
               source={viewModel.source}
-              selectedVideoTrack={viewModel.selectedVideoTrack}
-              bufferConfig={viewModel.bufferConfig}
+              selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
+              bufferConfig={WEBCAM_BUFFER_CONFIG}
               onFullscreenPlayerDidPresent={
                 viewModel.onFullscreenPlayerDidPresent
               }

@@ -1,16 +1,17 @@
 import React, {memo, useCallback} from 'react';
+import {FlatList} from 'react-native';
 import Container from 'components/Container';
 import View from 'components/View';
-import HistoryViewModel from './HistoryViewModel';
-import {FlatList} from 'react-native';
-import {GameSettings} from 'types/settings';
+import Button from 'components/Button';
 import Text from 'components/Text';
 import i18n from 'i18n';
+import {GameSettings} from 'types/settings';
 import {Player} from 'types/player';
-import styles from './styles';
 import colors from 'configuration/colors';
 import dayjs from 'dayjs';
 import {DAY_FORMAT, TIME_FORMAT} from 'utils/date';
+import HistoryViewModel from './HistoryViewModel';
+import styles from './styles';
 
 const History = () => {
   const viewModel = HistoryViewModel();
@@ -78,7 +79,14 @@ const History = () => {
             {item.players.playingPlayers.map(renderPlayer)}
           </View>
           <View flex={'1'} alignItems={'center'}>
-            <Text>{i18n.t('reWatch')}</Text>
+            <Button
+              style={styles.buttonRewWatch}
+              onPress={viewModel.onReWatchGame.bind(
+                History,
+                item.webcamFolderName,
+              )}>
+              <Text>{i18n.t('reWatch')}</Text>
+            </Button>
           </View>
         </View>
       );
@@ -88,7 +96,7 @@ const History = () => {
   );
 
   const keyExtractor = useCallback(
-    (item: GameSettings, index: number) => `history-${index}`,
+    (_item: GameSettings, index: number) => `history-${index}`,
     [],
   );
 

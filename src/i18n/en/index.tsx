@@ -73,6 +73,7 @@ const en = {
   msgIntroDescription: 'Billiards - Devices - Evolutions',
   txtEnterWebcamIPAddress: 'Enter webcam IP address',
   txtReconnect: 'Reconnect',
+  txtMinuteOrder: 'Minute {{minute}}',
 
   month: 'month',
   year: 'year',

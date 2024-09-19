@@ -36,7 +36,7 @@ const GamePlayViewModel = () => {
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [winner, setWinner] = useState<Player>();
-  const [webcamFileName, setWebcamFileName] = useState<string>();
+  const [webcamFolderName, setWebcamFolderName] = useState<string>();
 
   const [isStarted, setIsStarted] = useState(
     gameSettings?.mode?.mode === 'fast' ? true : false,
@@ -197,8 +197,8 @@ const GamePlayViewModel = () => {
     return COUNTDOWN_WIDTH / gameSettings!.mode?.countdownTime! - 10;
   }, [gameSettings]);
 
-  const updateWebcamFileName = useCallback((name: string) => {
-    setWebcamFileName(name);
+  const updateWebcamFolderName = useCallback((name: string) => {
+    setWebcamFolderName(name);
   }, []);
 
   const getCountdownColor = useCallback(
@@ -612,7 +612,7 @@ const GamePlayViewModel = () => {
                 ...gameSettings,
                 players: playerSettings,
                 totalTime,
-                webcamFileName,
+                webcamFolderName,
               },
             }),
           );
@@ -626,7 +626,7 @@ const GamePlayViewModel = () => {
     totalTime,
     gameSettings,
     playerSettings,
-    webcamFileName,
+    webcamFolderName,
   ]);
 
   const onReset = useCallback(() => {
@@ -671,6 +671,7 @@ const GamePlayViewModel = () => {
       isPaused,
       soundEnabled,
       poolBreakEnabled,
+      webcamFolderName,
       getCountdownWidthItem,
       getCountdownColor,
       onEditPlayerName,
@@ -683,7 +684,7 @@ const GamePlayViewModel = () => {
       onSwitchTurn,
       onSwapPlayers,
       onToggleSound,
-      updateWebcamFileName,
+      updateWebcamFolderName,
       onPoolScore,
       onSelectWinner,
       onClearWinner,
@@ -710,6 +711,7 @@ const GamePlayViewModel = () => {
     isPaused,
     soundEnabled,
     poolBreakEnabled,
+    webcamFolderName,
     getCountdownWidthItem,
     getCountdownColor,
     onEditPlayerName,
@@ -722,7 +724,7 @@ const GamePlayViewModel = () => {
     onSwitchTurn,
     onSwapPlayers,
     onToggleSound,
-    updateWebcamFileName,
+    updateWebcamFolderName,
     onPoolScore,
     onSelectWinner,
     onClearWinner,

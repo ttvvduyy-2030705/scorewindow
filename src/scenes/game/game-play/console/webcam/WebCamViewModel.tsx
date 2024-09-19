@@ -1,3 +1,4 @@
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {keys} from 'configuration/keys';
 import {
@@ -6,22 +7,22 @@ import {
   WEBCAM_PATH,
   WEBCAM_PORT,
 } from 'constants/webcam';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
-  BufferConfig,
   OnBufferData,
   OnLoadData,
   OnSeekData,
   OnVideoErrorData,
   OnVideoTracksData,
-  SelectedVideoTrackType,
   VideoRef,
 } from 'react-native-video';
 import {streamWebcamToFile} from 'services/ffmpeg/webcam';
 import {requestReadWriteStorage} from 'utils/permission';
+import {navigate} from 'utils/navigation';
+import {screens} from 'scenes/screens';
 
 export interface Props {
-  updateWebcamFileName: (name: string) => void;
+  webcamFolderName?: string;
+  updateWebcamFolderName: (name: string) => void;
 }
 
 const WebCamViewModel = (props: Props) => {
@@ -60,7 +61,7 @@ const WebCamViewModel = (props: Props) => {
       const _url = `${WEBCAM_HOST}${WEBCAM_LOGIN_PROFILE}@${webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
       streamWebcamToFile(_url, now);
       setUrl(_url);
-      props.updateWebcamFileName(now);
+      props.updateWebcamFolderName(now);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webcamIP, webcamEnabled]);
@@ -76,7 +77,9 @@ const WebCamViewModel = (props: Props) => {
 
   const onDelay = useCallback(() => {}, []);
 
-  const onReWatch = useCallback(async () => {}, []);
+  const onReWatch = useCallback(async () => {
+    navigate(screens.playback, {webcamFolderName: props.webcamFolderName});
+  }, [props]);
 
   const onToggleWebcamEnabled = useCallback(() => {
     setWebcamEnabled(prev => !prev);
@@ -119,18 +122,6 @@ const WebCamViewModel = (props: Props) => {
       webcamEnabled,
       webcamIP,
       source: {uri: url, type: 'rtsp'},
-      selectedVideoTrack: {type: SelectedVideoTrackType.INDEX, value: 0},
-      bufferConfig: {
-        minBufferMs: 15000,
-        maxBufferMs: 50000,
-        bufferForPlaybackMs: 2500,
-        bufferForPlaybackAfterRebufferMs: 5000,
-        backBufferDurationMs: 120000,
-        cacheSizeMB: 0,
-        live: {
-          targetOffsetMs: 500,
-        },
-      } as BufferConfig,
       onChangeWebcamIP,
       onToggleWebcamEnabled,
       onReconnectWebcam,

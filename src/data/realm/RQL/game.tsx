@@ -20,7 +20,7 @@ const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
           gameSettings.mode.extraTimeTurns?.toString() as GameExtraTimeTurns,
       },
       players: gameSettings.players,
-      webcamFileName: gameSettings.webcamFileName,
+      webcamFolderName: gameSettings.webcamFolderName,
     });
   });
 };
@@ -47,6 +47,7 @@ const ReadGames = (params?: {
         category: game.category,
         mode: game.mode,
         players: game.players,
+        webcamFolderName: game.webcamFolderName,
       } as GameSettings & {createdAt: Date; updatedAt: Date}),
   );
 };

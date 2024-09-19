@@ -6,6 +6,8 @@ export type Screens = {
 
   history: string;
 
+  playback: string;
+
   //Helper
   overlay: string;
 };

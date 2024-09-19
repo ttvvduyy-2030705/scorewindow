@@ -1,9 +1,9 @@
 import React, {memo, useMemo} from 'react';
 import {ViewStyle, ActivityIndicator} from 'react-native';
-import {useTheme} from '@react-navigation/native';
 import View from 'components/View';
 import Image from 'components/Image';
 import images from 'assets';
+import colors from 'configuration/colors';
 
 import styles from './styles';
 
@@ -16,8 +16,6 @@ interface LoadingProps {
 
 const Loading = (props: LoadingProps) => {
   const {isLoading = false, size, style, showPlainLoading = false} = props;
-
-  const {colors} = useTheme();
 
   const imageStyle: any = useMemo(() => {
     if (style) {

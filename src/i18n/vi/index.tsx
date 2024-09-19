@@ -76,6 +76,7 @@ const vi = {
   msgIntroDescription: 'Billiards - Devices - Evolutions',
   txtEnterWebcamIPAddress: 'Nhập địa chỉ IP webcam',
   txtReconnect: 'Kết nối lại',
+  txtMinuteOrder: 'Phút thứ {{minute}}',
 
   month: 'tháng',
   year: 'năm',

@@ -25,6 +25,7 @@ export interface Props {
   isPaused: boolean;
   soundEnabled: boolean;
   poolBreakEnabled: boolean;
+  webcamFolderName?: string;
   onPoolBreak: () => void;
   onPressGiveMoreTime: () => void;
   onWarmUp: () => void;
@@ -40,7 +41,7 @@ export interface Props {
   onStop: () => void;
   onReset: () => void;
   onResetTurn: () => void;
-  updateWebcamFileName: (name: string) => void;
+  updateWebcamFolderName: (name: string) => void;
 }
 
 const ConsoleViewModel = (props: Props) => {

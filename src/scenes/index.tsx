@@ -74,6 +74,7 @@ const Scenes = sceneKeys.map((name, index) => {
   switch (name) {
     case 'home':
     case 'gamePlay':
+    case 'playback':
       _options = noHeader;
       break;
   }

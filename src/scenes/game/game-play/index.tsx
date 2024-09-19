@@ -212,6 +212,7 @@ const GamePlay = () => {
           isPaused={viewModel.isPaused}
           soundEnabled={viewModel.soundEnabled}
           poolBreakEnabled={viewModel.poolBreakEnabled}
+          webcamFolderName={viewModel.webcamFolderName}
           onPoolBreak={viewModel.onPoolBreak}
           onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
           onWarmUp={viewModel.onWarmUp}
@@ -227,7 +228,7 @@ const GamePlay = () => {
           onStop={viewModel.onStop}
           onReset={viewModel.onReset}
           onResetTurn={viewModel.onResetTurn}
-          updateWebcamFileName={viewModel.updateWebcamFileName}
+          updateWebcamFolderName={viewModel.updateWebcamFolderName}
         />
         {renderPlayers(
           1,

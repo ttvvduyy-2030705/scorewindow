@@ -13,11 +13,11 @@ import colors from 'configuration/colors';
 import images from 'assets';
 import i18n from 'i18n';
 
-import WebCamViewModel from './WebCamViewModel';
+import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
 
-const WebCam = () => {
-  const viewModel = WebCamViewModel();
+const WebCam = (props: Props) => {
+  const viewModel = WebCamViewModel(props);
 
   const WEBCAM_LOADER = useMemo(() => {
     return (

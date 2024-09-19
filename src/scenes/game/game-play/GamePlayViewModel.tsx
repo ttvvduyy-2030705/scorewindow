@@ -5,6 +5,7 @@ import {useRealm} from '@realm/react';
 import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
 import colors from 'configuration/colors';
+import {cancelStreamWebcamToFile} from 'services/ffmpeg/webcam';
 
 import {goBack} from 'utils/navigation';
 import {isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
@@ -35,6 +36,7 @@ const GamePlayViewModel = () => {
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [winner, setWinner] = useState<Player>();
+  const [webcamFileName, setWebcamFileName] = useState<string>();
 
   const [isStarted, setIsStarted] = useState(
     gameSettings?.mode?.mode === 'fast' ? true : false,
@@ -181,6 +183,12 @@ const GamePlayViewModel = () => {
     }
   }, [isStarted, soundEnabled, countdownTime, gameSettings]);
 
+  useEffect(() => {
+    return () => {
+      cancelStreamWebcamToFile();
+    };
+  }, []);
+
   const getCountdownWidthItem = useCallback(() => {
     if (!gameSettings?.mode?.countdownTime) {
       return;
@@ -188,6 +196,10 @@ const GamePlayViewModel = () => {
 
     return COUNTDOWN_WIDTH / gameSettings!.mode?.countdownTime! - 10;
   }, [gameSettings]);
+
+  const updateWebcamFileName = useCallback((name: string) => {
+    setWebcamFileName(name);
+  }, []);
 
   const getCountdownColor = useCallback(
     (index: number) => {
@@ -600,6 +612,7 @@ const GamePlayViewModel = () => {
                 ...gameSettings,
                 players: playerSettings,
                 totalTime,
+                webcamFileName,
               },
             }),
           );
@@ -607,7 +620,14 @@ const GamePlayViewModel = () => {
         },
       },
     ]);
-  }, [dispatch, realm, totalTime, gameSettings, playerSettings]);
+  }, [
+    dispatch,
+    realm,
+    totalTime,
+    gameSettings,
+    playerSettings,
+    webcamFileName,
+  ]);
 
   const onReset = useCallback(() => {
     const newPlayerSettings = {
@@ -663,6 +683,7 @@ const GamePlayViewModel = () => {
       onSwitchTurn,
       onSwapPlayers,
       onToggleSound,
+      updateWebcamFileName,
       onPoolScore,
       onSelectWinner,
       onClearWinner,
@@ -701,6 +722,7 @@ const GamePlayViewModel = () => {
     onSwitchTurn,
     onSwapPlayers,
     onToggleSound,
+    updateWebcamFileName,
     onPoolScore,
     onSelectWinner,
     onClearWinner,

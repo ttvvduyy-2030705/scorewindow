@@ -20,6 +20,7 @@ const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
           gameSettings.mode.extraTimeTurns?.toString() as GameExtraTimeTurns,
       },
       players: gameSettings.players,
+      webcamFileName: gameSettings.webcamFileName,
     });
   });
 };

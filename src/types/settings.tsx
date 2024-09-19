@@ -21,4 +21,5 @@ export type GameSettings = {
   category: BilliardCategory;
   mode: GameSettingsMode;
   players: PlayerSettings;
+  webcamFileName?: string;
 };

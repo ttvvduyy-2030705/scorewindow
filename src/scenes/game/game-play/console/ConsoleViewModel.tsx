@@ -40,6 +40,7 @@ export interface Props {
   onStop: () => void;
   onReset: () => void;
   onResetTurn: () => void;
+  updateWebcamFileName: (name: string) => void;
 }
 
 const ConsoleViewModel = (props: Props) => {

@@ -17,8 +17,14 @@ import {
   SelectedVideoTrackType,
   VideoRef,
 } from 'react-native-video';
+import {streamWebcamToFile} from 'services/ffmpeg/webcam';
+import {requestReadWriteStorage} from 'utils/permission';
 
-const WebCamViewModel = () => {
+export interface Props {
+  updateWebcamFileName: (name: string) => void;
+}
+
+const WebCamViewModel = (props: Props) => {
   const videoRef = useRef<VideoRef>(null);
   const [webcamIP, setWebcamIP] = useState<string>('');
   const [autoConnect, setAutoConnect] = useState<boolean>(true);
@@ -45,9 +51,18 @@ const WebCamViewModel = () => {
       return;
     }
 
-    setUrl(
-      `${WEBCAM_HOST}${WEBCAM_LOGIN_PROFILE}@${webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`,
-    );
+    requestReadWriteStorage().then(isGranted => {
+      if (!isGranted) {
+        return;
+      }
+
+      const now = Date.now().toString();
+      const _url = `${WEBCAM_HOST}${WEBCAM_LOGIN_PROFILE}@${webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
+      streamWebcamToFile(_url, now);
+      setUrl(_url);
+      props.updateWebcamFileName(now);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webcamIP, webcamEnabled]);
 
   const onRefresh = useCallback(() => {

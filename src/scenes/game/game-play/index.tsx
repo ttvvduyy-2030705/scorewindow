@@ -227,6 +227,7 @@ const GamePlay = () => {
           onStop={viewModel.onStop}
           onReset={viewModel.onReset}
           onResetTurn={viewModel.onResetTurn}
+          updateWebcamFileName={viewModel.updateWebcamFileName}
         />
         {renderPlayers(
           1,

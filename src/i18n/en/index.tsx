@@ -1,11 +1,13 @@
 import header from './header';
 import error from './error';
 import game from './game';
+import config from './config';
 
 const en = {
   ...header,
   ...error,
   ...game,
+  ...config,
   msgNotEmpty: 'This field cannot be empty',
   msgFieldNotEmpty: '{{name}} cannot be empty',
   msgActionSuccess: '{{action}} {{name}} successfully',

@@ -34,10 +34,15 @@ const Home = (props: Props) => {
             </Text>
           </View>
           <View alignItems={'end'}>
-            <View>
+            <View direction={'row'} alignItems={'center'}>
               <Text fontWeight={'bold'} fontSize={32} letterSpacing={3}>
                 {viewModel.helloText}
               </Text>
+              <Button
+                onPress={viewModel.onPressConfigs}
+                style={styles.buttonConfigs}>
+                <Image source={images.settings} style={styles.icon} />
+              </Button>
             </View>
             <View marginTop={'10'}>
               <Button

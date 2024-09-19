@@ -8,6 +8,8 @@ export type Screens = {
 
   playback: string;
 
+  configs: string;
+
   //Helper
   overlay: string;
 };

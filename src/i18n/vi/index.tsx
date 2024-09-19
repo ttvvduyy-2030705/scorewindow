@@ -1,11 +1,13 @@
 import header from './header';
 import error from './error';
 import game from './game';
+import config from './config';
 
 const vi = {
   ...header,
   ...error,
   ...game,
+  ...config,
   msgNotEmpty: 'Trường này không được trống',
   msgFieldNotEmpty: '{{name}} không được trống',
   msgActionSuccess: '{{action}} {{name}} thành công',

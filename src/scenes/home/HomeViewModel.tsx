@@ -16,6 +16,11 @@ const HomeViewModel = (props: Props) => {
     // BLEService.scanAndConnect();
   }, [props]);
 
+  const onPressConfigs = useCallback(() => {
+    props.navigate(screens.configs);
+    // BLEService.scanAndConnect();
+  }, [props]);
+
   const helloText = useMemo(() => {
     const now = new Date();
     const hours = now.getHours();
@@ -31,8 +36,8 @@ const HomeViewModel = (props: Props) => {
   }, []);
 
   return useMemo(() => {
-    return {helloText, onStartNewGame, onPressHistory};
-  }, [helloText, onStartNewGame, onPressHistory]);
+    return {helloText, onStartNewGame, onPressHistory, onPressConfigs};
+  }, [helloText, onStartNewGame, onPressHistory, onPressConfigs]);
 };
 
 export default HomeViewModel;

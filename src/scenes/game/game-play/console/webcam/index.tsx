@@ -130,7 +130,7 @@ const WebCam = (props: Props) => {
           </Button>
         </View>
         <Divider vertical size={'small'} />
-        <View flex={'1'} direction={'row'} justify={'center'}>
+        {/* <View flex={'1'} direction={'row'} justify={'center'}>
           <Button onPress={viewModel.onDelay}>
             <View
               direction={'row'}
@@ -142,8 +142,8 @@ const WebCam = (props: Props) => {
               <Image source={images.webcam.delay} style={styles.icon} />
             </View>
           </Button>
-        </View>
-        <Divider vertical size={'small'} />
+        </View> */}
+        {/* <Divider vertical size={'small'} /> */}
         <View flex={'1'} direction={'row'} justify={'center'}>
           <Button onPress={viewModel.onReWatch}>
             <View

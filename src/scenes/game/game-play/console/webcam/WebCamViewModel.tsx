@@ -99,10 +99,13 @@ const WebCamViewModel = (props: Props) => {
 
   const onSeek = useCallback((_data: OnSeekData) => {}, []);
 
-  const onLoad = useCallback((_data: OnLoadData) => {
-    videoRef.current?.setVolume(0);
-    // AsyncStorage.setItem(keys.WEBCAM_IP_ADDRESS, webcamIP);
-  }, []);
+  const onLoad = useCallback(
+    (_data: OnLoadData) => {
+      videoRef.current?.setVolume(0);
+      AsyncStorage.setItem(keys.WEBCAM_IP_ADDRESS, webcamIP);
+    },
+    [webcamIP],
+  );
 
   const onVideoTracks = useCallback((_data: OnVideoTracksData) => {}, []);
 

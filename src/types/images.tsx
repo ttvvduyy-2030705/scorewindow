@@ -10,6 +10,7 @@ export type Images = {
   logoOutlined: number;
   logoFilled: number;
   settings: number;
+  delete: number;
   game: {
     edit: number;
     soundOn: number;

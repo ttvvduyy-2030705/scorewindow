@@ -12,6 +12,7 @@ const images: Images = {
   logoOutlined: require('./images/logo-outlined.png'),
   logoFilled: require('./images/logo-filled.png'),
   settings: require('./images/setting.png'),
+  delete: require('./images/delete.png'),
   game: {
     edit: require('./images/game/edit.png'),
     soundOn: require('./images/game/sound-on.png'),

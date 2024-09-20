@@ -1,9 +1,10 @@
 import {all} from 'redux-saga/effects';
 
 import game from './game';
+import history from './history';
 
 const rootSaga = function* () {
-  yield all([game]);
+  yield all([game, history]);
 };
 
 export type SagaResponse<T> = {

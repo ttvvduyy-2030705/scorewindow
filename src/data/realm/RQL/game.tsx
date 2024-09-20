@@ -4,12 +4,12 @@ import {GameExtraTimeTurns, GameSettings} from 'types/settings';
 import {useQuery} from '@realm/react';
 
 const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
-  const now = new Date();
-  // const id = new BSON.ObjectId();
-
   realm.write(() => {
+    const now = new Date();
+    const id = new BSON.ObjectId();
+
     realm.create(GameSchema, {
-      // id,
+      id,
       createdAt: now,
       updatedAt: now,
       totalTime: gameSettings.totalTime || 0,
@@ -27,7 +27,11 @@ const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
 
 const ReadGames = (params?: {
   length?: number;
-}): (GameSettings & {createdAt: Date; updatedAt: Date})[] => {
+}): (GameSettings & {
+  id: BSON.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+})[] => {
   // const games = useQuery(GameSchema);
 
   const games = useQuery(
@@ -41,6 +45,7 @@ const ReadGames = (params?: {
   return games.slice(0, params?.length || 20).map(
     game =>
       ({
+        id: game.id,
         createdAt: game.createdAt,
         updatedAt: game.updatedAt,
         totalTime: game.totalTime,
@@ -48,7 +53,11 @@ const ReadGames = (params?: {
         mode: game.mode,
         players: game.players,
         webcamFolderName: game.webcamFolderName,
-      } as GameSettings & {createdAt: Date; updatedAt: Date}),
+      } as GameSettings & {
+        id: BSON.ObjectId;
+        createdAt: Date;
+        updatedAt: Date;
+      }),
   );
 };
 
@@ -57,7 +66,7 @@ const UpdateGame = (
   id: BSON.ObjectId,
   gameSettings: GameSettings,
 ) => {
-  const toUpdate = realm.objects(GameSchema).filtered('_id == $0', id);
+  const toUpdate = realm.objects(GameSchema).filtered('id == $0', id);
 
   const now = new Date();
   realm.write(() => {
@@ -69,7 +78,7 @@ const UpdateGame = (
 };
 
 const DeleteGame = (realm: Realm, id: BSON.ObjectId) => {
-  const toDelete = realm.objects(GameSchema).filtered('_id == $0', id);
+  const toDelete = realm.objects(GameSchema).filtered('id == $0', id);
 
   realm.write(() => {
     realm.delete(toDelete);

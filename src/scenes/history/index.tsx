@@ -4,6 +4,8 @@ import Container from 'components/Container';
 import View from 'components/View';
 import Button from 'components/Button';
 import Text from 'components/Text';
+import Image from 'components/Image';
+import images from 'assets';
 import i18n from 'i18n';
 import {GameSettings} from 'types/settings';
 import {Player} from 'types/player';
@@ -78,14 +80,23 @@ const History = () => {
           <View flex={'1'} direction={'row'} justify={'center'}>
             {item.players.playingPlayers.map(renderPlayer)}
           </View>
-          <View flex={'1'} alignItems={'center'}>
+          <View
+            flex={'1'}
+            direction={'row'}
+            alignItems={'center'}
+            justify={'between'}>
             <Button
-              style={styles.buttonRewWatch}
+              style={styles.button}
               onPress={viewModel.onReWatchGame.bind(
                 History,
                 item.webcamFolderName,
               )}>
               <Text>{i18n.t('reWatch')}</Text>
+            </Button>
+            <Button
+              style={styles.buttonDelete}
+              onPress={viewModel.onDeleteGame.bind(History, item)}>
+              <Image source={images.delete} style={styles.icon} />
             </Button>
           </View>
         </View>

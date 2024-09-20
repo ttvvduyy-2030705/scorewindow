@@ -9,11 +9,21 @@ const styles = StyleSheet.create({
   player: {
     borderRadius: 10,
   },
-  buttonRewWatch: {
+  button: {
     backgroundColor: colors.lightPrimary1,
     paddingHorizontal: responsiveDimension(30),
     paddingVertical: responsiveDimension(10),
     borderRadius: 10,
+  },
+  buttonDelete: {
+    backgroundColor: colors.lightPrimary1,
+    padding: responsiveDimension(10),
+    borderRadius: 10,
+  },
+  icon: {
+    width: responsiveDimension(32),
+    height: responsiveDimension(32),
+    tintColor: colors.red,
   },
 });
 

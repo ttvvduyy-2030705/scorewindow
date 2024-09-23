@@ -104,6 +104,7 @@ const GamePlayViewModel = () => {
     warmUpCountdownTime,
     warmUpCount,
     poolBreakEnabled,
+    countdownTime,
   ]);
 
   useEffect(() => {

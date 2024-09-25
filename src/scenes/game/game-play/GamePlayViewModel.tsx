@@ -337,7 +337,7 @@ const GamePlayViewModel = () => {
   }, [isStarted, playerSettings, currentPlayerIndex, _resetCountdown]);
 
   const onViolate = useCallback(
-    (playerIndex: number) => {
+    (playerIndex: number, reset?: boolean) => {
       if (
         !isStarted ||
         !playerSettings ||
@@ -351,7 +351,7 @@ const GamePlayViewModel = () => {
           if (playerIndex === index) {
             return {
               ...player,
-              violate: player.violate ? player.violate + 1 : 1,
+              violate: reset ? 0 : player.violate ? player.violate + 1 : 1,
             } as Player;
           }
 

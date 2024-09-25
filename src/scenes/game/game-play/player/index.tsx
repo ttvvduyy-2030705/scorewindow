@@ -192,7 +192,10 @@ const GamePlayer = (props: Props) => {
             alignItems={'center'}
             marginRight={'15'}
             marginBottom={'10'}>
-            <Button style={styles.buttonViolate} onPress={viewModel.onViolate}>
+            <Button
+              style={styles.buttonViolate}
+              onPress={viewModel.onViolate}
+              onLongPress={viewModel.onResetViolate}>
               <Text color={colors.white} fontWeight={'bold'}>
                 {'X'}
               </Text>
@@ -209,6 +212,7 @@ const GamePlayer = (props: Props) => {
     props.player.violate,
     viewModel.onEndTurn,
     viewModel.onViolate,
+    viewModel.onResetViolate,
   ]);
 
   return (

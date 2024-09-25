@@ -15,6 +15,7 @@ import styles from './styles';
 interface ButtonProps {
   children?: ReactElement | ReactElement[] | boolean;
   onPress: (event: GestureResponderEvent) => void;
+  onLongPress?: (event: GestureResponderEvent) => void;
   style?: ViewStyle | ViewStyle[];
   disable?: boolean;
   isLoading?: boolean;
@@ -30,6 +31,7 @@ const Button = (props: ButtonProps) => {
   const {
     children,
     onPress,
+    onLongPress,
     style,
     disable,
     isLoading,
@@ -109,6 +111,7 @@ const Button = (props: ButtonProps) => {
     <Pressable
       style={[styles.container, centerStyle, style, _disableStyle]}
       onPress={onPress}
+      onLongPress={onLongPress}
       disabled={disable}>
       {Component}
     </Pressable>

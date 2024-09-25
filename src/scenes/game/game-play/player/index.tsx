@@ -196,12 +196,14 @@ const GamePlayer = (props: Props) => {
               style={styles.buttonViolate}
               onPress={viewModel.onViolate}
               onLongPress={viewModel.onResetViolate}>
-              <Text color={colors.white} fontWeight={'bold'}>
+              <Text color={colors.white} fontWeight={'bold'} fontSize={48}>
                 {'X'}
               </Text>
             </Button>
             <View marginLeft={'10'}>
-              <Text fontSize={32}>{props.player.violate || 0}</Text>
+              <Text fontSize={64} lineHeight={64} style={styles.textViolate}>
+                {props.player.violate || 0}
+              </Text>
             </View>
           </View>
         </View>

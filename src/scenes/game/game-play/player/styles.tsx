@@ -75,9 +75,12 @@ const styles = StyleSheet.create({
   buttonEndTurnEmpty: {
     paddingHorizontal: responsiveDimension(30),
   },
+  textViolate: {
+    marginBottom: -16,
+  },
   buttonViolate: {
-    width: responsiveDimension(48),
-    height: responsiveDimension(48),
+    width: responsiveDimension(96),
+    height: responsiveDimension(96),
     borderRadius: 100,
     backgroundColor: colors.red,
     justifyContent: 'center',

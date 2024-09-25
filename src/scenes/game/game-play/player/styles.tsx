@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 0.5,
     borderColor: colors.gray,
-    borderRadius: 40,
+    borderRadius: 80,
     paddingBottom: responsiveDimension(10),
     backgroundColor: colors.white,
   },
@@ -39,12 +39,18 @@ const styles = StyleSheet.create({
     marginRight: responsiveDimension(15),
     marginBottom: responsiveDimension(15),
   },
+  inputWrapper: {
+    height: responsiveDimension(72),
+  },
   input: {
-    fontSize: responsiveFontSize(24),
+    height: responsiveDimension(72),
+    fontSize: responsiveFontSize(40),
     fontWeight: 'bold',
     backgroundColor: colors.transparent,
-    borderBottomColor: colors.black,
+
     borderBottomWidth: 0.5,
+    color: colors.lightBlack,
+    marginHorizontal: 0,
   },
   extraTimeTurnsWrapper: {
     marginTop: responsiveDimension(10),

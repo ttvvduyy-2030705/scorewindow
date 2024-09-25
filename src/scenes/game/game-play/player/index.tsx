@@ -223,13 +223,20 @@ const GamePlayer = (props: Props) => {
       style={[styles.container, {backgroundColor: props.player.color}]}
       marginHorizontal={'20'}>
       <View
+        style={styles.inputWrapper}
         direction={'row'}
         alignItems={'center'}
-        paddingHorizontal={'15'}
-        marginTop={'10'}>
+        paddingHorizontal={'15'}>
         <View flex={'1'}>
           <TextInput
-            inputStyle={styles.input}
+            inputStyle={[
+              styles.input,
+              {
+                borderBottomColor: viewModel.nameEditable
+                  ? colors.black
+                  : colors.transparent,
+              },
+            ]}
             value={props.player.name}
             onChange={viewModel.onChangeName}
             disabled={!viewModel.nameEditable}

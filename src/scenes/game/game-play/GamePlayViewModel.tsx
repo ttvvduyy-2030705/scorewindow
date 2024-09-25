@@ -30,13 +30,11 @@ const GamePlayViewModel = () => {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [totalTurns, setTotalTurns] = useState(1);
   const [totalTime, setTotalTime] = useState(0);
-  const [gameBreakEnabled, setGameBreakEnabled] = useState<boolean>(false);
-  const [poolBreakEnabled, setPoolBreakEnabled] = useState<boolean>(false);
+
   const [countdownTime, setCountdownTime] = useState<number>(0);
   const [warmUpCount, setWarmUpCount] = useState<number>();
   const [warmUpCountdownTime, setWarmUpCountdownTime] = useState<number>();
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>();
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const [winner, setWinner] = useState<Player>();
   const [webcamFolderName, setWebcamFolderName] = useState<string>();
 
@@ -44,6 +42,10 @@ const GamePlayViewModel = () => {
     gameSettings?.mode?.mode === 'fast' ? true : false,
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isMatchPaused, setIsMatchPaused] = useState<boolean>(false);
+  const [gameBreakEnabled, setGameBreakEnabled] = useState<boolean>(false);
+  const [poolBreakEnabled, setPoolBreakEnabled] = useState<boolean>(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   useEffect(() => {
     RemoteControl.instance.registerKeyEvents(
@@ -147,15 +149,18 @@ const GamePlayViewModel = () => {
 
     countdownInterval = setInterval(() => {
       setTotalTime(prev => prev + 1);
-      setCountdownTime(prev =>
-        typeof prev === 'number' && prev > 0 ? prev - 1 : 0,
-      );
+
+      if (!isMatchPaused) {
+        setCountdownTime(prev =>
+          typeof prev === 'number' && prev > 0 ? prev - 1 : 0,
+        );
+      }
     }, 1000);
 
     return () => {
       clearInterval(countdownInterval);
     };
-  }, [isStarted, isPaused, poolBreakEnabled]);
+  }, [isStarted, isPaused, poolBreakEnabled, isMatchPaused]);
 
   useEffect(() => {
     if (!warmUpCountdownTime) {
@@ -556,6 +561,7 @@ const GamePlayViewModel = () => {
     _resetCountdown();
 
     setTotalTurns(totalTurns + 1);
+    setIsMatchPaused(false);
   }, [isStarted, gameSettings, totalTurns, _resetCountdown]);
 
   const onSwapPlayers = useCallback(() => {
@@ -575,6 +581,14 @@ const GamePlayViewModel = () => {
 
     setIsStarted(true);
   }, [isStarted]);
+
+  const onPauseCountDown = useCallback(() => {
+    if (!isStarted || isPaused) {
+      return;
+    }
+
+    setIsMatchPaused(true);
+  }, [isStarted, isPaused]);
 
   const onPause = useCallback(() => {
     if (isPaused) {
@@ -660,6 +674,7 @@ const GamePlayViewModel = () => {
       updateGameSettings,
       isStarted,
       isPaused,
+      isMatchPaused,
       soundEnabled,
       gameBreakEnabled,
       poolBreakEnabled,
@@ -684,6 +699,7 @@ const GamePlayViewModel = () => {
       onPoolBreak,
       onStart,
       onEndTurn,
+      onPauseCountDown,
       onPause,
       onStop,
       onReset,
@@ -702,6 +718,7 @@ const GamePlayViewModel = () => {
     updateGameSettings,
     isStarted,
     isPaused,
+    isMatchPaused,
     soundEnabled,
     gameBreakEnabled,
     poolBreakEnabled,
@@ -726,6 +743,7 @@ const GamePlayViewModel = () => {
     onPoolBreak,
     onStart,
     onEndTurn,
+    onPauseCountDown,
     onPause,
     onStop,
     onReset,

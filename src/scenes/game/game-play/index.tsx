@@ -111,40 +111,45 @@ const GamePlay = () => {
     }
 
     return (
-      <View flex={'1'} direction={'row'} style={styles.countdown}>
-        {Array.from(
-          {length: viewModel.gameSettings.mode?.countdownTime},
-          (_, index) => {
-            if (viewModel.countdownTime <= index) {
+      <Button style={styles.countdown} onPress={viewModel.onPauseCountDown}>
+        <View flex={'1'} direction={'row'}>
+          {Array.from(
+            {length: viewModel.gameSettings.mode?.countdownTime},
+            (_, index) => {
+              if (viewModel.countdownTime <= index) {
+                return (
+                  <View
+                    key={`countdown-item-hide-${index}`}
+                    style={[
+                      styles.countdownItem,
+                      {width: viewModel.getCountdownWidthItem()},
+                    ]}
+                  />
+                );
+              }
+
               return (
                 <View
-                  key={`countdown-item-hide-${index}`}
+                  key={`countdown-item-${index}`}
                   style={[
                     styles.countdownItem,
-                    {width: viewModel.getCountdownWidthItem()},
+                    {
+                      width: viewModel.getCountdownWidthItem(),
+                      backgroundColor: viewModel.isMatchPaused
+                        ? colors.gray
+                        : viewModel.getCountdownColor(index),
+                    },
                   ]}
                 />
               );
-            }
-
-            return (
-              <View
-                key={`countdown-item-${index}`}
-                style={[
-                  styles.countdownItem,
-                  {
-                    width: viewModel.getCountdownWidthItem(),
-                    backgroundColor: viewModel.getCountdownColor(index),
-                  },
-                ]}
-              />
-            );
-          },
-        ).reverse()}
-      </View>
+            },
+          ).reverse()}
+        </View>
+      </Button>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    viewModel.isMatchPaused,
     viewModel.gameSettings,
     viewModel.countdownTime,
     viewModel.getCountdownColor,

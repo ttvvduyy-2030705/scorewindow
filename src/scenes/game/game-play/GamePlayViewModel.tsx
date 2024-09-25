@@ -176,11 +176,6 @@ const GamePlayViewModel = () => {
       return;
     }
 
-    if (countdownTime === 0) {
-      Sound.timeout();
-      return;
-    }
-
     if (countdownTime > 0 && countdownTime <= 10) {
       Sound.beep();
     }

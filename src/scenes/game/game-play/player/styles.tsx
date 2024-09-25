@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(40),
     fontWeight: 'bold',
     backgroundColor: colors.transparent,
-
     borderBottomWidth: 0.5,
     color: colors.lightBlack,
     marginHorizontal: 0,

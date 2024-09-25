@@ -385,15 +385,7 @@ const GamePlayViewModel = () => {
           } as PlayerSettings),
       );
     }
-
-    if (soundEnabled) {
-      Sound.speak(
-        i18n.t('msgWinner', {
-          player: playerSettings?.playingPlayers[currentPlayerIndex].name,
-        }),
-      );
-    }
-  }, [currentPlayerIndex, playerSettings, gameSettings, soundEnabled]);
+  }, [currentPlayerIndex, playerSettings, gameSettings]);
 
   const onClearWinner = useCallback(() => {
     if (!playerSettings) {
@@ -431,10 +423,6 @@ const GamePlayViewModel = () => {
         },
       );
 
-      if (soundEnabled) {
-        Sound.speak(i18n.t(`ball${ball.number}`));
-      }
-
       setPlayerSettings({...playerSettings, playingPlayers: newPlayingPlayers});
 
       switch (true) {
@@ -456,7 +444,6 @@ const GamePlayViewModel = () => {
       currentPlayerIndex,
       gameSettings?.category,
       isStarted,
-      soundEnabled,
       playerSettings,
       onSelectWinner,
     ],

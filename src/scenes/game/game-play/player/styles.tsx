@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
     marginTop: responsiveDimension(10),
   },
   extraTimeTurns: {
-    width: dims.screenWidth * 0.01,
-    height: dims.screenWidth * 0.01,
-    borderRadius: 16,
-    backgroundColor: colors.primary,
+    width: dims.screenWidth * 0.02,
+    height: dims.screenWidth * 0.02,
+    borderRadius: 32,
+    backgroundColor: colors.lightBlack,
     elevation: 5,
   },
   extraTimeTurnsEmpty: {

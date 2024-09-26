@@ -484,6 +484,7 @@ const GamePlayViewModel = () => {
 
     setCountdownTime(gameSettings.mode?.countdownTime! * 2);
     setPoolBreakEnabled(false);
+    setIsMatchPaused(false);
     setIsStarted(true);
   }, [gameSettings, isStarted, isPaused, poolBreakEnabled]);
 
@@ -529,6 +530,7 @@ const GamePlayViewModel = () => {
         return;
       }
 
+      setIsMatchPaused(false);
       _resetCountdown();
 
       if (isPrevious) {

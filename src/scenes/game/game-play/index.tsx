@@ -135,9 +135,7 @@ const GamePlay = () => {
                     styles.countdownItem,
                     {
                       width: viewModel.getCountdownWidthItem(),
-                      backgroundColor: viewModel.isMatchPaused
-                        ? colors.gray
-                        : viewModel.getCountdownColor(index),
+                      backgroundColor: viewModel.getCountdownColor(index),
                     },
                   ]}
                 />
@@ -149,7 +147,6 @@ const GamePlay = () => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    viewModel.isMatchPaused,
     viewModel.gameSettings,
     viewModel.countdownTime,
     viewModel.getCountdownColor,

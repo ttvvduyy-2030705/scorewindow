@@ -20,12 +20,16 @@ const GamePlay = () => {
           <GamePlayer
             index={topIndex}
             isOnTurn={viewModel.currentPlayerIndex === topIndex}
+            isOnPoolBreak={viewModel.poolBreakPlayerIndex === topIndex}
             isStarted={viewModel.isStarted}
             isPaused={viewModel.isPaused}
             soundEnabled={viewModel.soundEnabled}
             totalTurns={viewModel.totalTurns}
             gameSettings={viewModel.gameSettings!}
             player={viewModel.playerSettings!.playingPlayers[topIndex]}
+            onSwitchPoolBreakPlayerIndex={
+              viewModel.onSwitchPoolBreakPlayerIndex
+            }
             onEditPlayerName={viewModel.onEditPlayerName}
             onChangePlayerPoint={viewModel.onChangePlayerPoint}
             onViolate={viewModel.onViolate}
@@ -37,12 +41,16 @@ const GamePlay = () => {
               <GamePlayer
                 index={bottomIndex}
                 isOnTurn={viewModel.currentPlayerIndex === bottomIndex}
+                isOnPoolBreak={viewModel.poolBreakPlayerIndex === bottomIndex}
                 isStarted={viewModel.isStarted}
                 isPaused={viewModel.isPaused}
                 soundEnabled={viewModel.soundEnabled}
                 totalTurns={viewModel.totalTurns}
                 gameSettings={viewModel.gameSettings!}
                 player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
+                onSwitchPoolBreakPlayerIndex={
+                  viewModel.onSwitchPoolBreakPlayerIndex
+                }
                 onEditPlayerName={viewModel.onEditPlayerName}
                 onChangePlayerPoint={viewModel.onChangePlayerPoint}
                 onViolate={viewModel.onViolate}
@@ -57,15 +65,17 @@ const GamePlay = () => {
     },
     [
       viewModel.currentPlayerIndex,
+      viewModel.poolBreakPlayerIndex,
       viewModel.isStarted,
       viewModel.isPaused,
       viewModel.soundEnabled,
       viewModel.totalTurns,
       viewModel.gameSettings,
+      viewModel.playerSettings,
+      viewModel.onSwitchPoolBreakPlayerIndex,
       viewModel.onChangePlayerPoint,
       viewModel.onEditPlayerName,
       viewModel.onViolate,
-      viewModel.playerSettings,
       viewModel.onEndTurn,
     ],
   );
@@ -79,12 +89,14 @@ const GamePlay = () => {
       <GamePlayer
         index={4}
         isOnTurn={viewModel.currentPlayerIndex === 4}
+        isOnPoolBreak={viewModel.poolBreakPlayerIndex === 4}
         isStarted={viewModel.isStarted}
         isPaused={viewModel.isPaused}
         soundEnabled={viewModel.soundEnabled}
         totalTurns={viewModel.totalTurns}
         gameSettings={viewModel.gameSettings!}
         player={viewModel.playerSettings!.playingPlayers[4]}
+        onSwitchPoolBreakPlayerIndex={viewModel.onSwitchPoolBreakPlayerIndex}
         onEditPlayerName={viewModel.onEditPlayerName}
         onChangePlayerPoint={viewModel.onChangePlayerPoint}
         onViolate={viewModel.onViolate}
@@ -93,12 +105,14 @@ const GamePlay = () => {
     );
   }, [
     viewModel.currentPlayerIndex,
+    viewModel.poolBreakPlayerIndex,
     viewModel.isStarted,
     viewModel.isPaused,
     viewModel.soundEnabled,
     viewModel.totalTurns,
     viewModel.gameSettings,
     viewModel.playerSettings,
+    viewModel.onSwitchPoolBreakPlayerIndex,
     viewModel.onChangePlayerPoint,
     viewModel.onEditPlayerName,
     viewModel.onViolate,

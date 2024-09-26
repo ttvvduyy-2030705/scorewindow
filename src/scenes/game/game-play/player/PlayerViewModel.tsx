@@ -8,10 +8,12 @@ export interface Props {
   gameSettings: GameSettings;
   player: Player;
   isOnTurn: boolean;
+  isOnPoolBreak: boolean;
   isStarted: boolean;
   isPaused: boolean;
   soundEnabled: boolean;
   totalTurns: number;
+  onSwitchPoolBreakPlayerIndex: (index: number) => void;
   onEditPlayerName: (index: number, newName: string) => void;
   onChangePlayerPoint: (
     addedPoint: number,

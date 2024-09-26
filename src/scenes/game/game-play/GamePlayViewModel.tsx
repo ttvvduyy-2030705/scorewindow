@@ -6,7 +6,6 @@ import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
 import colors from 'configuration/colors';
 import {cancelStreamWebcamToFile} from 'services/ffmpeg/webcam';
-import {GAME_BREAK_TIME} from 'constants/game-play';
 
 import {goBack} from 'utils/navigation';
 import {isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
@@ -27,13 +26,14 @@ const GamePlayViewModel = () => {
   const {updateGameSettings} = useSelector((state: RootState) => state.UI.game);
   const {gameSettings} = useSelector((state: RootState) => state.game);
 
+  const [poolBreakPlayerIndex, setPoolBreakPlayerIndex] = useState<number>();
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [totalTurns, setTotalTurns] = useState(1);
   const [totalTime, setTotalTime] = useState(0);
-
   const [countdownTime, setCountdownTime] = useState<number>(0);
   const [warmUpCount, setWarmUpCount] = useState<number>();
   const [warmUpCountdownTime, setWarmUpCountdownTime] = useState<number>();
+
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>();
   const [winner, setWinner] = useState<Player>();
   const [webcamFolderName, setWebcamFolderName] = useState<string>();
@@ -471,6 +471,22 @@ const GamePlayViewModel = () => {
     } as PlayerSettings);
   }, [_resetCountdown, playerSettings]);
 
+  const onSwitchPoolBreakPlayerIndex = useCallback(
+    (index: number) => {
+      if (!gameSettings) {
+        return;
+      }
+
+      if (index + 1 > gameSettings.players.playerNumber - 1) {
+        setPoolBreakPlayerIndex(0);
+        return;
+      }
+
+      setPoolBreakPlayerIndex(index + 1);
+    },
+    [gameSettings],
+  );
+
   const onToggleSound = useCallback(() => {
     setSoundEnabled(prev => !prev);
   }, []);
@@ -486,11 +502,12 @@ const GamePlayViewModel = () => {
       return;
     }
 
+    setPoolBreakPlayerIndex(currentPlayerIndex);
     setCountdownTime(gameSettings.mode?.countdownTime! * 2);
     setPoolBreakEnabled(false);
     setIsMatchPaused(false);
     setIsStarted(true);
-  }, [gameSettings, isStarted, isPaused, poolBreakEnabled]);
+  }, [gameSettings, isStarted, isPaused, poolBreakEnabled, currentPlayerIndex]);
 
   const getWarmUpTimeString = useCallback(() => {
     if (!warmUpCountdownTime) {
@@ -670,6 +687,7 @@ const GamePlayViewModel = () => {
     return {
       winner,
       currentPlayerIndex,
+      poolBreakPlayerIndex,
       totalTime,
       totalTurns,
       playerSettings,
@@ -696,6 +714,7 @@ const GamePlayViewModel = () => {
       onWarmUp,
       onEndWarmUp,
       onSwitchTurn,
+      onSwitchPoolBreakPlayerIndex,
       onSwapPlayers,
       onToggleSound,
       updateWebcamFolderName,
@@ -714,6 +733,7 @@ const GamePlayViewModel = () => {
   }, [
     winner,
     currentPlayerIndex,
+    poolBreakPlayerIndex,
     totalTime,
     totalTurns,
     playerSettings,
@@ -740,6 +760,7 @@ const GamePlayViewModel = () => {
     onWarmUp,
     onEndWarmUp,
     onSwitchTurn,
+    onSwitchPoolBreakPlayerIndex,
     onSwapPlayers,
     onToggleSound,
     updateWebcamFolderName,

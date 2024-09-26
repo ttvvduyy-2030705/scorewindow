@@ -226,6 +226,8 @@ const GamePlayer = (props: Props) => {
         style={styles.inputWrapper}
         direction={'row'}
         alignItems={'center'}
+        marginTop={'10'}
+        marginBottom={'5'}
         paddingHorizontal={'15'}>
         <View flex={'1'}>
           <TextInput
@@ -253,13 +255,13 @@ const GamePlayer = (props: Props) => {
         marginHorizontal={'20'}
         marginTop={'10'}>
         <Button style={styles.button} onPress={viewModel.onDecreasePoint}>
-          <Text fontSize={PAIR_PLAY ? 48 : 24} fontWeight={'bold'}>
+          <Text fontSize={24} fontWeight={'bold'}>
             {'-'}
           </Text>
         </Button>
         <View marginHorizontal={'10'} />
         <Button style={styles.button} onPress={viewModel.onIncreasePoint}>
-          <Text fontSize={PAIR_PLAY ? 48 : 24} fontWeight={'bold'}>
+          <Text fontSize={24} fontWeight={'bold'}>
             {'+'}
           </Text>
         </Button>
@@ -270,6 +272,28 @@ const GamePlayer = (props: Props) => {
         direction={'row'}
         alignItems={'center'}
         justify={'center'}>
+        <View
+          style={styles.functionWrapper}
+          direction={'row'}
+          justify={'between'}
+          alignItems={'center'}>
+          <View />
+          {props.isOnPoolBreak ? (
+            <Button
+              style={styles.buttonPoolBreak}
+              onPress={props.onSwitchPoolBreakPlayerIndex.bind(
+                GamePlayer,
+                props.index,
+              )}>
+              <Text fontSize={dims.screenWidth * 0.0125}>
+                {i18n.t('break')}
+              </Text>
+            </Button>
+          ) : (
+            <View />
+          )}
+        </View>
+
         {props.gameSettings?.mode?.mode !== 'fast' &&
         !isPoolGame(props.gameSettings?.category) ? (
           ADDITIONAL_POINTS
@@ -278,11 +302,13 @@ const GamePlayer = (props: Props) => {
         ) : (
           <View />
         )}
+
         <View flex={'1'} alignItems={'center'} justify={'center'}>
           <Text fontSize={512} adjustsFontSizeToFit={true}>
             {props.player.totalPoint}
           </Text>
         </View>
+
         {props.gameSettings?.mode?.mode !== 'fast' ? (
           <View marginRight={'15'}>{EXTRA_TIME_TURNS}</View>
         ) : (

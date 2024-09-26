@@ -95,6 +95,18 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     maxWidth: '17%',
   },
+  functionWrapper: {
+    top: responsiveDimension(24),
+    left: 0,
+    position: 'absolute',
+    width: '100%',
+  },
+  buttonPoolBreak: {
+    backgroundColor: colors.lightPrimary1,
+    paddingVertical: responsiveDimension(8),
+    paddingHorizontal: responsiveDimension(24),
+    marginRight: responsiveDimension(15),
+  },
 });
 
 export default styles;

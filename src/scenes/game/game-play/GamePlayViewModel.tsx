@@ -168,13 +168,17 @@ const GamePlayViewModel = () => {
     }
 
     warmUpCountdownInterval = setInterval(() => {
-      setWarmUpCountdownTime(prev => (prev ? prev - 1 : 0));
+      if (gameBreakEnabled) {
+        setWarmUpCountdownTime(prev => (prev ? prev + 1 : 1));
+      } else {
+        setWarmUpCountdownTime(prev => (prev ? prev - 1 : 0));
+      }
     }, 1000);
 
     return () => {
       clearInterval(warmUpCountdownInterval);
     };
-  }, [warmUpCountdownTime]);
+  }, [warmUpCountdownTime, gameBreakEnabled]);
 
   useEffect(() => {
     if (!isStarted || !soundEnabled || !gameSettings?.mode?.countdownTime) {
@@ -515,7 +519,7 @@ const GamePlayViewModel = () => {
 
   const onGameBreak = useCallback(() => {
     setGameBreakEnabled(true);
-    setWarmUpCountdownTime(GAME_BREAK_TIME);
+    setWarmUpCountdownTime(1);
   }, []);
 
   const onEndWarmUp = useCallback(() => {

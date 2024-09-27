@@ -59,13 +59,20 @@ const styles = StyleSheet.create({
   extraTimeTurnsContainer: {
     position: 'absolute',
     right: 0,
+    height: '100%',
   },
   extraTimeTurnsWrapper: {
-    marginTop: responsiveDimension(10),
+    flexWrap: 'wrap',
+    height: '100%',
+    alignContent: 'flex-end',
+  },
+  extraTimeTurn: {
+    width: responsiveDimension(80),
+    height: '15%',
   },
   extraTimeIcon: {
-    width: dims.screenWidth * 0.024,
-    height: dims.screenWidth * 0.024,
+    width: '100%',
+    height: '100%',
     elevation: 5,
   },
   extraTimeTurnsEmpty: {

@@ -78,17 +78,22 @@ const GamePlayer = (props: Props) => {
     }
 
     return (
-      <View>
+      <View
+        style={styles.extraTimeTurnsWrapper}
+        justify={'center'}
+        alignItems={'end'}>
         {Array.from(
           {length: (props.player.proMode?.extraTimeTurns as number) || 0},
           (_, i) => {
             return (
               <View
                 key={`extra-time-turns-${i}`}
-                style={styles.extraTimeTurnsWrapper}>
+                style={styles.extraTimeTurn}
+                alignItems={'end'}>
                 <Image
                   source={images.game.addTime}
                   style={styles.extraTimeIcon}
+                  resizeMode={'contain'}
                 />
               </View>
             );
@@ -277,30 +282,35 @@ const GamePlayer = (props: Props) => {
         direction={'row'}
         alignItems={'center'}
         justify={'center'}>
-        <View
-          style={styles.functionWrapper}
-          direction={'row'}
-          justify={'between'}
-          alignItems={'center'}>
-          <View />
-          {props.isOnPoolBreak ? (
-            <Button
-              style={styles.buttonPoolBreak}
-              onPress={props.onSwitchPoolBreakPlayerIndex.bind(
-                GamePlayer,
-                props.index,
-              )}>
-              <Text
-                color={colors.white}
-                fontWeight={'bold'}
-                fontSize={dims.screenWidth * 0.0125}>
-                {i18n.t('break')}
-              </Text>
-            </Button>
-          ) : (
+        {isPoolGame(props.gameSettings.category) &&
+        props.gameSettings.mode.mode !== 'fast' ? (
+          <View
+            style={styles.functionWrapper}
+            direction={'row'}
+            justify={'between'}
+            alignItems={'center'}>
             <View />
-          )}
-        </View>
+            {props.isOnPoolBreak ? (
+              <Button
+                style={styles.buttonPoolBreak}
+                onPress={props.onSwitchPoolBreakPlayerIndex.bind(
+                  GamePlayer,
+                  props.index,
+                )}>
+                <Text
+                  color={colors.white}
+                  fontWeight={'bold'}
+                  fontSize={dims.screenWidth * 0.0125}>
+                  {i18n.t('break')}
+                </Text>
+              </Button>
+            ) : (
+              <View />
+            )}
+          </View>
+        ) : (
+          <View />
+        )}
 
         <View style={styles.leftContainer}>
           {props.gameSettings?.mode?.mode !== 'fast' &&

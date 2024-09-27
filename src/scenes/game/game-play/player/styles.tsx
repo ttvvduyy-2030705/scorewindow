@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   buttonPoolBreak: {
-    backgroundColor: colors.lightPrimary1,
+    backgroundColor: colors.green,
     paddingVertical: responsiveDimension(8),
     paddingHorizontal: responsiveDimension(24),
     marginRight: responsiveDimension(15),

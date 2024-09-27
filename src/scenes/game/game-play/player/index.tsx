@@ -285,7 +285,10 @@ const GamePlayer = (props: Props) => {
                 GamePlayer,
                 props.index,
               )}>
-              <Text fontSize={dims.screenWidth * 0.0125}>
+              <Text
+                color={colors.white}
+                fontWeight={'bold'}
+                fontSize={dims.screenWidth * 0.0125}>
                 {i18n.t('break')}
               </Text>
             </Button>

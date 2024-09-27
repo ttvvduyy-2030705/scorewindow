@@ -681,7 +681,9 @@ const GamePlayViewModel = () => {
     ) {
       setPoolBreakEnabled(true);
     }
-  }, [gameSettings, playerSettings]);
+
+    onEndTurn();
+  }, [gameSettings, playerSettings, onEndTurn]);
 
   return useMemo(() => {
     return {

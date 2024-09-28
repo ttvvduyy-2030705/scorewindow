@@ -472,17 +472,23 @@ const GamePlayViewModel = () => {
   }, [_resetCountdown, playerSettings]);
 
   const onSwitchPoolBreakPlayerIndex = useCallback(
-    (index: number) => {
+    (index: number, callback?: (playerIndex: number) => void) => {
       if (!gameSettings) {
         return;
       }
+      let newPoolBreakPlayerIndex = 0;
 
       if (index + 1 > gameSettings.players.playerNumber - 1) {
-        setPoolBreakPlayerIndex(0);
-        return;
+        newPoolBreakPlayerIndex = 0;
+      } else {
+        newPoolBreakPlayerIndex = index + 1;
       }
 
-      setPoolBreakPlayerIndex(index + 1);
+      setPoolBreakPlayerIndex(newPoolBreakPlayerIndex);
+
+      if (callback) {
+        callback(newPoolBreakPlayerIndex);
+      }
     },
     [gameSettings],
   );
@@ -502,12 +508,11 @@ const GamePlayViewModel = () => {
       return;
     }
 
-    setPoolBreakPlayerIndex(currentPlayerIndex);
     setCountdownTime(gameSettings.mode?.countdownTime! * 2);
     setPoolBreakEnabled(false);
     setIsMatchPaused(false);
     setIsStarted(true);
-  }, [gameSettings, isStarted, isPaused, poolBreakEnabled, currentPlayerIndex]);
+  }, [gameSettings, isStarted, isPaused, poolBreakEnabled]);
 
   const getWarmUpTimeString = useCallback(() => {
     if (!warmUpCountdownTime) {
@@ -550,28 +555,34 @@ const GamePlayViewModel = () => {
       if (!gameSettings || !isStarted) {
         return;
       }
+      let nextPlayerIndex = 0,
+        newTotalTurns: number | null = null;
+
+      switch (true) {
+        case isPrevious && currentPlayerIndex - 1 < 0:
+          nextPlayerIndex = gameSettings.players.playerNumber - 1;
+          newTotalTurns = totalTurns + 1;
+          break;
+        case isPrevious:
+          nextPlayerIndex = currentPlayerIndex - 1;
+          break;
+        case !isPrevious &&
+          currentPlayerIndex + 1 > gameSettings.players.playerNumber - 1:
+          nextPlayerIndex = 0;
+          newTotalTurns = totalTurns + 1;
+          break;
+        default:
+          nextPlayerIndex = currentPlayerIndex + 1;
+          break;
+      }
 
       setIsMatchPaused(false);
+      setCurrentPlayerIndex(nextPlayerIndex);
       _resetCountdown();
 
-      if (isPrevious) {
-        if (currentPlayerIndex - 1 < 0) {
-          setCurrentPlayerIndex(gameSettings.players.playerNumber - 1);
-          setTotalTurns(totalTurns + 1);
-          return;
-        }
-
-        setCurrentPlayerIndex(currentPlayerIndex - 1);
-        return;
+      if (newTotalTurns) {
+        setTotalTurns(newTotalTurns);
       }
-
-      if (currentPlayerIndex + 1 > gameSettings.players.playerNumber - 1) {
-        setCurrentPlayerIndex(0);
-        setTotalTurns(totalTurns + 1);
-        return;
-      }
-
-      setCurrentPlayerIndex(currentPlayerIndex + 1);
     },
     [isStarted, currentPlayerIndex, totalTurns, gameSettings, _resetCountdown],
   );
@@ -682,8 +693,15 @@ const GamePlayViewModel = () => {
       setPoolBreakEnabled(true);
     }
 
-    onEndTurn();
-  }, [gameSettings, playerSettings, onEndTurn]);
+    onSwitchPoolBreakPlayerIndex(poolBreakPlayerIndex, playerIndex => {
+      setCurrentPlayerIndex(playerIndex);
+    });
+  }, [
+    poolBreakPlayerIndex,
+    gameSettings,
+    playerSettings,
+    onSwitchPoolBreakPlayerIndex,
+  ]);
 
   return useMemo(() => {
     return {

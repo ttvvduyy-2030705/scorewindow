@@ -296,6 +296,7 @@ const GamePlayer = (props: Props) => {
                 onPress={props.onSwitchPoolBreakPlayerIndex.bind(
                   GamePlayer,
                   props.index,
+                  undefined,
                 )}>
                 <Text
                   color={colors.white}

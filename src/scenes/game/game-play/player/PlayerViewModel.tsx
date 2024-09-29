@@ -13,7 +13,10 @@ export interface Props {
   isPaused: boolean;
   soundEnabled: boolean;
   totalTurns: number;
-  onSwitchPoolBreakPlayerIndex: (index: number) => void;
+  onSwitchPoolBreakPlayerIndex: (
+    index: number,
+    callback?: (playerIndex: number) => void,
+  ) => void;
   onEditPlayerName: (index: number, newName: string) => void;
   onChangePlayerPoint: (
     addedPoint: number,

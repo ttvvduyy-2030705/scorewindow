@@ -10,6 +10,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from '@react-navigation/native';
+import {logEvent, sendUserId} from 'services/firebase/analytics';
 import {LanguageContext} from 'context/language';
 import {StackScreens} from 'scenes';
 import {navigationRef} from 'utils/navigation';
@@ -25,6 +26,9 @@ import {
   PlayerGoalSchema,
 } from 'data/realm/models/player';
 import RemoteControl from 'utils/remote';
+import {initRemoteConfig} from 'services/firebase/remote-config';
+import analyticsKeys from 'services/firebase/analytics/keys';
+import DeviceInfo from 'react-native-device-info';
 // import {BLEService} from 'utils/bluetooth';
 
 const App = (): React.JSX.Element => {
@@ -57,6 +61,12 @@ const App = (): React.JSX.Element => {
   }, []);
 
   const _init = useCallback(async () => {
+    const deviceId = await DeviceInfo.getInstanceId();
+
+    sendUserId(deviceId);
+    logEvent(analyticsKeys.deviceId, {device_id: deviceId});
+    initRemoteConfig();
+
     const _currentLanguage = await loadLanguage();
     setCurrentLanguage(_currentLanguage);
   }, []);

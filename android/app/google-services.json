@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "378804694906",
+    "project_id": "aplus-score",
+    "storage_bucket": "aplus-score.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378804694906:android:14ba623402b44f1d3930c3",
+        "android_client_info": {
+          "package_name": "com.aplus.score"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFJgDV_bTUpqowmH_j97x3wiYA6-bKlMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -20,6 +20,8 @@ const en = {
   // eslint-disable-next-line quotes
   msgRateApp: "How was your experience, let's rate for the app.",
 
+  msgTrialEnd: 'This trial version has ended, please contact us to continue.',
+
   txtError: 'Error',
   msgError: 'Error occured, please try again',
   txtSuccess: 'Success',

@@ -19,6 +19,8 @@ const vi = {
 
   msgRateApp:
     'Trải nghiệm của bạn như thế nào, đánh giá ứng dụng thật tốt nhé.',
+  msgTrialEnd:
+    'Phiên bản này đã hết hạn dùng thử, vui lòng liên hệ với chúng tôi để tiếp tục.',
 
   txtError: 'Lỗi',
   msgError: 'Có lỗi xảy ra, vui lòng thử lại sau',

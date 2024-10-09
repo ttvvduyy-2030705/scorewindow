@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   },
   totalPointWrapper: {
     marginBottom: responsiveDimension(-96),
+    marginHorizontal: responsiveDimension(64),
   },
   totalPointNoMarginBottom: {
     marginBottom: 0,

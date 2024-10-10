@@ -299,6 +299,7 @@ const GamePlayViewModel = () => {
 
       if (!isPoolGame(gameSettings.category)) {
         _resetCountdown();
+        setIsMatchPaused(false);
       }
     },
     [isStarted, gameSettings, playerSettings, _resetCountdown],

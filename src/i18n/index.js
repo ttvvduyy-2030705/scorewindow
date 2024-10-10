@@ -1,4 +1,5 @@
 import * as RNLocalize from 'react-native-localize';
+import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-community/async-storage';
 import {I18n} from 'i18n-js';
 import Numeral from 'numeral';
@@ -6,7 +7,6 @@ import 'numeral/locales';
 
 import vi from './vi';
 import en from './en';
-import Tts from 'react-native-tts';
 
 const i18n = new I18n({vi, en});
 

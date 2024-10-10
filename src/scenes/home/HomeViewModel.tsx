@@ -1,5 +1,6 @@
+import {useCallback, useContext, useMemo} from 'react';
+import {LanguageContext} from 'context/language';
 import i18n from 'i18n';
-import {useCallback, useMemo} from 'react';
 import {screens} from 'scenes/screens';
 import {Navigation} from 'types/navigation';
 // import {BLEService} from 'utils/bluetooth';
@@ -7,6 +8,8 @@ import {Navigation} from 'types/navigation';
 export interface Props extends Navigation {}
 
 const HomeViewModel = (props: Props) => {
+  const {language} = useContext(LanguageContext);
+
   const onStartNewGame = useCallback(() => {
     props.navigate(screens.gameSettings);
   }, [props]);
@@ -33,11 +36,18 @@ const HomeViewModel = (props: Props) => {
       case hours > 17 && hours <= 23:
         return i18n.t('txtGoodEvening');
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
 
   return useMemo(() => {
-    return {helloText, onStartNewGame, onPressHistory, onPressConfigs};
-  }, [helloText, onStartNewGame, onPressHistory, onPressConfigs]);
+    return {
+      language,
+      helloText,
+      onStartNewGame,
+      onPressHistory,
+      onPressConfigs,
+    };
+  }, [language, helloText, onStartNewGame, onPressHistory, onPressConfigs]);
 };
 
 export default HomeViewModel;

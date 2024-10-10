@@ -75,7 +75,6 @@ const en = {
   msgAppName: 'Digital Score Board',
   msgIntroTitle: 'Entertainment',
   msgIntroDescription: 'Billiards - Devices - Evolutions',
-  txtEnterWebcamIPAddress: 'Enter webcam IP address',
   txtReconnect: 'Reconnect',
   txtMinuteOrder: 'Minute {{minute}}',
 

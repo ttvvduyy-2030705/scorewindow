@@ -11,6 +11,9 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from '@react-navigation/native';
 import {logEvent, sendUserId} from 'services/firebase/analytics';
+import Container from 'components/Container';
+import View from 'components/View';
+import Loading from 'components/Loading';
 import {LanguageContext} from 'context/language';
 import {StackScreens} from 'scenes';
 import {navigationRef} from 'utils/navigation';
@@ -32,6 +35,7 @@ import DeviceInfo from 'react-native-device-info';
 // import {BLEService} from 'utils/bluetooth';
 
 const App = (): React.JSX.Element => {
+  const [isLoading, setIsLoading] = useState(true);
   const [currentLanguage, setCurrentLanguage] = useState('vi');
 
   useEffect(() => {
@@ -69,6 +73,8 @@ const App = (): React.JSX.Element => {
 
     const _currentLanguage = await loadLanguage();
     setCurrentLanguage(_currentLanguage);
+
+    setIsLoading(false);
   }, []);
 
   const onChangeCurrentLanguage = useCallback((language: string) => {
@@ -93,7 +99,15 @@ const App = (): React.JSX.Element => {
           <NavigationContainer ref={navigationRef}>
             <LanguageContext.Provider
               value={{language: currentLanguage, onChangeCurrentLanguage}}>
-              <StackScreens />
+              {isLoading ? (
+                <Container>
+                  <View flex={'1'} alignItems={'center'} justify={'center'}>
+                    <Loading isLoading />
+                  </View>
+                </Container>
+              ) : (
+                <StackScreens />
+              )}
             </LanguageContext.Provider>
           </NavigationContainer>
         </PersistGate>

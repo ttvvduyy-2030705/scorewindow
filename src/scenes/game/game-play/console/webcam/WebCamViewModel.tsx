@@ -1,12 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {keys} from 'configuration/keys';
-import {
-  WEBCAM_HOST,
-  WEBCAM_LOGIN_PROFILE,
-  WEBCAM_PATH,
-  WEBCAM_PORT,
-} from 'constants/webcam';
+import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
 import {
   OnBufferData,
   OnLoadData,
@@ -30,6 +25,8 @@ let interval: NodeJS.Timeout;
 const WebCamViewModel = (props: Props) => {
   const videoRef = useRef<VideoRef>(null);
   const [webcamIP, setWebcamIP] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [connectCountdownTime, setConnectCountdownTime] = useState<number>(10);
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -37,15 +34,28 @@ const WebCamViewModel = (props: Props) => {
 
   useEffect(() => {
     const _init = async () => {
-      AsyncStorage.getItem(keys.WEBCAM_IP_ADDRESS, (error, result) => {
-        if (!error && result) {
-          setWebcamIP(result);
+      AsyncStorage.multiGet(
+        [keys.WEBCAM_IP_ADDRESS, keys.WEBCAM_USERNAME, keys.WEBCAM_PASSWORD],
+        (error, result) => {
+          if (!error && result) {
+            const _ip = result[0][1];
+            const _username = result[1][1];
+            const _password = result[2][1];
 
-          interval = setInterval(() => {
-            setConnectCountdownTime(prev => (prev - 1 > 0 ? prev - 1 : 0));
-          }, 1000);
-        }
-      });
+            if (!_ip || !_username || !_password) {
+              return;
+            }
+
+            setWebcamIP(_ip);
+            setUsername(_username);
+            setPassword(_password);
+
+            interval = setInterval(() => {
+              setConnectCountdownTime(prev => (prev - 1 > 0 ? prev - 1 : 0));
+            }, 1000);
+          }
+        },
+      );
     };
 
     _init();
@@ -71,13 +81,13 @@ const WebCamViewModel = (props: Props) => {
       }
 
       const now = Date.now().toString();
-      const _url = `${WEBCAM_HOST}${WEBCAM_LOGIN_PROFILE}@${webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
+      const _url = `${WEBCAM_HOST}${username}:${password}@${webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
       streamWebcamToFile(_url, now);
       setUrl(_url);
       props.updateWebcamFolderName(now);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webcamIP, autoConnect]);
+  }, [webcamIP, username, password, autoConnect]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

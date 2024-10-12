@@ -1,14 +1,10 @@
 import {StyleSheet} from 'react-native';
 import colors from 'configuration/colors';
-import {responsiveDimension, responsiveFontSize} from 'utils/helper';
+import {responsiveDimension} from 'utils/helper';
 
 const styles = StyleSheet.create({
-  inputWrapper: {
-    height: responsiveDimension(72),
-  },
+  inputWrapper: {},
   input: {
-    height: responsiveDimension(72),
-    fontSize: responsiveFontSize(40),
     fontWeight: 'bold',
     backgroundColor: colors.transparent,
     borderBottomWidth: 0.5,

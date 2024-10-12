@@ -54,7 +54,7 @@ const PointSteps = (props: Props) => {
                 {
                   paddingVertical: PAIR_PLAY
                     ? responsiveDimension(15)
-                    : responsiveDimension(10),
+                    : responsiveDimension(0),
                 },
               ]}
               onPress={props.onPressPointStep.bind(

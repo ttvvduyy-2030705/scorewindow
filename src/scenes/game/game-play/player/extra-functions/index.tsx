@@ -65,10 +65,6 @@ const ExtraFunctions = (props: Props) => {
     );
   }, [props.averagePoint, props.highestRate]);
 
-  if (props.gameSettings?.mode?.mode === 'fast') {
-    return <View />;
-  }
-
   return (
     <View style={styles.functionWrapper} direction={'row'} justify={'between'}>
       {props.proModeEnabled && !isPoolGame(props.gameSettings?.category) ? (

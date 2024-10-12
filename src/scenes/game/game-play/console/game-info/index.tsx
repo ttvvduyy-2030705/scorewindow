@@ -17,25 +17,25 @@ interface Props {
 }
 
 const GameInfo = (props: Props) => {
+  const isFullPlayer = props.totalPlayers === 5;
+
   const renderPoint = useCallback(
     (title: string, value: number) => {
       return (
         <View
-          style={styles.functionItem}
           flex={'1'}
           direction={'row'}
           alignItems={'center'}
-          justify={'center'}
-          marginLeft={'20'}>
+          justify={'center'}>
           <Text fontSize={16}>{title}</Text>
-          <View
-            flex={'1'}
-            direction={'row'}
-            alignItems={'center'}
-            marginLeft={'5'}>
+          <View direction={'row'} alignItems={'center'} marginLeft={'5'}>
             <Text
-              style={styles.textPoint}
-              fontSize={128}
+              style={
+                props.isStarted
+                  ? styles.textPointNoMarginBottom
+                  : styles.textPointMarginBottom
+              }
+              fontSize={104}
               adjustsFontSizeToFit={true}
               color={colors.grayBlue}
               fontWeight={'bold'}>
@@ -45,11 +45,10 @@ const GameInfo = (props: Props) => {
         </View>
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.isStarted],
   );
 
-  if (props.totalPlayers === 5 && props.currentMode?.mode === 'fast') {
+  if (isFullPlayer && props.currentMode?.mode === 'fast') {
     return <View />;
   }
 
@@ -58,8 +57,11 @@ const GameInfo = (props: Props) => {
   }
 
   return (
-    <View flex={'1'}>
-      <View flex={'1'} direction={'row'} alignItems={'center'}>
+    <View flex={isFullPlayer ? '0' : '1'}>
+      <View
+        flex={isFullPlayer ? '0' : '1'}
+        direction={'row'}
+        alignItems={'center'}>
         {renderPoint(i18n.t('totalTurns'), props.totalTurns)}
         {renderPoint(i18n.t('goal'), props.goal)}
       </View>

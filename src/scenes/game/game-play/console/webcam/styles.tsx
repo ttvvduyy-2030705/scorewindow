@@ -5,7 +5,7 @@ import {responsiveDimension} from 'utils/helper';
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    aspectRatio: 1.77777,
+    aspectRatio: 1.542,
     alignSelf: 'center',
   },
   webcamWrapper: {

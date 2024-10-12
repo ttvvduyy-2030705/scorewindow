@@ -6,6 +6,7 @@ import {isPoolGame} from 'utils/game';
 export interface Props {
   index: number;
   gameSettings: GameSettings;
+  totalPlayers?: number;
   player: Player;
   isOnTurn: boolean;
   isOnPoolBreak: boolean;
@@ -112,8 +113,13 @@ const PlayerViewModel = (props: Props) => {
     [props, highestRate, totalPointInTurn],
   );
 
+  const showProMode = useMemo(() => {
+    return props.proModeEnabled && !isPoolGame(props.gameSettings?.category);
+  }, [props]);
+
   return useMemo(() => {
     return {
+      showProMode,
       highestRate,
       averagePoint,
       totalPointInTurn,
@@ -128,6 +134,7 @@ const PlayerViewModel = (props: Props) => {
       onEndTurn,
     };
   }, [
+    showProMode,
     highestRate,
     averagePoint,
     totalPointInTurn,

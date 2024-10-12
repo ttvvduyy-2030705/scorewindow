@@ -36,11 +36,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveDimension(30),
   },
   totalPointWrapper: {
-    marginBottom: responsiveDimension(-96),
+    marginBottom: responsiveDimension(-56),
     marginHorizontal: responsiveDimension(64),
   },
   totalPointNoMarginBottom: {
     marginBottom: 0,
+    marginHorizontal: responsiveDimension(64),
   },
 });
 

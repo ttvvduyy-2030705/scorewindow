@@ -40,6 +40,7 @@ const GamePlayer = (props: Props) => {
       style={[styles.container, {backgroundColor: props.player.color}]}
       marginHorizontal={'20'}>
       <PlayerName
+        totalPlayers={props.totalPlayers}
         player={props.player}
         nameEditable={viewModel.nameEditable}
         onChangeName={viewModel.onChangeName}
@@ -69,30 +70,33 @@ const GamePlayer = (props: Props) => {
         direction={'row'}
         alignItems={'center'}
         justify={'center'}>
-        <ExtraFunctions
-          index={props.index}
-          highestRate={viewModel.highestRate}
-          isOnPoolBreak={props.isOnPoolBreak}
-          proModeEnabled={props.proModeEnabled}
-          averagePoint={viewModel.averagePoint}
-          gameSettings={props.gameSettings}
-          onSwitchPoolBreakPlayerIndex={props.onSwitchPoolBreakPlayerIndex}
-        />
+        {viewModel.showProMode ? (
+          <ExtraFunctions
+            index={props.index}
+            highestRate={viewModel.highestRate}
+            isOnPoolBreak={props.isOnPoolBreak}
+            proModeEnabled={props.proModeEnabled}
+            averagePoint={viewModel.averagePoint}
+            gameSettings={props.gameSettings}
+            onSwitchPoolBreakPlayerIndex={props.onSwitchPoolBreakPlayerIndex}
+          />
+        ) : (
+          <View />
+        )}
 
         <View style={styles.leftContainer}>
           {isPoolGame(props.gameSettings?.category) ? BALLS_VIEW : <View />}
         </View>
 
-        <View
-          style={
-            props.proModeEnabled && !isPoolGame(props.gameSettings?.category)
-              ? styles.totalPointWrapper
-              : styles.totalPointNoMarginBottom
-          }
-          flex={'1'}
-          alignItems={'center'}
-          justify={'center'}>
-          <Text fontSize={512} adjustsFontSizeToFit={true}>
+        <View flex={'1'} alignItems={'center'} justify={'center'}>
+          <Text
+            style={
+              viewModel.showProMode
+                ? styles.totalPointWrapper
+                : styles.totalPointNoMarginBottom
+            }
+            fontSize={512}
+            adjustsFontSizeToFit={true}>
             {props.player.totalPoint}
           </Text>
         </View>

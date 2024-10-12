@@ -27,6 +27,7 @@ const GamePlay = () => {
             proModeEnabled={viewModel.proModeEnabled}
             totalTurns={viewModel.totalTurns}
             gameSettings={viewModel.gameSettings!}
+            totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
             player={viewModel.playerSettings!.playingPlayers[topIndex]}
             onSwitchPoolBreakPlayerIndex={
               viewModel.onSwitchPoolBreakPlayerIndex
@@ -49,6 +50,7 @@ const GamePlay = () => {
                 proModeEnabled={viewModel.proModeEnabled}
                 totalTurns={viewModel.totalTurns}
                 gameSettings={viewModel.gameSettings!}
+                totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
                 player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
                 onSwitchPoolBreakPlayerIndex={
                   viewModel.onSwitchPoolBreakPlayerIndex
@@ -99,6 +101,7 @@ const GamePlay = () => {
         proModeEnabled={viewModel.proModeEnabled}
         totalTurns={viewModel.totalTurns}
         gameSettings={viewModel.gameSettings!}
+        totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
         player={viewModel.playerSettings!.playingPlayers[4]}
         onSwitchPoolBreakPlayerIndex={viewModel.onSwitchPoolBreakPlayerIndex}
         onEditPlayerName={viewModel.onEditPlayerName}

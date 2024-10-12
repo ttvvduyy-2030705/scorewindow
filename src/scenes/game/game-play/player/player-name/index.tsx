@@ -5,12 +5,14 @@ import TextInput from 'components/TextInput';
 import Button from 'components/Button';
 import Image from 'components/Image';
 import images from 'assets';
+import {responsiveDimension} from 'utils/helper';
 
 import {Player} from 'types/player';
 
 import styles from './styles';
 
 interface Props {
+  totalPlayers?: number;
   player: Player;
   nameEditable: boolean;
   onChangeName: (value: string) => void;
@@ -18,9 +20,13 @@ interface Props {
 }
 
 const PlayerName = (props: Props) => {
+  const isPairPlay = props.totalPlayers && props.totalPlayers > 2;
+
   return (
     <View
-      style={styles.inputWrapper}
+      style={{
+        height: isPairPlay ? responsiveDimension(40) : responsiveDimension(72),
+      }}
       direction={'row'}
       alignItems={'center'}
       marginTop={'10'}
@@ -35,6 +41,15 @@ const PlayerName = (props: Props) => {
                 ? colors.black
                 : colors.transparent,
             },
+            isPairPlay
+              ? {
+                  fontSize: responsiveDimension(32),
+                  height: responsiveDimension(56),
+                }
+              : {
+                  fontSize: responsiveDimension(40),
+                  height: responsiveDimension(72),
+                },
           ]}
           value={props.player.name}
           onChange={props.onChangeName}

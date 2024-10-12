@@ -18,8 +18,10 @@ const styles = StyleSheet.create({
   buttonGiveMoreTime: {
     backgroundColor: colors.yellow,
   },
-  functionItem: {
-    marginBottom: responsiveDimension(-16),
+  functionItem: {},
+  textPoint: {
+    width: '100%',
+    marginTop: responsiveDimension(-24),
   },
 });
 

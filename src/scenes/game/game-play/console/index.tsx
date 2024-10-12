@@ -184,8 +184,9 @@ const GameConsole = (props: Props) => {
                 onResetTurn={props.onResetTurn}
               />
             ) : (
-              <View flex={props.totalPlayers === 5 ? '0' : '1'} justify={'end'}>
+              <View flex={props.totalPlayers === 5 ? '0' : '1'}>
                 <GameInfo
+                  isStarted={props.isStarted}
                   goal={props.goal}
                   totalTurns={props.totalTurns}
                   totalPlayers={props.totalPlayers}

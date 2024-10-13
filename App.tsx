@@ -7,6 +7,8 @@
 
 import 'react-native-get-random-values';
 import React, {useCallback, useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from '@react-navigation/native';
@@ -106,7 +108,9 @@ const App = (): React.JSX.Element => {
                   </View>
                 </Container>
               ) : (
-                <StackScreens />
+                <GestureHandlerRootView style={styles.container}>
+                  <StackScreens />
+                </GestureHandlerRootView>
               )}
             </LanguageContext.Provider>
           </NavigationContainer>
@@ -115,5 +119,11 @@ const App = (): React.JSX.Element => {
     </RealmProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default App;

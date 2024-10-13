@@ -12,6 +12,7 @@ import {OnLoadData, OnVideoErrorData, VideoRef} from 'react-native-video';
 import {keys} from 'configuration/keys';
 import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
 import {LanguageContext} from 'context/language';
+import {Webcam} from 'types/webcam';
 
 const WebcamConfigViewModel = () => {
   const {language} = useContext(LanguageContext);
@@ -20,16 +21,25 @@ const WebcamConfigViewModel = () => {
   const userNameRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  const [webcamIPAddress, setWebcamIPAddress] = useState('');
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('');
+  const [webcam, setWebcam] = useState<Webcam>({
+    webcamIP: '',
+    username: 'admin',
+    password: '',
+  });
 
   const [webcamUrl, setWebcamUrl] = useState<string>('');
   const [allowToSave, setAllowToSave] = useState(false);
 
   useEffect(() => {
     AsyncStorage.multiGet(
-      [keys.WEBCAM_IP_ADDRESS, keys.WEBCAM_USERNAME, keys.WEBCAM_PASSWORD],
+      [
+        keys.WEBCAM_IP_ADDRESS,
+        keys.WEBCAM_USERNAME,
+        keys.WEBCAM_PASSWORD,
+        keys.WEBCAM_SCALE,
+        keys.WEBCAM_TRANSLATE_X,
+        keys.WEBCAM_TRANSLATE_Y,
+      ],
       (error, result) => {
         if (error || !result) {
           return;
@@ -38,31 +48,30 @@ const WebcamConfigViewModel = () => {
         const _ip = result[0][1];
         const _username = result[1][1];
         const _password = result[2][1];
+        const _scale = result[3][1];
+        const _translateX = result[4][1];
+        const _translateY = result[5][1];
 
         if (!_ip || !_username || !_password) {
           return;
         }
 
-        if (_ip) {
-          setWebcamIPAddress(_ip);
-        }
-
-        if (_username) {
-          setUsername(_username);
-        }
-
-        if (_password) {
-          setPassword(_password);
-        }
+        setWebcam({
+          webcamIP: _ip,
+          username: _username,
+          password: _password,
+          scale: Number(_scale) || 1,
+          translateX: Number(_translateX) || 0,
+          translateY: Number(_translateY) || 0,
+        });
       },
     );
   }, []);
 
-  const onChangeText = useCallback(
-    (setValue: React.Dispatch<React.SetStateAction<string>>) =>
-      (value: string) => {
-        setValue(value);
-      },
+  const onChangeWebcamConfig = useCallback(
+    (key: string) => (value: string) => {
+      setWebcam(prev => ({...prev, [key]: value}));
+    },
     [],
   );
 
@@ -75,10 +84,10 @@ const WebcamConfigViewModel = () => {
   );
 
   const onTest = useCallback(() => {
-    const _url = `${WEBCAM_HOST}${username}:${password}@${webcamIPAddress}:${WEBCAM_PORT}${WEBCAM_PATH}`;
+    const _url = `${WEBCAM_HOST}${webcam?.username}:${webcam?.password}@${webcam?.webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
 
     setWebcamUrl(_url);
-  }, [webcamIPAddress, username, password]);
+  }, [webcam]);
 
   const onSaveConfig = useCallback(() => {
     if (!allowToSave) {
@@ -87,10 +96,19 @@ const WebcamConfigViewModel = () => {
 
     setWebcamUrl('');
     setAllowToSave(false);
-    AsyncStorage.setItem(keys.WEBCAM_IP_ADDRESS, webcamIPAddress);
-    AsyncStorage.setItem(keys.WEBCAM_USERNAME, username);
-    AsyncStorage.setItem(keys.WEBCAM_PASSWORD, password);
-  }, [allowToSave, webcamIPAddress, username, password]);
+    AsyncStorage.setItem(keys.WEBCAM_IP_ADDRESS, webcam.webcamIP);
+    AsyncStorage.setItem(keys.WEBCAM_USERNAME, webcam.username);
+    AsyncStorage.setItem(keys.WEBCAM_PASSWORD, webcam.password);
+  }, [allowToSave, webcam]);
+
+  const onSaveWebcamPosition = useCallback(
+    (scale: number, translateX: number, translateY: number) => {
+      AsyncStorage.setItem(keys.WEBCAM_SCALE, scale.toString());
+      AsyncStorage.setItem(keys.WEBCAM_TRANSLATE_X, translateX.toString());
+      AsyncStorage.setItem(keys.WEBCAM_TRANSLATE_Y, translateY.toString());
+    },
+    [],
+  );
 
   const onLoad = useCallback((_data: OnLoadData) => {
     videoRef.current?.setVolume(0);
@@ -102,8 +120,8 @@ const WebcamConfigViewModel = () => {
       console.log('On webcam error', e);
     }
 
-    setWebcamIPAddress('');
     setWebcamUrl('');
+    setWebcam({webcamIP: '', username: '', password: ''});
     setAllowToSave(false);
   }, []);
 
@@ -113,39 +131,36 @@ const WebcamConfigViewModel = () => {
       userNameRef,
       passwordRef,
       language,
-      webcamIPAddress,
-      username,
-      password,
+      webcam,
       webcamUrl,
       allowToSave,
       source: {
         uri: webcamUrl,
         type: 'rtsp',
       },
-      onChangeIPAddress: onChangeText(setWebcamIPAddress),
-      onChangeUsername: onChangeText(setUsername),
-      onChangePassword: onChangeText(setPassword),
+      onChangeIPAddress: onChangeWebcamConfig('webcamIP'),
+      onChangeUsername: onChangeWebcamConfig('username'),
+      onChangePassword: onChangeWebcamConfig('password'),
       onSubmitEditingIPAddress: onSubmitEditing(userNameRef),
       onSubmitEditingUsername: onSubmitEditing(passwordRef),
       onTest,
       onSaveConfig,
-      onChangeText,
       onLoad,
       onWebcamError,
+      onSaveWebcamPosition,
     };
   }, [
     language,
-    webcamIPAddress,
-    username,
-    password,
+    webcam,
     webcamUrl,
     allowToSave,
+    onChangeWebcamConfig,
+    onSubmitEditing,
     onTest,
     onSaveConfig,
-    onChangeText,
     onLoad,
-    onSubmitEditing,
     onWebcamError,
+    onSaveWebcamPosition,
   ]);
 };
 

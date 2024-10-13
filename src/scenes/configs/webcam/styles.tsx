@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   webcam: {
-    flex: 1,
-    width: '100%',
+    overflow: 'hidden',
     backgroundColor: colors.black,
   },
   input: {

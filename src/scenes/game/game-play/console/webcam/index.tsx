@@ -1,5 +1,4 @@
 import React, {memo, useMemo} from 'react';
-import Video from 'react-native-video';
 
 import View from 'components/View';
 import Button from 'components/Button';
@@ -7,15 +6,12 @@ import Text from 'components/Text';
 import Image from 'components/Image';
 import Divider from 'components/Divider';
 import Loading from 'components/Loading';
+import Video from 'components/Video';
 
 import images from 'assets';
 import i18n from 'i18n';
 
 import colors from 'configuration/colors';
-import {
-  WEBCAM_BUFFER_CONFIG,
-  WEBCAM_SELECTED_VIDEO_TRACK,
-} from 'constants/webcam';
 
 import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
@@ -63,12 +59,13 @@ const WebCam = (props: Props) => {
             WEBCAM_LOADER
           ) : (
             <Video
-              id={'webcam-billiards'}
+              key={'webcam-billiards'}
               ref={viewModel.videoRef}
-              style={styles.webcam}
+              gestureDisabled
               source={viewModel.source}
-              selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
-              bufferConfig={WEBCAM_BUFFER_CONFIG}
+              initialScale={viewModel.webcam?.scale}
+              initialTranslateX={viewModel.webcam?.translateX}
+              initialTranslateY={viewModel.webcam?.translateY}
               onFullscreenPlayerDidPresent={
                 viewModel.onFullscreenPlayerDidPresent
               }
@@ -78,7 +75,6 @@ const WebCam = (props: Props) => {
               onVideoTracks={viewModel.onVideoTracks}
               onEnd={viewModel.onEnd}
               onError={viewModel.onWebcamError}
-              renderLoader={WEBCAM_LOADER}
             />
           )}
         </View>

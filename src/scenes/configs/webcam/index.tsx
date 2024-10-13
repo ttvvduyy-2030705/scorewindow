@@ -1,18 +1,12 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useCallback} from 'react';
 import {KeyboardTypeOptions, TextInput as RNTextInput} from 'react-native';
-import Video from 'react-native-video';
 import Button from 'components/Button';
-import Loading from 'components/Loading';
 import Text from 'components/Text';
 import View from 'components/View';
 import TextInput from 'components/TextInput';
+import Video from 'components/Video';
 import i18n from 'i18n';
-import {
-  WEBCAM_BUFFER_CONFIG,
-  WEBCAM_SELECTED_VIDEO_TRACK,
-} from 'constants/webcam';
 
-import configStyles from '../styles';
 import WebcamConfigViewModel from './WebcamConfigViewModel';
 import styles from './styles';
 
@@ -61,18 +55,6 @@ const WebcamConfig = () => {
     [],
   );
 
-  const WEBCAM_LOADER = useMemo(() => {
-    return (
-      <View
-        flex={'1'}
-        style={configStyles.fullWidth}
-        alignItems={'center'}
-        justify={'center'}>
-        <Loading isLoading size={'large'} showPlainLoading />
-      </View>
-    );
-  }, []);
-
   return (
     <View style={styles.configIPWrapper} padding={'20'}>
       <Text fontWeight={'bold'}>{i18n.t('webcamConfig')}</Text>
@@ -80,7 +62,7 @@ const WebcamConfig = () => {
         <View direction={'row'} alignItems={'center'} marginTop={'15'}>
           {renderInput(
             i18n.t('webcamIP'),
-            viewModel.webcamIPAddress,
+            viewModel.webcam.webcamIP,
             i18n.t('txtEnterWebcamIPAddress'),
             'numeric',
             'next',
@@ -91,7 +73,7 @@ const WebcamConfig = () => {
           )}
           {renderInput(
             i18n.t('username'),
-            viewModel.username,
+            viewModel.webcam.username,
             i18n.t('txtEnterUsername'),
             'default',
             'next',
@@ -103,7 +85,7 @@ const WebcamConfig = () => {
           )}
           {renderInput(
             i18n.t('password'),
-            viewModel.password,
+            viewModel.webcam.password,
             i18n.t('txtEnterPassword'),
             'default',
             'default',
@@ -116,7 +98,10 @@ const WebcamConfig = () => {
         </View>
       </View>
 
-      <View direction={'row'} marginTop={'20'}>
+      <View
+        flex={viewModel.webcamUrl ? '1' : '0'}
+        direction={'row'}
+        marginTop={'20'}>
         <View
           flex={'1'}
           direction={'row'}
@@ -134,19 +119,21 @@ const WebcamConfig = () => {
         </View>
       </View>
 
-      <View marginBottom={'20'} />
+      <View marginVertical={'20'} paddingVertical={'15'} />
       {viewModel.webcamUrl ? (
-        <Video
-          id={'webcam-billiards-test'}
-          ref={viewModel.videoRef}
-          style={styles.webcam}
-          source={viewModel.source}
-          selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
-          bufferConfig={WEBCAM_BUFFER_CONFIG}
-          onLoad={viewModel.onLoad}
-          onError={viewModel.onWebcamError}
-          renderLoader={WEBCAM_LOADER}
-        />
+        <View style={styles.webcam} flex={'4'} direction={'row'}>
+          <Video
+            key={'webcam-billiards-test'}
+            ref={viewModel.videoRef}
+            source={viewModel.source}
+            initialScale={viewModel.webcam.scale}
+            initialTranslateX={viewModel.webcam.translateX}
+            initialTranslateY={viewModel.webcam.translateY}
+            onLoad={viewModel.onLoad}
+            onError={viewModel.onWebcamError}
+            onPosition={viewModel.onSaveWebcamPosition}
+          />
+        </View>
       ) : (
         <View />
       )}

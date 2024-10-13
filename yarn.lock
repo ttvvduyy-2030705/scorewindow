@@ -1653,6 +1653,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@egjs/hammerjs@npm:^2.0.17":
+  version: 2.0.17
+  resolution: "@egjs/hammerjs@npm:2.0.17"
+  dependencies:
+    "@types/hammerjs": ^2.0.36
+  checksum: 8945137cec5837edd70af3f2e0ea621543eb0aa3b667e6269ec6485350f4d120c2434b37c7c30b1cf42a65275dd61c1f24626749c616696d3956ac0c008c4766
+  languageName: node
+  linkType: hard
+
 "@eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.4.0":
   version: 4.4.0
   resolution: "@eslint-community/eslint-utils@npm:4.4.0"
@@ -4017,6 +4026,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hammerjs@npm:^2.0.36":
+  version: 2.0.46
+  resolution: "@types/hammerjs@npm:2.0.46"
+  checksum: caba6ec788d19905c71092670b58514b3d1f5eee5382bf9205e8df688d51e7857b7994e2dd7aed57fac8977bdf0e456d67fbaf23440a4385b8ce25fe2af1ec39
+  languageName: node
+  linkType: hard
+
 "@types/hoist-non-react-statics@npm:^3.3.0":
   version: 3.3.5
   resolution: "@types/hoist-non-react-statics@npm:3.3.5"
@@ -4914,6 +4930,7 @@ __metadata:
     react-native: 0.74.4
     react-native-device-info: ^13.0.0
     react-native-fs: ^2.20.0
+    react-native-gesture-handler: ^2.20.0
     react-native-get-random-values: ^1.11.0
     react-native-linear-gradient: ^2.8.3
     react-native-localize: ^3.2.0
@@ -9825,7 +9842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -9998,6 +10015,21 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 0be9bb9a5c13b501d0a3006efc3aa5c0b5b211456ee04718297f4e522532f3527f1daa220bd67d3b82d819ed8fdab8f64b7d6e0d7b768c1fd1d8ec9122d94316
+  languageName: node
+  linkType: hard
+
+"react-native-gesture-handler@npm:^2.20.0":
+  version: 2.20.0
+  resolution: "react-native-gesture-handler@npm:2.20.0"
+  dependencies:
+    "@egjs/hammerjs": ^2.0.17
+    hoist-non-react-statics: ^3.3.0
+    invariant: ^2.2.4
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: f573bc3717ae0209ff30bf62b95b3c7f11bd97f4797090211bce416c250388f55d1995aac0a7f1bbc99b06223ea64cbeae8d4ef88dcb8c877201b49163ea0e4b
   languageName: node
   linkType: hard
 

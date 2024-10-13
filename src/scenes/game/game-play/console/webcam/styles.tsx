@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   webcamWrapper: {
-    // height: dims.screenHeight * 0.3,
     backgroundColor: colors.black,
+    overflow: 'hidden',
   },
   webcam: {
     width: '100%',

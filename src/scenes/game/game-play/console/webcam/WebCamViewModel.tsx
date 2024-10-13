@@ -14,6 +14,7 @@ import {streamWebcamToFile} from 'services/ffmpeg/webcam';
 import {requestReadWriteStorage} from 'utils/permission';
 import {navigate} from 'utils/navigation';
 import {screens} from 'scenes/screens';
+import {Webcam} from 'types/webcam';
 
 export interface Props {
   webcamFolderName?: string;
@@ -24,9 +25,7 @@ let interval: NodeJS.Timeout;
 
 const WebCamViewModel = (props: Props) => {
   const videoRef = useRef<VideoRef>(null);
-  const [webcamIP, setWebcamIP] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [webcam, setWebcam] = useState<Webcam>();
   const [connectCountdownTime, setConnectCountdownTime] = useState<number>(10);
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -35,20 +34,35 @@ const WebCamViewModel = (props: Props) => {
   useEffect(() => {
     const _init = async () => {
       AsyncStorage.multiGet(
-        [keys.WEBCAM_IP_ADDRESS, keys.WEBCAM_USERNAME, keys.WEBCAM_PASSWORD],
+        [
+          keys.WEBCAM_IP_ADDRESS,
+          keys.WEBCAM_USERNAME,
+          keys.WEBCAM_PASSWORD,
+          keys.WEBCAM_SCALE,
+          keys.WEBCAM_TRANSLATE_X,
+          keys.WEBCAM_TRANSLATE_Y,
+        ],
         (error, result) => {
           if (!error && result) {
             const _ip = result[0][1];
             const _username = result[1][1];
             const _password = result[2][1];
+            const _scale = result[3][1];
+            const _translateX = result[4][1];
+            const _translateY = result[5][1];
 
             if (!_ip || !_username || !_password) {
               return;
             }
 
-            setWebcamIP(_ip);
-            setUsername(_username);
-            setPassword(_password);
+            setWebcam({
+              webcamIP: _ip,
+              username: _username,
+              password: _password,
+              scale: Number(_scale) || 1,
+              translateX: Number(_translateX) || 0,
+              translateY: Number(_translateY) || 0,
+            });
 
             interval = setInterval(() => {
               setConnectCountdownTime(prev => (prev - 1 > 0 ? prev - 1 : 0));
@@ -81,13 +95,13 @@ const WebCamViewModel = (props: Props) => {
       }
 
       const now = Date.now().toString();
-      const _url = `${WEBCAM_HOST}${username}:${password}@${webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
+      const _url = `${WEBCAM_HOST}${webcam?.username}:${webcam?.password}@${webcam?.webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
       streamWebcamToFile(_url, now);
       setUrl(_url);
       props.updateWebcamFolderName(now);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webcamIP, username, password, autoConnect]);
+  }, [webcam, autoConnect]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -110,13 +124,9 @@ const WebCamViewModel = (props: Props) => {
 
   const onSeek = useCallback((_data: OnSeekData) => {}, []);
 
-  const onLoad = useCallback(
-    (_data: OnLoadData) => {
-      videoRef.current?.setVolume(0);
-      AsyncStorage.setItem(keys.WEBCAM_IP_ADDRESS, webcamIP);
-    },
-    [webcamIP],
-  );
+  const onLoad = useCallback((_data: OnLoadData) => {
+    videoRef.current?.setVolume(0);
+  }, []);
 
   const onVideoTracks = useCallback((_data: OnVideoTracksData) => {}, []);
 
@@ -124,7 +134,7 @@ const WebCamViewModel = (props: Props) => {
 
   const onWebcamError = useCallback((e: OnVideoErrorData) => {
     console.log('On webcam error', e);
-    setWebcamIP('');
+    setWebcam(undefined);
   }, []);
 
   return useMemo(() => {
@@ -132,7 +142,7 @@ const WebCamViewModel = (props: Props) => {
       videoRef,
       refreshing,
       autoConnect,
-      webcamIP,
+      webcam,
       connectCountdownTime,
       source: {uri: url, type: 'rtsp'},
       onRefresh,
@@ -150,7 +160,7 @@ const WebCamViewModel = (props: Props) => {
     videoRef,
     refreshing,
     autoConnect,
-    webcamIP,
+    webcam,
     url,
     connectCountdownTime,
     onRefresh,

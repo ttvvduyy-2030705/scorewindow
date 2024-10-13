@@ -49,7 +49,7 @@ const PlayBackWebcamViewModel = (props: Props) => {
   }, []);
 
   const onShareVideo = useCallback(() => {
-    Share.open({url: webcamUrl}).catch(err => {
+    Share.open({url: `file://${webcamUrl}`}).catch(err => {
       err && console.log(err);
     });
   }, [webcamUrl]);

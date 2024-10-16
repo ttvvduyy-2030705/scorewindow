@@ -70,19 +70,21 @@ const PlayBackWebcam = (props: Props) => {
               </Text>
             </View>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {FILE_LIST}
-          </ScrollView>
-          <View flex={'1'} />
-          <View>
-            <Button style={styles.buttonBack} onPress={goBack}>
-              <View direction={'row'} alignItems={'center'}>
-                <Image source={images.back} style={styles.iconBack} />
-                <Text lineHeight={15}>{i18n.t('txtBack')}</Text>
-              </View>
-            </Button>
+
+          <View flex={'1'}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {FILE_LIST}
+            </ScrollView>
           </View>
+
+          <Button style={styles.buttonBack} onPress={goBack}>
+            <View direction={'row'} alignItems={'center'}>
+              <Image source={images.back} style={styles.iconBack} />
+              <Text lineHeight={15}>{i18n.t('txtBack')}</Text>
+            </View>
+          </Button>
         </View>
+
         <View flex={'1'} style={styles.webcamContainer}>
           {viewModel.webcamUrl ? (
             <>

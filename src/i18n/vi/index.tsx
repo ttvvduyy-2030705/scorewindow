@@ -79,7 +79,8 @@ const vi = {
   msgIntroTitle: 'Nâng tầm giải trí',
   msgIntroDescription: 'Billiards - Devices - Evolutions',
   txtReconnect: 'Kết nối lại',
-  txtMinuteOrder: 'Phút thứ {{minute}}',
+  txtMinuteOrder: '{{minute}} phút',
+  txtFullGame: 'Toàn trận',
 
   month: 'tháng',
   year: 'năm',

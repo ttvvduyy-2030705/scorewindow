@@ -28,6 +28,7 @@ const WebCamViewModel = (props: Props) => {
   const [webcam, setWebcam] = useState<Webcam>();
   const [connectCountdownTime, setConnectCountdownTime] = useState<number>(10);
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
+  const [isWebcamStarted, setIsWebcamStarted] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [url, setUrl] = useState<string | undefined>();
 
@@ -81,11 +82,12 @@ const WebCamViewModel = (props: Props) => {
     }
 
     setAutoConnect(true);
+
     clearInterval(interval);
   }, [connectCountdownTime]);
 
   useEffect(() => {
-    if (!autoConnect) {
+    if (!autoConnect || isWebcamStarted) {
       return;
     }
 
@@ -96,12 +98,14 @@ const WebCamViewModel = (props: Props) => {
 
       const now = Date.now().toString();
       const _url = `${WEBCAM_HOST}${webcam?.username}:${webcam?.password}@${webcam?.webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
+
       streamWebcamToFile(_url, now);
       setUrl(_url);
       props.updateWebcamFolderName(now);
+      setIsWebcamStarted(true);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webcam, autoConnect]);
+  }, [webcam, autoConnect, isWebcamStarted]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -134,7 +138,6 @@ const WebCamViewModel = (props: Props) => {
 
   const onWebcamError = useCallback((e: OnVideoErrorData) => {
     console.log('On webcam error', e);
-    setWebcam(undefined);
   }, []);
 
   return useMemo(() => {

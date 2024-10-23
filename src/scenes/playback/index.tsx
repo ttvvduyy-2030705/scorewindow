@@ -1,4 +1,5 @@
 import React, {memo, useMemo} from 'react';
+import {ScrollView} from 'react-native';
 import Video from 'react-native-video';
 
 import Container from 'components/Container';
@@ -6,7 +7,9 @@ import View from 'components/View';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import Loading from 'components/Loading';
+import Image from 'components/Image';
 
+import images from 'assets';
 import i18n from 'i18n';
 import {goBack} from 'utils/navigation';
 
@@ -16,10 +19,8 @@ import {
 } from 'constants/webcam';
 
 import PlayBackWebcamViewModel, {Props} from './PlayBackViewModel';
+import {DURATION_LIST} from './constants';
 import styles from './styles';
-import {ScrollView} from 'react-native';
-import Image from 'components/Image';
-import images from 'assets';
 
 const PlayBackWebcam = (props: Props) => {
   const viewModel = PlayBackWebcamViewModel(props);
@@ -37,27 +38,26 @@ const PlayBackWebcam = (props: Props) => {
   }, []);
 
   const FILE_LIST = useMemo(() => {
-    return viewModel.files.map((file, index) => {
+    return DURATION_LIST.map((item, index) => {
       return (
         <Button
           key={index}
           style={[
             styles.button,
-            file.id === viewModel.selectedFileId ? styles.buttonSelected : {},
+            index === viewModel.selectedDurationIndex
+              ? styles.buttonSelected
+              : {},
           ]}
           onPress={viewModel.onSelectMinuteForWebcam.bind(
             PlayBackWebcam,
-            file,
+            index,
+            item.value,
           )}>
-          <Text>{i18n.t('txtMinuteOrder', {minute: file.id + 1})}</Text>
+          <Text>{item.title()}</Text>
         </Button>
       );
     });
-  }, [
-    viewModel.selectedFileId,
-    viewModel.files,
-    viewModel.onSelectMinuteForWebcam,
-  ]);
+  }, [viewModel.selectedDurationIndex, viewModel.onSelectMinuteForWebcam]);
 
   return (
     <Container>
@@ -86,7 +86,9 @@ const PlayBackWebcam = (props: Props) => {
         </View>
 
         <View flex={'1'} style={styles.webcamContainer}>
-          {viewModel.webcamUrl ? (
+          {viewModel.isLoading ? (
+            <View style={styles.webcam}>{WEBCAM_LOADER}</View>
+          ) : viewModel.webcamUrl ? (
             <>
               <Video
                 id={'webcam-billiards-playback'}

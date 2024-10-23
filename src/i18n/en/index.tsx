@@ -76,7 +76,8 @@ const en = {
   msgIntroTitle: 'Entertainment',
   msgIntroDescription: 'Billiards - Devices - Evolutions',
   txtReconnect: 'Reconnect',
-  txtMinuteOrder: 'Minute {{minute}}',
+  txtMinuteOrder: '{{minute}} minutes',
+  txtFullGame: 'Full game',
 
   month: 'month',
   year: 'year',

@@ -133,7 +133,7 @@ const GamePlay = () => {
     }
 
     return (
-      <Button style={styles.countdown} onPress={viewModel.onPauseCountDown}>
+      <Button style={styles.countdown} onPress={viewModel.onToggleCountDown}>
         <View flex={'1'} direction={'row'}>
           {Array.from(
             {length: viewModel.gameSettings.mode?.countdownTime},

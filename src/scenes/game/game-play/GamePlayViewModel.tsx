@@ -624,12 +624,12 @@ const GamePlayViewModel = () => {
     setIsStarted(true);
   }, [isStarted]);
 
-  const onPauseCountDown = useCallback(() => {
+  const onToggleCountDown = useCallback(() => {
     if (!isStarted || isPaused) {
       return;
     }
 
-    setIsMatchPaused(true);
+    setIsMatchPaused(prev => !prev);
   }, [isStarted, isPaused]);
 
   const onPause = useCallback(() => {
@@ -754,7 +754,7 @@ const GamePlayViewModel = () => {
       onPoolBreak,
       onStart,
       onEndTurn,
-      onPauseCountDown,
+      onToggleCountDown,
       onPause,
       onStop,
       onReset,
@@ -802,7 +802,7 @@ const GamePlayViewModel = () => {
     onPoolBreak,
     onStart,
     onEndTurn,
-    onPauseCountDown,
+    onToggleCountDown,
     onPause,
     onStop,
     onReset,

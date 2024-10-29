@@ -10,6 +10,7 @@ const config = {
   txtEnterUsername: 'Nhập tên đăng nhập webcam',
   txtEnterPassword: 'Nhập mật khẩu webcam',
   txtWebcamSyncTime: 'Thời gian đồng bộ webcam',
+  txtAffectPerformance: 'Có thể ảnh hưởng hiệu năng',
 };
 
 export default config;

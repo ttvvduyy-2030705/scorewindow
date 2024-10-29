@@ -65,7 +65,10 @@ const WebcamConfig = () => {
       <View marginTop={'15'} marginHorizontal={'15'}>
         <View marginHorizontal={'10'}>
           <Text fontSize={12}>
-            {i18n.t('txtWebcamSyncTime')} ({i18n.t('txtSecond')})
+            {i18n.t('txtWebcamSyncTime')}{' '}
+            {viewModel.webcam.syncTime <= 10
+              ? `(${i18n.t('txtAffectPerformance')})`
+              : ''}
           </Text>
         </View>
         <View
@@ -77,7 +80,7 @@ const WebcamConfig = () => {
           marginBottom={'10'}>
           <View>
             <Text fontSize={12} color={colors.gray2}>
-              {3}
+              {3}s
             </Text>
           </View>
           <View flex={'1'} direction={'row'}>
@@ -87,12 +90,19 @@ const WebcamConfig = () => {
               minimumValue={3}
               maximumValue={60}
               step={1}
-              thumbTintColor={colors.lightBlack}
-              minimumTrackTintColor={colors.statusBar}
+              thumbTintColor={viewModel.sliderColor}
+              minimumTrackTintColor={viewModel.sliderColor}
               maximumTrackTintColor={colors.deepGray}
               onValueChange={viewModel.onChangeSyncTime}
             />
-            <View style={[styles.sliderValue, viewModel.sliderValueStyle]}>
+            <View
+              style={[
+                styles.sliderValue,
+                viewModel.sliderValueStyle,
+                {
+                  backgroundColor: viewModel.sliderColor,
+                },
+              ]}>
               <Text fontSize={12} color={colors.white}>
                 {viewModel.webcam.syncTime < 10
                   ? `0${viewModel.webcam.syncTime}`
@@ -102,7 +112,7 @@ const WebcamConfig = () => {
           </View>
           <View>
             <Text fontSize={12} color={colors.gray2}>
-              {60}
+              {60}s
             </Text>
           </View>
         </View>

@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
   sliderValue: {
     position: 'absolute',
     top: -18,
-    backgroundColor: colors.statusBar,
     borderRadius: 20,
     paddingHorizontal: 6,
   },

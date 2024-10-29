@@ -13,6 +13,7 @@ import {keys} from 'configuration/keys';
 import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
 import {LanguageContext} from 'context/language';
 import {Webcam} from 'types/webcam';
+import colors from 'configuration/colors';
 
 const WebcamConfigViewModel = () => {
   const {language} = useContext(LanguageContext);
@@ -142,6 +143,14 @@ const WebcamConfigViewModel = () => {
     };
   }, [webcam]);
 
+  const sliderColor = useMemo(() => {
+    return webcam.syncTime <= 10
+      ? colors.error
+      : webcam.syncTime <= 30
+      ? colors.yellow
+      : colors.statusBar;
+  }, [webcam]);
+
   return useMemo(() => {
     return {
       videoRef,
@@ -156,6 +165,7 @@ const WebcamConfigViewModel = () => {
         type: 'rtsp',
       },
       sliderValueStyle,
+      sliderColor,
       onChangeIPAddress: onChangeWebcamConfig('webcamIP'),
       onChangeUsername: onChangeWebcamConfig('username'),
       onChangePassword: onChangeWebcamConfig('password'),
@@ -174,6 +184,7 @@ const WebcamConfigViewModel = () => {
     webcamUrl,
     allowToSave,
     sliderValueStyle,
+    sliderColor,
     onChangeWebcamConfig,
     onSubmitEditing,
     onTest,

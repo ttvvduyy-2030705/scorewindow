@@ -10,6 +10,7 @@ const config = {
   txtEnterUsername: 'Enter webcam username',
   txtEnterPassword: 'Enter webcam password',
   txtWebcamSyncTime: 'Webcam sync time',
+  txtAffectPerformance: 'May affect performance',
 };
 
 export default config;

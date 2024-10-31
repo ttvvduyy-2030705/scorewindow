@@ -112,6 +112,7 @@ const GameConsole = (props: Props) => {
             {props.totalPlayers < 5 || props.currentMode?.mode === 'fast' ? (
               <Webcam
                 webcamFolderName={props.webcamFolderName}
+                renderMatchInfo={props.renderMatchInfo}
                 updateWebcamFolderName={props.updateWebcamFolderName}
               />
             ) : (

@@ -1,16 +1,26 @@
 const config = {
+  webcam: 'Webcam',
+  camera: 'Camera',
   webcamConfig: 'Cấu hình webcam',
+  cameraConfig: 'Cấu hình camera',
   webcamIP: 'IP Webcam',
   username: 'Tên đăng nhập',
   password: 'Mật khẩu',
   test: 'Kiểm tra',
   saveConfig: 'Lưu cấu hình',
+  rtmpUrl: 'Đường dẫn stream',
+  streamKey: 'Stream key',
+  channelId: 'Channel ID',
   msgEmptyWebcamUrl: 'Không có video tồn tại',
   txtEnterWebcamIPAddress: 'Nhập địa chỉ IP webcam',
   txtEnterUsername: 'Nhập tên đăng nhập webcam',
   txtEnterPassword: 'Nhập mật khẩu webcam',
   txtWebcamSyncTime: 'Thời gian đồng bộ webcam',
   txtAffectPerformance: 'Có thể ảnh hưởng hiệu năng',
+  txtEnterRTMPUrl: 'Nhập đường dẫn RTMP',
+  txtEnterStreamKey: 'Nhập stream key',
+  txtEnterChannelID: 'Nhập channel ID',
+  msgLiveStreamPublished: 'LiveStream đã bắt đầu trên Youtube',
 };
 
 export default config;

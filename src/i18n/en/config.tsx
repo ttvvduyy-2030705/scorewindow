@@ -1,16 +1,26 @@
 const config = {
+  webcam: 'Webcam',
+  camera: 'Camera',
   webcamConfig: 'Webcam Configuration',
+  cameraConfig: 'Camera configuration',
   webcamIP: 'Webcam IP',
   username: 'Username',
   password: 'Password',
   test: 'Test',
   saveConfig: 'Save config',
+  rtmpUrl: 'Stream URL',
+  streamKey: 'Stream key',
+  channelId: 'Channel ID',
   msgEmptyWebcamUrl: 'Video does not exist',
   txtEnterWebcamIPAddress: 'Enter webcam IP address',
   txtEnterUsername: 'Enter webcam username',
   txtEnterPassword: 'Enter webcam password',
   txtWebcamSyncTime: 'Webcam sync time',
   txtAffectPerformance: 'May affect performance',
+  txtEnterRTMPUrl: 'Enter RTMP link',
+  txtEnterStreamKey: 'Enter stream key',
+  txtEnterChannelID: 'Enter channel ID',
+  msgLiveStreamPublished: 'LiveStream published on Youtube',
 };
 
 export default config;

@@ -12,7 +12,7 @@ import {OnLoadData, OnVideoErrorData, VideoRef} from 'react-native-video';
 import {keys} from 'configuration/keys';
 import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
 import {LanguageContext} from 'context/language';
-import {Webcam} from 'types/webcam';
+import {Webcam, WebcamType} from 'types/webcam';
 import colors from 'configuration/colors';
 
 const WebcamConfigViewModel = () => {
@@ -101,6 +101,7 @@ const WebcamConfigViewModel = () => {
 
     setWebcamUrl('');
     setAllowToSave(false);
+    AsyncStorage.setItem(keys.WEBCAM_TYPE, WebcamType.webcam);
     AsyncStorage.setItem(keys.WEBCAM_IP_ADDRESS, webcam.webcamIP);
     AsyncStorage.setItem(keys.WEBCAM_USERNAME, webcam.username);
     AsyncStorage.setItem(keys.WEBCAM_PASSWORD, webcam.password);

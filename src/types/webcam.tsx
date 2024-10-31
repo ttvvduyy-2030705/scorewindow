@@ -13,3 +13,13 @@ export type Webcam = {
   translateX?: number;
   translateY?: number;
 };
+
+export type LiveStreamCamera = {
+  rtmpUrl: string;
+  streamKey: string;
+};
+
+export enum WebcamType {
+  webcam = 'webcam',
+  camera = 'camera',
+}

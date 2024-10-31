@@ -7,6 +7,7 @@ export type Images = {
   startGame: number;
   history: number;
   logo: number;
+  logoSmall: number;
   logoOutlined: number;
   logoFilled: number;
   settings: number;

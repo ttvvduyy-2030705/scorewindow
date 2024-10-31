@@ -1,4 +1,4 @@
-import React, {memo, useMemo, ReactNode} from 'react';
+import React, {memo, useMemo, ReactNode, forwardRef} from 'react';
 import {
   View as RNView,
   ViewStyle,
@@ -58,9 +58,14 @@ interface Props {
   //Linear gradient
   linearColors?: string[];
   linearEffect?: 'leftToRight' | 'rightToLeft' | 'topToBottom' | 'bottomToTop';
+
+  collapsable?: boolean;
 }
 
-const View = (props: Props) => {
+const View = forwardRef(function MyInput(
+  props: Props,
+  ref: React.ForwardedRef<RNView>,
+) {
   const {
     children,
     style,
@@ -86,6 +91,7 @@ const View = (props: Props) => {
     //linear
     linearColors,
     linearEffect = 'leftToRight',
+    collapsable,
   } = props;
 
   const _styles = useMemo(() => {
@@ -149,10 +155,14 @@ const View = (props: Props) => {
   }
 
   return (
-    <RNView style={_styles} onLayout={onLayout}>
+    <RNView
+      ref={ref}
+      style={_styles}
+      onLayout={onLayout}
+      collapsable={collapsable}>
       {children}
     </RNView>
   );
-};
+});
 
 export default memo(View);

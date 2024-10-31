@@ -1,11 +1,15 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import RNFS from 'react-native-fs';
+import {captureRef} from 'react-native-view-shot';
 import {useRealm} from '@realm/react';
 import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
 import colors from 'configuration/colors';
 import {cancelStreamWebcamToFile} from 'services/ffmpeg/webcam';
+import {MATCH_IMAGE, WEBCAM_BASE_CAMERA_FOLDER} from 'constants/webcam';
+import i18n from 'i18n';
 
 import {goBack} from 'utils/navigation';
 import {isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
@@ -15,7 +19,7 @@ import RemoteControl from 'utils/remote';
 import {Player, PlayerSettings} from 'types/player';
 import {RemoteControlKeys} from 'types/bluetooth';
 import {BallType, PoolBallType} from 'types/ball';
-import i18n from 'i18n';
+
 import {COUNTDOWN_WIDTH} from './styles';
 
 let countdownInterval: NodeJS.Timeout, warmUpCountdownInterval: NodeJS.Timeout;
@@ -25,6 +29,8 @@ const GamePlayViewModel = () => {
   const dispatch = useDispatch();
   const {updateGameSettings} = useSelector((state: RootState) => state.UI.game);
   const {gameSettings} = useSelector((state: RootState) => state.game);
+
+  const matchRef = useRef(null);
 
   const [poolBreakPlayerIndex, setPoolBreakPlayerIndex] = useState<number>(0);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -192,6 +198,33 @@ const GamePlayViewModel = () => {
       Sound.beep();
     }
   }, [isStarted, soundEnabled, countdownTime, gameSettings]);
+
+  useEffect(() => {
+    if (
+      !matchRef.current ||
+      !playerSettings ||
+      playerSettings.playingPlayers.length > 2
+    ) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      captureRef(matchRef, {
+        format: 'png',
+        quality: 1,
+      }).then(
+        async uri => {
+          const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
+          const _path = uri.slice(7);
+
+          RNFS.copyFile(_path, matchImagePath);
+        },
+        error => console.error('Oops, snapshot failed', error),
+      );
+
+      clearTimeout(timeout);
+    }, 1000);
+  }, [playerSettings]);
 
   useEffect(() => {
     return () => {
@@ -713,6 +746,7 @@ const GamePlayViewModel = () => {
 
   return useMemo(() => {
     return {
+      matchRef,
       winner,
       currentPlayerIndex,
       poolBreakPlayerIndex,
@@ -761,6 +795,7 @@ const GamePlayViewModel = () => {
       onResetTurn,
     };
   }, [
+    matchRef,
     winner,
     currentPlayerIndex,
     poolBreakPlayerIndex,

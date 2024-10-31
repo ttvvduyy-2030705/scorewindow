@@ -1,6 +1,7 @@
 import {dims} from 'configuration';
 import colors from 'configuration/colors';
 import {StyleSheet} from 'react-native';
+import {responsiveDimension} from 'utils/helper';
 
 const COUNTDOWN_WIDTH = dims.screenWidth * 0.91;
 
@@ -43,6 +44,18 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   extraText: {},
+  matchLogo: {
+    width: responsiveDimension(64),
+    height: responsiveDimension(32),
+  },
+  matchInfo: {
+    position: 'absolute',
+    bottom: -70,
+    width: '100%',
+  },
+  matchBackground: {
+    backgroundColor: colors.darkOverlay,
+  },
 });
 
 export {COUNTDOWN_WIDTH};

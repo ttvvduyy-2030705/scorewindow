@@ -36,6 +36,7 @@ export interface Props {
   onPoolScore: (ball: PoolBallType) => void;
   onSelectWinner: () => void;
   onClearWinner: () => void;
+  renderMatchInfo: () => ReactNode;
   renderLastPlayer: () => ReactNode;
   onStart: () => void;
   onPause: () => void;

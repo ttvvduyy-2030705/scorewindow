@@ -15,6 +15,7 @@ import colors from 'configuration/colors';
 
 import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
+import {WebcamType} from 'types/webcam';
 
 const WebCam = (props: Props) => {
   const viewModel = WebCamViewModel(props);
@@ -45,6 +46,18 @@ const WebCam = (props: Props) => {
     );
   }, [viewModel.connectCountdownTime]);
 
+  const LIVESTREAM_MESSAGE = useMemo(() => {
+    return (
+      <View
+        flex={'1'}
+        style={styles.fullWidth}
+        alignItems={'center'}
+        justify={'center'}>
+        <Text color={colors.white}>{i18n.t('msgLiveStreamPublished')}</Text>
+      </View>
+    );
+  }, []);
+
   return (
     <View style={styles.container}>
       <View
@@ -57,7 +70,7 @@ const WebCam = (props: Props) => {
             WEBCAM_LOADING_INTRO
           ) : viewModel.refreshing ? (
             WEBCAM_LOADER
-          ) : (
+          ) : viewModel.webcamType === WebcamType.webcam ? (
             <Video
               key={'webcam-billiards'}
               ref={viewModel.videoRef}
@@ -76,7 +89,11 @@ const WebCam = (props: Props) => {
               onEnd={viewModel.onEnd}
               onError={viewModel.onWebcamError}
             />
+          ) : (
+            LIVESTREAM_MESSAGE
           )}
+
+          {props.renderMatchInfo()}
         </View>
       </View>
       <View direction={'row'} alignItems={'center'}>

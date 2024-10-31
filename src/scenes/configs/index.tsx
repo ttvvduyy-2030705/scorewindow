@@ -1,12 +1,20 @@
 import React, {memo} from 'react';
 import Container from 'components/Container';
 import View from 'components/View';
+import Button from 'components/Button';
+import Text from 'components/Text';
+import i18n from 'i18n';
 
 import LanguageConfig from './language';
 import WebcamConfig from './webcam';
+import ConfigsViewModel from './ConfigsViewModel';
+import {WebcamType} from 'types/webcam';
+import Livestream from './livestream';
 import styles from './styles';
 
 const Configs = () => {
+  const viewModel = ConfigsViewModel();
+
   return (
     <Container>
       <View flex={'1'} padding={'20'}>
@@ -15,7 +23,39 @@ const Configs = () => {
             <LanguageConfig />
           </View>
           <View flex={'1'} direction={'row'} style={styles.fullHeight}>
-            <WebcamConfig />
+            <View flex={'1'} style={styles.webcamContainer}>
+              <View direction={'row'} alignItems={'center'}>
+                <Button
+                  style={[
+                    styles.flex,
+                    viewModel.currentWebcamType === WebcamType.webcam
+                      ? styles.selectedButton
+                      : styles.button,
+                  ]}
+                  onPress={viewModel.onSelectWebcam}>
+                  <View paddingVertical={'10'} alignItems={'center'}>
+                    <Text>{i18n.t('webcam')}</Text>
+                  </View>
+                </Button>
+                <Button
+                  style={[
+                    styles.flex,
+                    viewModel.currentWebcamType === WebcamType.camera
+                      ? styles.selectedButton
+                      : styles.button,
+                  ]}
+                  onPress={viewModel.onSelectCamera}>
+                  <View paddingVertical={'10'} alignItems={'center'}>
+                    <Text>{i18n.t('camera')}</Text>
+                  </View>
+                </Button>
+              </View>
+              {viewModel.currentWebcamType === WebcamType.webcam ? (
+                <WebcamConfig />
+              ) : (
+                <Livestream />
+              )}
+            </View>
           </View>
 
           <View flex={'1'} marginLeft={'20'} />

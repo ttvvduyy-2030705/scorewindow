@@ -9,6 +9,7 @@ const images: Images = {
   startGame: require('./images/start-game.png'),
   history: require('./images/history.png'),
   logo: require('./images/logo.png'),
+  logoSmall: require('./images/logo-small.png'),
   logoOutlined: require('./images/logo-outlined.png'),
   logoFilled: require('./images/logo-filled.png'),
   settings: require('./images/setting.png'),

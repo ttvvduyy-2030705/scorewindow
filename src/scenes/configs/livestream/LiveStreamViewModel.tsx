@@ -1,30 +1,33 @@
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {keys} from 'configuration/keys';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {LiveStreamCamera, WebcamType} from 'types/webcam';
+import {LiveStreamCamera, OutputType, WebcamType} from 'types/webcam';
 
 const LiveStreamViewModel = () => {
   const [liveStreamData, setLiveStreamData] = useState<LiveStreamCamera>({
     rtmpUrl: '',
     streamKey: '',
+    outputType: OutputType.livestream,
   });
   const [allowToSave, setAllowToSave] = useState(false);
 
   useEffect(() => {
     AsyncStorage.multiGet(
-      [keys.CAMERA_RTMP_URL, keys.CAMERA_STREAM_KEY],
+      [keys.CAMERA_RTMP_URL, keys.CAMERA_STREAM_KEY, keys.OUTPUT_TYPE],
       (error, result) => {
         if (!error && result) {
           const _rtmpUrl = result[0][1];
           const _streamKey = result[1][1];
+          const _outputType = result[2][1];
 
-          if (!_rtmpUrl || !_streamKey) {
+          if (!_rtmpUrl || !_streamKey || !_outputType) {
             return;
           }
 
           setLiveStreamData({
             rtmpUrl: _rtmpUrl,
             streamKey: _streamKey,
+            outputType: _outputType as OutputType,
           });
         }
       },
@@ -33,7 +36,11 @@ const LiveStreamViewModel = () => {
 
   useEffect(() => {
     setAllowToSave(
-      liveStreamData.rtmpUrl && liveStreamData.streamKey ? true : false,
+      liveStreamData.outputType === OutputType.livestream
+        ? liveStreamData.rtmpUrl && liveStreamData.streamKey
+          ? true
+          : false
+        : true,
     );
   }, [liveStreamData]);
 
@@ -48,6 +55,10 @@ const LiveStreamViewModel = () => {
     AsyncStorage.setItem(keys.WEBCAM_TYPE, WebcamType.camera);
     AsyncStorage.setItem(keys.CAMERA_RTMP_URL, liveStreamData.rtmpUrl);
     AsyncStorage.setItem(keys.CAMERA_STREAM_KEY, liveStreamData.streamKey);
+    AsyncStorage.setItem(
+      keys.OUTPUT_TYPE,
+      liveStreamData.outputType.toString(),
+    );
 
     setAllowToSave(false);
 
@@ -64,6 +75,8 @@ const LiveStreamViewModel = () => {
       onChangeRTMPUrl: onChangeValue('rtmpUrl'),
       onChangeStreamKey: onChangeValue('streamKey'),
       onChangeChannelId: onChangeValue('channelId'),
+      onSelectOutputTypeLocal: onChangeValue('outputType'),
+      onSelectOutputTypeLiveStream: onChangeValue('outputType'),
       onSaveConfig,
     };
   }, [liveStreamData, allowToSave, onChangeValue, onSaveConfig]);

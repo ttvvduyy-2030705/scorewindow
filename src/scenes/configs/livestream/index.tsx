@@ -6,6 +6,8 @@ import TextInput from 'components/TextInput';
 import Button from 'components/Button';
 import i18n from 'i18n';
 
+import {OutputType} from 'types/webcam';
+
 import LiveStreamViewModel from './LiveStreamViewModel';
 import styles from './styles';
 
@@ -57,24 +59,75 @@ const LiveStream = () => {
       </View>
 
       <View>
-        {renderInput(
-          i18n.t('rtmpUrl'),
-          viewModel.liveStreamData.rtmpUrl,
-          i18n.t('txtEnterRTMPUrl'),
-          'url',
-          'next',
-          viewModel.onChangeRTMPUrl,
-          {},
+        {viewModel.liveStreamData.outputType === OutputType.livestream ? (
+          <>
+            {renderInput(
+              i18n.t('rtmpUrl'),
+              viewModel.liveStreamData.rtmpUrl,
+              i18n.t('txtEnterRTMPUrl'),
+              'url',
+              'next',
+              viewModel.onChangeRTMPUrl,
+              {},
+            )}
+            {renderInput(
+              i18n.t('streamKey'),
+              viewModel.liveStreamData.streamKey,
+              i18n.t('txtEnterStreamKey'),
+              'default',
+              'next',
+              viewModel.onChangeStreamKey,
+              {secureTextEntry: true},
+            )}
+          </>
+        ) : (
+          <View />
         )}
-        {renderInput(
-          i18n.t('streamKey'),
-          viewModel.liveStreamData.streamKey,
-          i18n.t('txtEnterStreamKey'),
-          'default',
-          'next',
-          viewModel.onChangeStreamKey,
-          {secureTextEntry: true},
-        )}
+
+        <View
+          direction={'row'}
+          alignItems={'center'}
+          marginHorizontal={'10'}
+          marginVertical={'15'}>
+          <View marginRight={'10'}>
+            <Text fontSize={12}>{i18n.t('txtChooseOutputType')}</Text>
+          </View>
+          <View
+            flex={'1'}
+            direction={'row'}
+            alignItems={'center'}
+            justify={'end'}>
+            <Button
+              style={
+                viewModel.liveStreamData.outputType === OutputType.local
+                  ? styles.selectedButton
+                  : styles.button
+              }
+              onPress={viewModel.onSelectOutputTypeLocal.bind(
+                LiveStream,
+                'local',
+              )}>
+              <View paddingHorizontal={'15'} paddingVertical={'10'}>
+                <Text>{i18n.t('local')}</Text>
+              </View>
+            </Button>
+            <View marginHorizontal={'10'} />
+            <Button
+              style={
+                viewModel.liveStreamData.outputType === OutputType.livestream
+                  ? styles.selectedButton
+                  : styles.button
+              }
+              onPress={viewModel.onSelectOutputTypeLocal.bind(
+                LiveStream,
+                'livestream',
+              )}>
+              <View paddingHorizontal={'15'} paddingVertical={'10'}>
+                <Text>{i18n.t('livestream')}</Text>
+              </View>
+            </Button>
+          </View>
+        </View>
       </View>
 
       <View direction={'row'} marginTop={'20'} marginHorizontal={'20'}>

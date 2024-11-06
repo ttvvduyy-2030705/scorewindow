@@ -26,8 +26,9 @@ const WEBCAM_BASE_FILE_NAME = 'webcam_';
 const WEBCAM_FILE_EXTENSION = '.mov';
 
 const WEBCAM_BASE_CAMERA_FOLDER = 'camera';
-const WEBCAM_OUTPUT_FILE_NAME = 'match_combined';
-const CAMERA_FILE_EXTENSION = '.mkv';
+const WEBCAM_OUTPUT_FILE_NAME = 'output_camera';
+const WEBCAM_OUTPUT_TEMP_FILE_NAME = 'output_temp_camera';
+const CAMERA_FILE_EXTENSION = '.ts';
 
 const MATCH_IMAGE = 'match_info.png';
 const MATCH_COUNTDOWN = 'match_countdown.png';
@@ -39,6 +40,7 @@ export {
   WEBCAM_BUFFER_CONFIG,
   WEBCAM_SELECTED_VIDEO_TRACK,
   WEBCAM_BASE_FILE_NAME,
+  WEBCAM_OUTPUT_TEMP_FILE_NAME,
   WEBCAM_BASE_CAMERA_FOLDER,
   WEBCAM_OUTPUT_FILE_NAME,
   WEBCAM_FILE_EXTENSION,

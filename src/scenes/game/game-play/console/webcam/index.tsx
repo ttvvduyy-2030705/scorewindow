@@ -15,7 +15,6 @@ import colors from 'configuration/colors';
 
 import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
-import {WebcamType} from 'types/webcam';
 
 const WebCam = (props: Props) => {
   const viewModel = WebCamViewModel(props);
@@ -70,7 +69,7 @@ const WebCam = (props: Props) => {
             WEBCAM_LOADING_INTRO
           ) : viewModel.refreshing ? (
             WEBCAM_LOADER
-          ) : viewModel.webcamType === WebcamType.webcam ? (
+          ) : viewModel.source.uri ? (
             <Video
               key={'webcam-billiards'}
               ref={viewModel.videoRef}

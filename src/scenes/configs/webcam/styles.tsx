@@ -40,6 +40,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 6,
   },
+  selectedButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+  },
+  button: {
+    borderWidth: 0.5,
+    borderColor: colors.gray,
+    borderRadius: 16,
+  },
 });
 
 export default styles;

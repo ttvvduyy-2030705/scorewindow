@@ -6,9 +6,19 @@ import {
   useRef,
   useState,
 } from 'react';
+import {RootState} from 'data/redux/reducers';
+import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import RNFS from 'react-native-fs';
 import {keys} from 'configuration/keys';
-import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
+import {
+  CAMERA_FILE_EXTENSION,
+  WEBCAM_BASE_CAMERA_FOLDER,
+  WEBCAM_HOST,
+  WEBCAM_OUTPUT_FILE_NAME,
+  WEBCAM_PATH,
+  WEBCAM_PORT,
+} from 'constants/webcam';
 import {
   OnBufferData,
   OnLoadData,
@@ -17,12 +27,12 @@ import {
   OnVideoTracksData,
   VideoRef,
 } from 'react-native-video';
-import {streamWebcamToFile} from 'services/ffmpeg/webcam';
+import {streamWebcamToFile} from 'services/ffmpeg/local';
 import {liveStreamFromCamera} from 'services/ffmpeg/livestream';
 import {requestReadWriteStorage} from 'utils/permission';
 import {navigate} from 'utils/navigation';
 import {screens} from 'scenes/screens';
-import {LiveStreamCamera, Webcam, WebcamType} from 'types/webcam';
+import {LiveStreamCamera, OutputType, Webcam, WebcamType} from 'types/webcam';
 
 export interface Props {
   webcamFolderName?: string;
@@ -34,6 +44,8 @@ let interval: NodeJS.Timeout;
 
 const WebCamViewModel = (props: Props) => {
   const videoRef = useRef<VideoRef>(null);
+
+  const {gameSettings} = useSelector((state: RootState) => state.game);
 
   const [webcamType, setWebcamType] = useState<WebcamType>();
   const [webcam, setWebcam] = useState<Webcam>();
@@ -86,36 +98,77 @@ const WebCamViewModel = (props: Props) => {
 
       setIsWebcamStarted(true);
 
-      if (webcamType === WebcamType.camera) {
-        liveStreamFromCamera(liveStream);
+      const _outputType =
+        webcamType === WebcamType.camera
+          ? liveStream?.outputType
+          : webcam?.outputType;
+      const _url =
+        webcamType === WebcamType.camera
+          ? `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${WEBCAM_OUTPUT_FILE_NAME}${CAMERA_FILE_EXTENSION}`
+          : `${WEBCAM_HOST}${webcam?.username}:${webcam?.password}@${webcam?.webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
+
+      if (_outputType === OutputType.livestream) {
+        liveStreamFromCamera(
+          liveStream,
+          _url,
+          webcamType,
+          !!gameSettings?.mode.countdownTime,
+        );
         return;
       }
 
       const now = Date.now().toString();
-      const _url = `${WEBCAM_HOST}${webcam?.username}:${webcam?.password}@${webcam?.webcamIP}:${WEBCAM_PORT}${WEBCAM_PATH}`;
-
-      streamWebcamToFile(_url, now, webcam?.syncTime || 60);
+      streamWebcamToFile(_url, now, webcam?.syncTime || 60, webcamType);
       setUrl(_url);
+
       props.updateWebcamFolderName(now);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webcamType, webcam, liveStream, autoConnect, isWebcamStarted]);
+  }, [
+    webcamType,
+    webcam,
+    liveStream,
+    autoConnect,
+    isWebcamStarted,
+    gameSettings,
+  ]);
+
+  // const recordLocalCamera = useCallback(() => {
+  //   cameraRef.current?.startRecording({
+  //     onRecordingFinished: video => {
+  //       console.log('Record finished', video);
+  //       RNFS.copyFile(video.path);
+  //     },
+  //     onRecordingError: error => console.error(error),
+  //   });
+
+  //   intervalCamera = setInterval(() => {
+  //     cameraRef.current?.pauseRecording();
+  //   }, 5000);
+  // }, [cameraRef]);
 
   const getCameraData = useCallback(() => {
     AsyncStorage.multiGet(
-      [keys.CAMERA_RTMP_URL, keys.CAMERA_STREAM_KEY],
+      [keys.CAMERA_RTMP_URL, keys.CAMERA_STREAM_KEY, keys.OUTPUT_TYPE],
       (error, result) => {
         if (!error && result) {
           const _rtmpUrl = result[0][1];
           const _streamKey = result[1][1];
+          const _outputType = result[2][1];
 
-          if (!_rtmpUrl || !_streamKey) {
+          if (
+            (_outputType &&
+              _outputType === OutputType.livestream &&
+              (!_rtmpUrl || !_streamKey)) ||
+            !_outputType
+          ) {
             return;
           }
 
           setLiveStream({
-            rtmpUrl: _rtmpUrl,
-            streamKey: _streamKey,
+            rtmpUrl: _rtmpUrl || '',
+            streamKey: _streamKey || '',
+            outputType: _outputType as OutputType,
           });
 
           interval = setInterval(() => {
@@ -136,6 +189,9 @@ const WebCamViewModel = (props: Props) => {
         keys.WEBCAM_SYNC_TIME,
         keys.WEBCAM_TRANSLATE_X,
         keys.WEBCAM_TRANSLATE_Y,
+        keys.OUTPUT_TYPE,
+        keys.CAMERA_RTMP_URL,
+        keys.CAMERA_STREAM_KEY,
       ],
       (error, result) => {
         if (!error && result) {
@@ -146,8 +202,11 @@ const WebCamViewModel = (props: Props) => {
           const _syncTime = result[4][1];
           const _translateX = result[5][1];
           const _translateY = result[6][1];
+          const _outputType = result[7][1];
+          const _rtmpUrl = result[8][1];
+          const _streamKey = result[9][1];
 
-          if (!_ip || !_username || !_password) {
+          if (!_ip || !_username || !_password || !_outputType) {
             return;
           }
 
@@ -159,6 +218,13 @@ const WebCamViewModel = (props: Props) => {
             syncTime: _syncTime ? Number(_syncTime) : 60,
             translateX: _translateX ? Number(_translateX) : 0,
             translateY: _translateY ? Number(_translateY) : 0,
+            outputType: _outputType as OutputType,
+          });
+
+          setLiveStream({
+            rtmpUrl: _rtmpUrl || '',
+            streamKey: _streamKey || '',
+            outputType: _outputType as OutputType,
           });
 
           interval = setInterval(() => {
@@ -214,7 +280,7 @@ const WebCamViewModel = (props: Props) => {
       source:
         webcamType === WebcamType.webcam
           ? {uri: url, type: 'rtsp'}
-          : {uri: url},
+          : {uri: url, type: 'ts'},
       onRefresh,
       onDelay,
       onReWatch,

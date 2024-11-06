@@ -3,7 +3,7 @@ import {Alert} from 'react-native';
 import {OnVideoErrorData, VideoRef} from 'react-native-video';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
-import {mergeVideos} from 'services/ffmpeg/webcam';
+import {mergeVideos} from 'services/ffmpeg/local';
 
 import i18n from 'i18n';
 

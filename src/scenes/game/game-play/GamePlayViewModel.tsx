@@ -7,7 +7,7 @@ import {useRealm} from '@realm/react';
 import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
 import colors from 'configuration/colors';
-import {cancelStreamWebcamToFile} from 'services/ffmpeg/webcam';
+import {cancelStreamWebcamToFile} from 'services/ffmpeg/local';
 import {
   MATCH_COUNTDOWN,
   MATCH_IMAGE,

@@ -12,7 +12,7 @@ import {OnLoadData, OnVideoErrorData, VideoRef} from 'react-native-video';
 import {keys} from 'configuration/keys';
 import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
 import {LanguageContext} from 'context/language';
-import {Webcam, WebcamType} from 'types/webcam';
+import {LiveStreamCamera, OutputType, Webcam, WebcamType} from 'types/webcam';
 import colors from 'configuration/colors';
 
 const WebcamConfigViewModel = () => {
@@ -27,6 +27,12 @@ const WebcamConfigViewModel = () => {
     username: 'admin',
     password: '',
     syncTime: 60,
+    outputType: OutputType.local,
+  });
+  const [liveStreamData, setLiveStreamData] = useState<LiveStreamCamera>({
+    rtmpUrl: '',
+    streamKey: '',
+    outputType: OutputType.livestream,
   });
 
   const [webcamUrl, setWebcamUrl] = useState<string>('');
@@ -42,6 +48,9 @@ const WebcamConfigViewModel = () => {
         keys.WEBCAM_SYNC_TIME,
         keys.WEBCAM_TRANSLATE_X,
         keys.WEBCAM_TRANSLATE_Y,
+        keys.OUTPUT_TYPE,
+        keys.CAMERA_RTMP_URL,
+        keys.CAMERA_STREAM_KEY,
       ],
       (error, result) => {
         if (error || !result) {
@@ -55,8 +64,11 @@ const WebcamConfigViewModel = () => {
         const _syncTime = result[4][1];
         const _translateX = result[5][1];
         const _translateY = result[6][1];
+        const _outputType = result[7][1];
+        const _rtmpUrl = result[8][1];
+        const _streamKey = result[9][1];
 
-        if (!_ip || !_username || !_password) {
+        if (!_ip || !_username || !_password || !_outputType) {
           return;
         }
 
@@ -68,7 +80,14 @@ const WebcamConfigViewModel = () => {
           syncTime: _syncTime ? Number(_syncTime) : 60,
           translateX: _translateX ? Number(_translateX) : 0,
           translateY: _translateY ? Number(_translateY) : 0,
+          outputType: _outputType as OutputType,
         });
+
+        setLiveStreamData(prev => ({
+          ...prev,
+          rtmpUrl: _rtmpUrl || '',
+          streamKey: _streamKey || '',
+        }));
       },
     );
   }, []);
@@ -76,6 +95,13 @@ const WebcamConfigViewModel = () => {
   const onChangeWebcamConfig = useCallback(
     (key: string) => (value: string | number) => {
       setWebcam(prev => ({...prev, [key]: value}));
+    },
+    [],
+  );
+
+  const onChangeLiveStreamConfig = useCallback(
+    (key: string) => (value: string) => {
+      setLiveStreamData(prev => ({...prev, [key]: value}));
     },
     [],
   );
@@ -106,7 +132,10 @@ const WebcamConfigViewModel = () => {
     AsyncStorage.setItem(keys.WEBCAM_USERNAME, webcam.username);
     AsyncStorage.setItem(keys.WEBCAM_PASSWORD, webcam.password);
     AsyncStorage.setItem(keys.WEBCAM_SYNC_TIME, webcam.syncTime.toString());
-  }, [allowToSave, webcam]);
+    AsyncStorage.setItem(keys.OUTPUT_TYPE, webcam.outputType.toString());
+    AsyncStorage.setItem(keys.CAMERA_RTMP_URL, liveStreamData.rtmpUrl);
+    AsyncStorage.setItem(keys.CAMERA_STREAM_KEY, liveStreamData.streamKey);
+  }, [allowToSave, webcam, liveStreamData]);
 
   const onSaveWebcamPosition = useCallback(
     (scale: number, translateX: number, translateY: number) => {
@@ -134,7 +163,13 @@ const WebcamConfigViewModel = () => {
     }
 
     setWebcamUrl('');
-    setWebcam({webcamIP: '', username: '', password: '', syncTime: 60});
+    setWebcam({
+      webcamIP: '',
+      username: '',
+      password: '',
+      syncTime: 60,
+      outputType: OutputType.local,
+    });
     setAllowToSave(false);
   }, []);
 
@@ -159,6 +194,7 @@ const WebcamConfigViewModel = () => {
       passwordRef,
       language,
       webcam,
+      liveStreamData,
       webcamUrl,
       allowToSave,
       source: {
@@ -171,6 +207,10 @@ const WebcamConfigViewModel = () => {
       onChangeUsername: onChangeWebcamConfig('username'),
       onChangePassword: onChangeWebcamConfig('password'),
       onChangeSyncTime: onChangeWebcamConfig('syncTime'),
+      onSelectOutputTypeLocal: onChangeWebcamConfig('outputType'),
+      onSelectOutputTypeLiveStream: onChangeWebcamConfig('outputType'),
+      onChangeRTMPUrl: onChangeLiveStreamConfig('rtmpUrl'),
+      onChangeStreamKey: onChangeLiveStreamConfig('streamKey'),
       onSubmitEditingIPAddress: onSubmitEditing(userNameRef),
       onSubmitEditingUsername: onSubmitEditing(passwordRef),
       onTest,
@@ -182,11 +222,13 @@ const WebcamConfigViewModel = () => {
   }, [
     language,
     webcam,
+    liveStreamData,
     webcamUrl,
     allowToSave,
     sliderValueStyle,
     sliderColor,
     onChangeWebcamConfig,
+    onChangeLiveStreamConfig,
     onSubmitEditing,
     onTest,
     onSaveConfig,

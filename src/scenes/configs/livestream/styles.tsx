@@ -17,6 +17,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveDimension(20),
     paddingVertical: responsiveDimension(10),
   },
+  selectedButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+  },
+  button: {
+    borderWidth: 0.5,
+    borderColor: colors.gray,
+    borderRadius: 16,
+  },
 });
 
 export default styles;

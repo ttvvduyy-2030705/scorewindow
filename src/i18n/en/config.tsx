@@ -11,6 +11,8 @@ const config = {
   rtmpUrl: 'Stream URL',
   streamKey: 'Stream key',
   channelId: 'Channel ID',
+  local: 'Local',
+  livestream: 'LiveStream',
   msgEmptyWebcamUrl: 'Video does not exist',
   txtEnterWebcamIPAddress: 'Enter webcam IP address',
   txtEnterUsername: 'Enter webcam username',
@@ -21,6 +23,7 @@ const config = {
   txtEnterStreamKey: 'Enter stream key',
   txtEnterChannelID: 'Enter channel ID',
   msgLiveStreamPublished: 'LiveStream published on Youtube',
+  txtChooseOutputType: 'Video output: ',
 };
 
 export default config;

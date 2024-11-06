@@ -11,6 +11,8 @@ const config = {
   rtmpUrl: 'Đường dẫn stream',
   streamKey: 'Stream key',
   channelId: 'Channel ID',
+  local: 'Lưu vô thiết bị',
+  livestream: 'LiveStream',
   msgEmptyWebcamUrl: 'Không có video tồn tại',
   txtEnterWebcamIPAddress: 'Nhập địa chỉ IP webcam',
   txtEnterUsername: 'Nhập tên đăng nhập webcam',
@@ -21,6 +23,7 @@ const config = {
   txtEnterStreamKey: 'Nhập stream key',
   txtEnterChannelID: 'Nhập channel ID',
   msgLiveStreamPublished: 'LiveStream đã bắt đầu trên Youtube',
+  txtChooseOutputType: 'Đầu ra video: ',
 };
 
 export default config;

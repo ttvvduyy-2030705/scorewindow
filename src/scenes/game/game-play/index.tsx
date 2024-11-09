@@ -369,7 +369,7 @@ const GamePlay = () => {
             {viewModel.countdownTime >
             viewModel.gameSettings?.mode?.countdownTime ? (
               <View style={styles.extraWrapper} paddingHorizontal={'10'}>
-                <Text fontSize={12}>{'Extra'}</Text>
+                <Text fontSize={12}>{'Extension'}</Text>
               </View>
             ) : (
               <View />

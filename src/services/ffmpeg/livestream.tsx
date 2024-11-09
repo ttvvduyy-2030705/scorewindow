@@ -23,35 +23,26 @@ const liveStreamFromCamera = async (
     await RNFS.mkdir(folderPath);
   }
 
-  const videoAndMatchInfo = `-y -video_size hd720 -f android_camera -i 0 -f image2 -stream_loop -1 -i ${matchImagePath}`;
+  const videoAndMatchInfo = `-y -video_size 1920x1080 -f android_camera -i 0 -f image2 -stream_loop -1 -i ${matchImagePath}`;
   const audioAndOutput = `-f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
-      -f flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1 ${liveStream?.rtmpUrl}/${liveStream?.streamKey}`;
+      -f flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1 -preset medium -b:v 5000k -maxrate 6000k -bufsize 12000k ${liveStream?.rtmpUrl}/${liveStream?.streamKey}`;
+  const filterComplex = `-f image2 -stream_loop -1 -i ${matchCountdownImagePath} -filter_complex "hflip[flipped];[flipped][1]overlay=(W-w)/2:(H-h)-60[img1];[2:v]scale=640:35[img2];[img1][img2]overlay=(W-w)/2:(H-h)-25"`;
 
   if (webcamType === WebcamType.camera) {
     FFmpegKit.executeAsync(
       `${videoAndMatchInfo} \
-      ${
-        countdownEnabled
-          ? `-f image2 -stream_loop -1 -i ${matchCountdownImagePath} -filter_complex "hflip[flipped];[flipped][1]overlay=25:25[img1];[2:v]scale=640:35[img2];[img1][img2]overlay=25:100"`
-          : ''
-      } \
+      ${countdownEnabled ? filterComplex : ''} \
       ${audioAndOutput}`,
     );
     return;
   }
 
   const webcamAndMatchInfo = `-y -i ${webcamUrl} -f image2 -stream_loop -1 -i ${matchImagePath}`;
-  const webcamAudioAndOutput = `-f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
-  -f flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1 ${liveStream?.rtmpUrl}/${liveStream?.streamKey}`;
 
   FFmpegKit.executeAsync(
     `${webcamAndMatchInfo} \
-    ${
-      countdownEnabled
-        ? `-f image2 -stream_loop -1 -i ${matchCountdownImagePath} -filter_complex "hflip[flipped];[flipped][1]overlay=25:25[img1];[2:v]scale=640:35[img2];[img1][img2]overlay=25:100"`
-        : ''
-    } \
-    ${webcamAudioAndOutput}`,
+    ${countdownEnabled ? filterComplex : ''} \
+    ${audioAndOutput}`,
   );
 };
 

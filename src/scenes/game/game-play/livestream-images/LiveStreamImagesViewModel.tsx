@@ -16,6 +16,7 @@ import {PlayerSettings} from 'types/player';
 import {GameSettings} from 'types/settings';
 
 export interface Props {
+  currentPlayerIndex: number;
   countdownTime?: number;
   gameSettings?: GameSettings;
   playerSettings?: PlayerSettings;
@@ -125,6 +126,10 @@ const LiveStreamImagesViewModel = (props: Props) => {
     }
 
     const timeout = setTimeout(() => {
+      if (!matchRef.current) {
+        return;
+      }
+
       captureRef(matchRef, {
         format: 'png',
         quality: 1,

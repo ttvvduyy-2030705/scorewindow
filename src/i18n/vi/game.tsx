@@ -68,6 +68,7 @@ const game = {
   msgStopGame: 'Bạn chắc chắn muốn kết thúc trận đấu chứ ?',
   raceTo: 'RACE TO {{goal}}',
   msgWebcamIntro: 'Webcam sẽ khởi chạy trong {{second}} giây',
+  decreaseTotalTurns: 'Trừ lượt',
 
   //Pool
   ball1: 'một',

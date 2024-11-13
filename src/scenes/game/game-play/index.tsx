@@ -184,12 +184,14 @@ const GamePlay = () => {
         countdownTime={viewModel.countdownTime}
         gameSettings={viewModel.gameSettings}
         playerSettings={viewModel.playerSettings}
+        currentPlayerIndex={viewModel.currentPlayerIndex}
       />
     );
   }, [
     viewModel.countdownTime,
     viewModel.gameSettings,
     viewModel.playerSettings,
+    viewModel.currentPlayerIndex,
   ]);
 
   const WARM_UP_VIEW = useMemo(() => {
@@ -244,14 +246,18 @@ const GamePlay = () => {
         <GameConsole
           winner={viewModel.winner}
           gameSettings={viewModel.gameSettings}
+          playerSettings={viewModel.playerSettings}
           currentMode={viewModel.gameSettings.mode}
           warmUpCount={viewModel.warmUpCount}
           totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
           totalTime={viewModel.totalTime}
           totalTurns={viewModel.totalTurns}
           goal={viewModel.gameSettings?.players?.goal?.goal}
+          countdownTime={viewModel.countdownTime}
+          currentPlayerIndex={viewModel.currentPlayerIndex}
           isStarted={viewModel.isStarted}
           isPaused={viewModel.isPaused}
+          isMatchPaused={viewModel.isMatchPaused}
           soundEnabled={viewModel.soundEnabled}
           poolBreakEnabled={viewModel.poolBreakEnabled}
           proModeEnabled={viewModel.proModeEnabled}
@@ -262,6 +268,7 @@ const GamePlay = () => {
           onWarmUp={viewModel.onWarmUp}
           onSwitchTurn={viewModel.onSwitchTurn}
           onSwapPlayers={viewModel.onSwapPlayers}
+          onDecreaseTotalTurns={viewModel.onDecreaseTotalTurns}
           onToggleSound={viewModel.onToggleSound}
           onToggleProMode={viewModel.onToggleProMode}
           onPoolScore={viewModel.onPoolScore}

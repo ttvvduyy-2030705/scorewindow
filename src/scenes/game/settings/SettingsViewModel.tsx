@@ -14,7 +14,7 @@ import {
   GameSettingsMode,
   GameWarmUpTime,
 } from 'types/settings';
-import {isPoolGame} from 'utils/game';
+import {isCarom3CGame, isPoolGame} from 'utils/game';
 import {DEFAULT_PLAYERS, GAME_SETTINGS, PLAYER_SETTINGS} from './constants';
 
 export interface Props extends Navigation {}
@@ -69,44 +69,63 @@ const GameSettingsViewModel = (props: Props) => {
           : DEFAULT_PLAYERS(),
         goal: {
           ...playerSettings.goal,
-          goal: isPoolGame(selectedCategory) ? 10 : 40,
+          goal: isPoolGame(selectedCategory)
+            ? 10
+            : isCarom3CGame(selectedCategory)
+            ? 30
+            : 40,
         },
       });
-      setGameSettingsMode({mode: 'fast'});
+
+      if (isCarom3CGame(selectedCategory)) {
+        setGameSettingsMode({
+          mode: 'pro',
+          extraTimeTurns: isCarom3CGame(selectedCategory) ? 2 : 1,
+          countdownTime: isCarom3CGame(selectedCategory) ? 40 : 35,
+          warmUpTime: 300,
+        });
+      } else {
+        setGameSettingsMode({
+          mode: 'fast',
+        });
+      }
     },
     [playerSettings],
   );
 
-  const onSelectGameMode = useCallback((selectedGameMode: GameMode) => {
-    switch (selectedGameMode) {
-      case 'fast':
-        setGameSettingsMode({mode: selectedGameMode});
-        break;
-      case 'time':
-        setGameSettingsMode({
-          mode: selectedGameMode,
-          extraTimeTurns: 1,
-          countdownTime: 35,
-        });
-        break;
-      case 'eliminate':
-        setGameSettingsMode({
-          mode: selectedGameMode,
-          countdownTime: 35,
-        });
-        break;
-      case 'pro':
-        setGameSettingsMode({
-          mode: selectedGameMode,
-          extraTimeTurns: 1,
-          countdownTime: 35,
-          warmUpTime: 300,
-        });
-        break;
-      default:
-        break;
-    }
-  }, []);
+  const onSelectGameMode = useCallback(
+    (selectedGameMode: GameMode) => {
+      switch (selectedGameMode) {
+        case 'fast':
+          setGameSettingsMode({mode: selectedGameMode});
+          break;
+        case 'time':
+          setGameSettingsMode({
+            mode: selectedGameMode,
+            extraTimeTurns: 1,
+            countdownTime: 35,
+          });
+          break;
+        case 'eliminate':
+          setGameSettingsMode({
+            mode: selectedGameMode,
+            countdownTime: 35,
+          });
+          break;
+        case 'pro':
+          setGameSettingsMode({
+            mode: selectedGameMode,
+            extraTimeTurns: isCarom3CGame(category) ? 2 : 1,
+            countdownTime: isCarom3CGame(category) ? 40 : 35,
+            warmUpTime: 300,
+          });
+          break;
+        default:
+          break;
+      }
+    },
+    [category],
+  );
 
   const onSelectExtraTimeTurns = useCallback(
     (extraTimeTurns: GameExtraTimeTurns) => {

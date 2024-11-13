@@ -31,8 +31,8 @@ const _buildThumbnailUrls = () => {
   const imageBottomLeftPath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${LIVESTREAM_IMAGE_BOTTOM_LEFT}`;
   const imageBottomRightPath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${LIVESTREAM_IMAGE_BOTTOM_RIGHT}`;
 
-  const topLeft = _mapThumbnailItem(imageTopLeftPath, 3, '0', '0');
-  const topRight = _mapThumbnailItem(imageTopRightPath, 4, '(W-w)-0', '0');
+  const topLeft = _mapThumbnailItem(imageTopLeftPath, 3, '15', '15');
+  const topRight = _mapThumbnailItem(imageTopRightPath, 4, '(W-w)-15', '15');
   const bottomLeft = _mapThumbnailItem(imageBottomLeftPath, 5, '0', '(H-h)-0');
   const bottomRight = _mapThumbnailItem(
     imageBottomRightPath,

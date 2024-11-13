@@ -8,12 +8,13 @@ import images from 'assets';
 import i18n from 'i18n';
 import ConsoleViewModel, {Props} from './ConsoleViewModel';
 import colors from 'configuration/colors';
-import {isPoolGame} from 'utils/game';
+import {isCaromGame, isPoolGame} from 'utils/game';
 import ButtonsConsole from './buttons';
 import GameInfo from './game-info';
 import Webcam from './webcam';
 import styles from './styles';
 import BallsView from './balls-view';
+import CaromInfo from './carom-info';
 
 const GameConsole = (props: Props) => {
   const viewModel = ConsoleViewModel(props);
@@ -109,7 +110,19 @@ const GameConsole = (props: Props) => {
               onStop={viewModel.onStop}
             />
 
-            {props.totalPlayers < 5 || props.currentMode?.mode === 'fast' ? (
+            {isCaromGame(props.gameSettings.category) ? (
+              <CaromInfo
+                isStarted={props.isStarted}
+                isPaused={props.isPaused}
+                isMatchPaused={props.isMatchPaused}
+                goal={props.goal}
+                totalTurns={props.totalTurns}
+                countdownTime={props.countdownTime}
+                currentPlayerIndex={props.currentPlayerIndex}
+                gameSettings={props.gameSettings}
+                playerSettings={props.playerSettings}
+              />
+            ) : props.totalPlayers < 5 || props.currentMode?.mode === 'fast' ? (
               <Webcam
                 webcamFolderName={props.webcamFolderName}
                 renderMatchInfo={props.renderMatchInfo}
@@ -158,6 +171,20 @@ const GameConsole = (props: Props) => {
                 ) : (
                   <View />
                 )}
+              </View>
+            ) : isCaromGame(props.gameSettings.category) && props.isStarted ? (
+              <View direction={'row'} marginHorizontal={'20'}>
+                <View
+                  flex={'1'}
+                  direction={'row'}
+                  justify={'center'}
+                  alignItems={'center'}>
+                  <Button
+                    style={styles.button}
+                    onPress={props.onDecreaseTotalTurns}>
+                    <Text>{i18n.t('decreaseTotalTurns')}</Text>
+                  </Button>
+                </View>
               </View>
             ) : (
               <View />

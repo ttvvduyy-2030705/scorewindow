@@ -3,13 +3,14 @@ import Image from 'components/Image';
 import Text from 'components/Text';
 import View from 'components/View';
 import i18n from 'i18n';
-import images from 'assets';
 
 import {isPoolGame} from 'utils/game';
 
 import LiveStreamImagesViewModel, {Props} from './LiveStreamImagesViewModel';
 import colors from 'configuration/colors';
 import styles from './styles';
+import images from 'assets';
+import LinearGradient from 'react-native-linear-gradient';
 
 const LiveStreamImages = (props: Props) => {
   const viewModel = LiveStreamImagesViewModel(props);
@@ -79,6 +80,23 @@ const LiveStreamImages = (props: Props) => {
     );
   }, [viewModel.bottomRightRef, viewModel.bottomRightImages, renderImages]);
 
+  const renderArrowTurn = useCallback(
+    (index: number) => {
+      if (index === props.currentPlayerIndex) {
+        if (index === 0) {
+          return (
+            <Image source={images.game.turn} style={styles.imageTurnRight} />
+          );
+        }
+
+        return <Image source={images.game.turn} style={styles.imageTurnLeft} />;
+      }
+
+      return <View style={styles.empty} />;
+    },
+    [props.currentPlayerIndex],
+  );
+
   if (!props.playerSettings || props.playerSettings.playingPlayers.length > 2) {
     return <View />;
   }
@@ -88,55 +106,56 @@ const LiveStreamImages = (props: Props) => {
       <View
         ref={viewModel.matchRef}
         style={styles.matchInfo}
+        direction={'row'}
         collapsable={false}
         alignItems={'center'}>
-        <View style={styles.matchLogoWrapper} paddingHorizontal={'10'}>
-          <Image
-            source={images.logoSmall}
-            style={styles.matchLogo}
-            resizeMode={'contain'}
-          />
-        </View>
+        <View style={styles.whiteBlock} />
         <View
           style={styles.matchBackground}
           flex={'1'}
           direction={'row'}
           alignItems={'center'}>
           <View flex={'1'} direction={'row'} alignItems={'center'}>
+            {renderArrowTurn(0)}
             <View flex={'1'} justify={'center'} paddingHorizontal={'15'}>
-              <Text fontWeight={'bold'}>{viewModel.player0?.name}</Text>
+              <Text fontWeight={'bold'} color={colors.white}>
+                {viewModel.player0?.name}
+              </Text>
             </View>
-            <View
-              justify={'center'}
-              paddingHorizontal={'15'}
-              marginRight={'15'}>
+            <View justify={'center'} paddingHorizontal={'15'}>
               <Text
                 style={styles.matchPointText}
                 fontWeight={'bold'}
                 fontSize={32}
-                color={colors.error}>
+                color={colors.white}>
                 {viewModel.player0?.totalPoint}
               </Text>
             </View>
           </View>
           {isPoolGame(props.gameSettings?.category) ? (
-            <View paddingHorizontal={'20'} style={styles.matchRace}>
-              <Text color={colors.white}>
-                {i18n.t('raceTo', {
-                  goal: props.gameSettings?.players.goal.goal,
-                })}
-              </Text>
-            </View>
+            <LinearGradient colors={[colors.deepGray, colors.black]}>
+              <View
+                paddingHorizontal={'20'}
+                justify={'center'}
+                alignItems={'center'}
+                style={styles.matchRace}>
+                <Text fontSize={12} color={colors.white} fontWeight={'bold'}>
+                  {i18n.t('raceTo', {
+                    goal: props.gameSettings?.players.goal.goal,
+                  })}
+                </Text>
+              </View>
+            </LinearGradient>
           ) : (
             <View />
           )}
           <View flex={'1'} direction={'row'} alignItems={'center'}>
-            <View justify={'center'} paddingHorizontal={'15'} marginLeft={'15'}>
+            <View justify={'center'} paddingHorizontal={'15'}>
               <Text
                 style={styles.matchPointText}
                 fontWeight={'bold'}
                 fontSize={32}
-                color={colors.error}>
+                color={colors.white}>
                 {viewModel.player1?.totalPoint}
               </Text>
             </View>
@@ -145,10 +164,14 @@ const LiveStreamImages = (props: Props) => {
               alignItems={'end'}
               justify={'center'}
               paddingHorizontal={'15'}>
-              <Text fontWeight={'bold'}>{viewModel.player1?.name}</Text>
+              <Text fontWeight={'bold'} color={colors.white}>
+                {viewModel.player1?.name}
+              </Text>
             </View>
+            {renderArrowTurn(1)}
           </View>
         </View>
+        <View style={styles.blackBlock} />
       </View>
 
       {renderTopLeftImages()}

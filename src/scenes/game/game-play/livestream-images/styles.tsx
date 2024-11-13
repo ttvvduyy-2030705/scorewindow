@@ -3,29 +3,22 @@ import colors from 'configuration/colors';
 import {responsiveDimension} from 'utils/helper';
 
 const styles = StyleSheet.create({
-  matchLogoWrapper: {
-    backgroundColor: colors.white,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    marginBottom: -1,
-  },
-  matchLogo: {
-    width: responsiveDimension(64),
-    height: responsiveDimension(32),
-  },
   matchInfo: {
     position: 'absolute',
     bottom: responsiveDimension(-512),
-    width: '100%',
+    width: '150%',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.white,
+    overflow: 'hidden',
   },
   matchBackground: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.error,
     height: 50,
     borderRadius: 8,
   },
   matchRace: {
-    backgroundColor: colors.error,
-    borderRadius: 8,
+    height: '100%',
   },
   matchPointText: {
     marginTop: -7,
@@ -42,6 +35,32 @@ const styles = StyleSheet.create({
   emptyView: {
     width: responsiveDimension(256),
     height: responsiveDimension(128),
+  },
+  imageTurnLeft: {
+    width: responsiveDimension(24),
+    height: responsiveDimension(24),
+    tintColor: colors.white,
+  },
+  imageTurnRight: {
+    width: responsiveDimension(24),
+    height: responsiveDimension(24),
+    transform: [{rotate: '180deg'}],
+    tintColor: colors.white,
+  },
+  empty: {
+    width: responsiveDimension(24),
+    height: responsiveDimension(24),
+  },
+  whiteBlock: {
+    height: 50,
+    width: 26,
+    backgroundColor: colors.white,
+    marginRight: -10,
+  },
+  blackBlock: {
+    height: 50,
+    width: 16,
+    backgroundColor: colors.overlay,
   },
 });
 

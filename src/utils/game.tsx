@@ -45,4 +45,28 @@ const isPool10Game = (category?: BilliardCategory) => {
   return false;
 };
 
-export {isPoolGame, isPool9Game, isPool10Game, isPool15Game, isPool15OnlyGame};
+const isCaromGame = (category?: BilliardCategory) => {
+  if (category === 'one-cushion' || category === 'three-cusion') {
+    return true;
+  }
+
+  return false;
+};
+
+const isCarom3CGame = (category?: BilliardCategory) => {
+  if (category === 'three-cusion') {
+    return true;
+  }
+
+  return false;
+};
+
+export {
+  isPoolGame,
+  isPool9Game,
+  isPool10Game,
+  isPool15Game,
+  isPool15OnlyGame,
+  isCaromGame,
+  isCarom3CGame,
+};

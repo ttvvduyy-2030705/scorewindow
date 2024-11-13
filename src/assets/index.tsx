@@ -24,6 +24,7 @@ const images: Images = {
     soundOn: require('./images/game/sound-on.png'),
     soundOff: require('./images/game/sound-off.png'),
     addTime: require('./images/game/add-time.png'),
+    turn: require('./images/game/turn.png'),
   },
   webcam: {
     refresh: require('./images/webcam/refresh.png'),

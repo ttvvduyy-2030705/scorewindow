@@ -318,7 +318,15 @@ const GamePlayViewModel = () => {
             ...prev,
             playingPlayers: prev?.playingPlayers.map((player, playerIndex) => {
               if (index === playerIndex) {
-                return {...player, totalPoint: player.totalPoint + addedPoint};
+                return {
+                  ...player,
+                  totalPoint: player.totalPoint + addedPoint,
+                  proMode: {
+                    ...player.proMode,
+                    currentPoint:
+                      (player.proMode?.currentPoint || 0) + addedPoint,
+                  },
+                };
               }
 
               return player;
@@ -536,6 +544,10 @@ const GamePlayViewModel = () => {
     [gameSettings],
   );
 
+  const onDecreaseTotalTurns = useCallback(() => {
+    setTotalTurns(prev => prev - 1);
+  }, []);
+
   const onToggleSound = useCallback(() => {
     setSoundEnabled(prev => !prev);
   }, []);
@@ -626,6 +638,22 @@ const GamePlayViewModel = () => {
       setIsMatchPaused(false);
       setCurrentPlayerIndex(nextPlayerIndex);
       _resetCountdown();
+
+      setPlayerSettings(
+        prev =>
+          ({
+            ...prev,
+            playingPlayers: prev?.playingPlayers.map(player => {
+              return {
+                ...player,
+                proMode: {
+                  ...player.proMode,
+                  currentPoint: 0,
+                },
+              };
+            }),
+          } as PlayerSettings),
+      );
 
       if (newTotalTurns) {
         setTotalTurns(newTotalTurns);
@@ -785,6 +813,7 @@ const GamePlayViewModel = () => {
       onSwitchTurn,
       onSwitchPoolBreakPlayerIndex,
       onSwapPlayers,
+      onDecreaseTotalTurns,
       onToggleSound,
       onToggleProMode,
       updateWebcamFolderName,
@@ -834,6 +863,7 @@ const GamePlayViewModel = () => {
     onSwitchTurn,
     onSwitchPoolBreakPlayerIndex,
     onSwapPlayers,
+    onDecreaseTotalTurns,
     onToggleSound,
     onToggleProMode,
     updateWebcamFolderName,

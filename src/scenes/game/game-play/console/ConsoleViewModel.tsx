@@ -5,13 +5,14 @@ import i18n from 'i18n';
 import {ReactNode, useCallback, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {BallType, PoolBallType} from 'types/ball';
-import {Player} from 'types/player';
+import {Player, PlayerSettings} from 'types/player';
 import {GameSettings, GameSettingsMode} from 'types/settings';
 import {formatTotalTime} from 'utils/date';
 import {isPool10Game, isPool15Game, isPool15OnlyGame} from 'utils/game';
 
 export interface Props {
   gameSettings: GameSettings;
+  playerSettings: PlayerSettings;
   currentMode: GameSettingsMode;
   winner?: Player;
   warmUpCount?: number;
@@ -19,8 +20,11 @@ export interface Props {
   totalTurns: number;
   totalTime: number;
   goal: number;
+  countdownTime: number;
+  currentPlayerIndex: number;
   isStarted: boolean;
   isPaused: boolean;
+  isMatchPaused: boolean;
   soundEnabled: boolean;
   poolBreakEnabled: boolean;
   proModeEnabled: boolean;
@@ -31,6 +35,7 @@ export interface Props {
   onWarmUp: () => void;
   onSwitchTurn: () => void;
   onSwapPlayers: () => void;
+  onDecreaseTotalTurns: () => void;
   onToggleSound: () => void;
   onToggleProMode: () => void;
   onPoolScore: (ball: PoolBallType) => void;

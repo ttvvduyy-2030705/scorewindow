@@ -22,6 +22,7 @@ export type Images = {
     soundOn: number;
     soundOff: number;
     addTime: number;
+    turn: number;
   };
   webcam: {
     refresh: number;

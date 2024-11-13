@@ -68,6 +68,7 @@ const game = {
   msgStopGame: 'Are you sure want to end this game ?',
   raceTo: 'RACE TO {{goal}}',
   msgWebcamIntro: 'Webcam will launch in {{second}}',
+  decreaseTotalTurns: 'Minus total turns',
 
   //Pool
   ball1: 'one',

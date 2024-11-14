@@ -31,9 +31,16 @@ const CaromInfo = (props: Props) => {
                 {player.name.toUpperCase()}
               </Text>
             </View>
-            <Text fontSize={40} fontWeight={'bold'}>
-              {player.proMode?.currentPoint || 0}
-            </Text>
+            <View direction={'row'} alignItems={'end'}>
+              <Text fontSize={40} fontWeight={'bold'}>
+                {player.totalPoint || 0}
+              </Text>
+              <View style={styles.currentTotalPoint} marginLeft={'15'}>
+                <Text fontSize={32} fontWeight={'bold'}>
+                  {player.proMode?.currentPoint || 0}
+                </Text>
+              </View>
+            </View>
             {props.currentPlayerIndex === index ? (
               <Image source={images.game.turn} style={styles.turnImage} />
             ) : (
@@ -47,11 +54,7 @@ const CaromInfo = (props: Props) => {
   );
 
   return (
-    <View
-      style={styles.container}
-      marginVertical={'20'}
-      paddingTop={'20'}
-      direction={'row'}>
+    <View style={styles.container} marginBottom={'20'} direction={'row'}>
       <View flex={'1'}>
         <View direction={'row'}>
           <View>
@@ -61,7 +64,7 @@ const CaromInfo = (props: Props) => {
               style={styles.totalPointWrapper}
               paddingHorizontal={'15'}>
               <Text color={colors.white} fontSize={72}>
-                {viewModel.currentTotalPoints}
+                {props.totalTurns}
               </Text>
             </View>
           </View>
@@ -75,9 +78,14 @@ const CaromInfo = (props: Props) => {
           style={styles.countdownContainer}
           direction={'row'}
           alignItems={'center'}
-          padding={'15'}>
-          <View paddingLeft={'5'} paddingRight={'20'}>
-            <Text fontSize={20}>{props.countdownTime}</Text>
+          paddingVertical={'15'}>
+          <View
+            style={styles.countdownWrapper}
+            marginLeft={'15'}
+            paddingHorizontal={'10'}>
+            <Text fontSize={20} color={colors.white}>
+              {props.countdownTime}
+            </Text>
           </View>
           <LinearGradient
             style={styles.linearWrapper}

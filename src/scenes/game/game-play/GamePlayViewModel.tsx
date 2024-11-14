@@ -12,10 +12,10 @@ import i18n from 'i18n';
 import {goBack} from 'utils/navigation';
 import {isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
 import Sound from 'utils/sound';
-import RemoteControl from 'utils/remote';
+// import RemoteControl from 'utils/remote';
 
 import {Player, PlayerSettings} from 'types/player';
-import {RemoteControlKeys} from 'types/bluetooth';
+// import {RemoteControlKeys} from 'types/bluetooth';
 import {BallType, PoolBallType} from 'types/ball';
 
 import {COUNTDOWN_WIDTH} from './styles';
@@ -56,69 +56,69 @@ const GamePlayViewModel = () => {
     gameSettings?.mode?.mode !== 'fast',
   );
 
-  useEffect(() => {
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.PLAY_OR_PAUSE,
-      isStarted ? onPause : onStart,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.LIGHT,
-      onSwitchTurn,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.PAGE_UP,
-      onPoolBreak,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.PAGE_DOWN,
-      onPressGiveMoreTime,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.VOL_UP,
-      onResetTurn,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.VOL_DOWN,
-      onReset,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.DEL,
-      warmUpCountdownTime ? onEndWarmUp : onWarmUp,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.MUTE,
-      onToggleSound,
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.UP,
-      onChangePlayerPoint.bind(GamePlayViewModel, 1, currentPlayerIndex, 0),
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.DOWN,
-      onChangePlayerPoint.bind(GamePlayViewModel, -1, currentPlayerIndex, 0),
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.LEFT,
-      onEndTurn.bind(GamePlayViewModel, true),
-    );
-    RemoteControl.instance.registerKeyEvents(
-      RemoteControlKeys.RIGHT,
-      onEndTurn,
-    );
+  // useEffect(() => {
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.PLAY_OR_PAUSE,
+  //     isStarted ? onPause : onStart,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.LIGHT,
+  //     onSwitchTurn,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.PAGE_UP,
+  //     onPoolBreak,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.PAGE_DOWN,
+  //     onPressGiveMoreTime,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.VOL_UP,
+  //     onResetTurn,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.VOL_DOWN,
+  //     onReset,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.DEL,
+  //     warmUpCountdownTime ? onEndWarmUp : onWarmUp,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.MUTE,
+  //     onToggleSound,
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.UP,
+  //     onChangePlayerPoint.bind(GamePlayViewModel, 1, currentPlayerIndex, 0),
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.DOWN,
+  //     onChangePlayerPoint.bind(GamePlayViewModel, -1, currentPlayerIndex, 0),
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.LEFT,
+  //     onEndTurn.bind(GamePlayViewModel, true),
+  //   );
+  //   RemoteControl.instance.registerKeyEvents(
+  //     RemoteControlKeys.RIGHT,
+  //     onEndTurn,
+  //   );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    isStarted,
-    isPaused,
-    currentPlayerIndex,
-    totalTurns,
-    gameSettings,
-    playerSettings,
-    warmUpCountdownTime,
-    warmUpCount,
-    poolBreakEnabled,
-    countdownTime,
-  ]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [
+  //   isStarted,
+  //   isPaused,
+  //   currentPlayerIndex,
+  //   totalTurns,
+  //   gameSettings,
+  //   playerSettings,
+  //   warmUpCountdownTime,
+  //   warmUpCount,
+  //   poolBreakEnabled,
+  //   countdownTime,
+  // ]);
 
   useEffect(() => {
     clearInterval(countdownInterval);
@@ -674,8 +674,14 @@ const GamePlayViewModel = () => {
   }, [isStarted, gameSettings, totalTurns, _resetCountdown]);
 
   const onSwapPlayers = useCallback(() => {
-    const player1: Player = {...playerSettings?.playingPlayers[0]} as Player;
-    const player0: Player = {...playerSettings?.playingPlayers[1]} as Player;
+    const player0: Player = {
+      ...playerSettings?.playingPlayers[0],
+      name: playerSettings?.playingPlayers[1].name,
+    } as Player;
+    const player1: Player = {
+      ...playerSettings?.playingPlayers[1],
+      name: playerSettings?.playingPlayers[0].name,
+    } as Player;
 
     setPlayerSettings({
       ...playerSettings,

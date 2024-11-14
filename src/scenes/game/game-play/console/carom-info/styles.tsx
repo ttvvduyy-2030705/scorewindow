@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
     // width: '100%',
     // aspectRatio: 1.542,
     // alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: colors.black,
+    marginTop: responsiveDimension(40),
   },
   totalPointWrapper: {
     backgroundColor: colors.lightBlack,
@@ -26,14 +29,21 @@ const styles = StyleSheet.create({
   linearWrapper: {
     flex: 1,
     height: 40,
-    borderRadius: 16,
     overflow: 'hidden',
+    marginHorizontal: responsiveDimension(15),
   },
   linear: {
     position: 'absolute',
     backgroundColor: colors.white,
     height: 40,
     width: '100%',
+  },
+  countdownWrapper: {
+    backgroundColor: colors.error,
+    height: '100%',
+  },
+  currentTotalPoint: {
+    marginBottom: responsiveDimension(3),
   },
 });
 

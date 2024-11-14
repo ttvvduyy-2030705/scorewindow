@@ -105,7 +105,7 @@ const PlayerViewModel = (props: Props) => {
         setHighestRate(totalPointInTurn);
       }
 
-      setAveragePoint((props.player.totalPoint / props.totalTurns).toFixed(3));
+      setAveragePoint((props.player.totalPoint / props.totalTurns).toFixed(2));
       setTotalPointInTurn(0);
 
       props.onEndTurn(isPrevious);

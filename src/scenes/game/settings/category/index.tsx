@@ -18,10 +18,8 @@ import {
   GAME_COUNT_DOWN_TIME,
   GAME_EXTRA_TIME_TURN,
   GAME_MODE,
-  GAME_MODE_POOL,
   GAME_WARM_UP_TIME,
 } from 'constants/game-settings';
-import {isPool15Game} from 'utils/game';
 
 interface Props {
   category?: BilliardCategory;

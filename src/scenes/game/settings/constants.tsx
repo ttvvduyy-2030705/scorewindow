@@ -24,7 +24,7 @@ const PLAYER_SETTINGS = (): PlayerSettings => ({
   playerNumber: 2,
   playingPlayers: DEFAULT_PLAYERS(),
   goal: {
-    goal: 40,
+    goal: 9,
     pointSteps: [-5, -1, 1, 5],
   },
 });

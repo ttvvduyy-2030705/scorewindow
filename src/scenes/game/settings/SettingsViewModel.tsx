@@ -70,7 +70,7 @@ const GameSettingsViewModel = (props: Props) => {
         goal: {
           ...playerSettings.goal,
           goal: isPoolGame(selectedCategory)
-            ? 10
+            ? 9
             : isCarom3CGame(selectedCategory)
             ? 30
             : 40,

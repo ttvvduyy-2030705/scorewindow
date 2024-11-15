@@ -54,7 +54,7 @@ const Text = (props: TextProps) => {
     letterSpacing,
     ellipsizeMode = 'tail',
     textAlign = 'left',
-    color = colors.lightBlack,
+    color = colors.black,
     adjustsFontSizeToFit,
     onLayout,
   } = props;

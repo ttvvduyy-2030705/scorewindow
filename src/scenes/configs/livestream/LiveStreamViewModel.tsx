@@ -7,7 +7,7 @@ const LiveStreamViewModel = () => {
   const [liveStreamData, setLiveStreamData] = useState<LiveStreamCamera>({
     rtmpUrl: '',
     streamKey: '',
-    outputType: OutputType.livestream,
+    outputType: OutputType.local,
   });
   const [allowToSave, setAllowToSave] = useState(false);
 

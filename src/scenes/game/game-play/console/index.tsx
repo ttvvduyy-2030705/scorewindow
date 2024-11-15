@@ -208,6 +208,7 @@ const GameConsole = (props: Props) => {
                 onPoolBreak={props.onPoolBreak}
                 onSelectBall={viewModel.onSelectBall}
                 onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
+                onSwapPlayers={viewModel.onSwapPlayers}
                 onRestart={viewModel.onRestart}
                 onResetTurn={props.onResetTurn}
               />

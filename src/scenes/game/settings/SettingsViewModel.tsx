@@ -64,9 +64,12 @@ const GameSettingsViewModel = (props: Props) => {
       setCategory(selectedCategory);
       setPlayerSettings({
         playerNumber: 2,
-        playingPlayers: isPoolGame(selectedCategory)
-          ? DEFAULT_PLAYERS().map(item => ({...item, color: PLAYER_COLOR[1]}))
-          : DEFAULT_PLAYERS(),
+        playingPlayers: DEFAULT_PLAYERS().map((item, index) => ({
+          ...item,
+          color: isPoolGame(selectedCategory)
+            ? PLAYER_COLOR[1]
+            : (PLAYER_COLOR as any)[index],
+        })),
         goal: {
           ...playerSettings.goal,
           goal: isPoolGame(selectedCategory)

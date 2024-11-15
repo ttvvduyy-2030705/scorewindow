@@ -6,7 +6,7 @@ import i18n from 'i18n';
 const DEFAULT_PLAYERS = () => [
   {
     name: i18n.t('player1'),
-    color: PLAYER_COLOR[0],
+    color: PLAYER_COLOR[1],
     totalPoint: 0,
   },
   {

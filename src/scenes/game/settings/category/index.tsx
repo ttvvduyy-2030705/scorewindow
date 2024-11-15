@@ -107,7 +107,7 @@ const CategorySettings = (props: Props) => {
       {renderCategoryLine(i18n.t('pool'), POOL, onSelectCategory, category)}
       {renderCategoryLine(
         i18n.t('mode'),
-        isPool15Game(category) ? GAME_MODE_POOL : GAME_MODE,
+        GAME_MODE,
         onSelectGameMode,
         gameMode,
       )}

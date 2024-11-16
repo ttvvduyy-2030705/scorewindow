@@ -46,13 +46,12 @@ const PoolBoard = (props: Props) => {
         direction={'row'}
         alignItems={'center'}>
         <View flex={'1'} direction={'row'} alignItems={'center'}>
-          {renderArrowTurn(0)}
-          <View flex={'1'} justify={'center'} paddingHorizontal={'15'}>
+          <View flex={'1'} justify={'center'} paddingHorizontal={'20'}>
             <Text fontWeight={'bold'} color={colors.white}>
               {viewModel.player0?.name}
             </Text>
           </View>
-          <View justify={'center'} paddingHorizontal={'15'}>
+          <View justify={'center'} paddingLeft={'15'} paddingRight={'5'}>
             <Text
               style={styles.matchPointText}
               fontWeight={'bold'}
@@ -61,6 +60,7 @@ const PoolBoard = (props: Props) => {
               {viewModel.player0?.totalPoint}
             </Text>
           </View>
+          {renderArrowTurn(1)}
         </View>
         {isPoolGame(props.gameSettings?.category) ? (
           <LinearGradient colors={[colors.deepGray, colors.black]}>
@@ -80,7 +80,8 @@ const PoolBoard = (props: Props) => {
           <View />
         )}
         <View flex={'1'} direction={'row'} alignItems={'center'}>
-          <View justify={'center'} paddingHorizontal={'15'}>
+          {renderArrowTurn(0)}
+          <View justify={'center'} paddingRight={'15'} paddingLeft={'5'}>
             <Text
               style={styles.matchPointText}
               fontWeight={'bold'}
@@ -93,12 +94,11 @@ const PoolBoard = (props: Props) => {
             flex={'1'}
             alignItems={'end'}
             justify={'center'}
-            paddingHorizontal={'15'}>
+            paddingHorizontal={'20'}>
             <Text fontWeight={'bold'} color={colors.white}>
               {viewModel.player1?.name}
             </Text>
           </View>
-          {renderArrowTurn(1)}
         </View>
       </View>
       <View style={styles.blackBlock} />

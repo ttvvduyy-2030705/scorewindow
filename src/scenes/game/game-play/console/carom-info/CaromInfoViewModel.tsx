@@ -1,6 +1,14 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {captureRef} from 'react-native-view-shot';
+import RNFS from 'react-native-fs';
+
 import {PlayerSettings} from 'types/player';
 import {GameSettings} from 'types/settings';
+import {
+  MATCH_COUNTDOWN,
+  MATCH_IMAGE,
+  WEBCAM_BASE_CAMERA_FOLDER,
+} from 'constants/webcam';
 
 export interface Props {
   isStarted: boolean;
@@ -15,6 +23,9 @@ export interface Props {
 }
 
 const CaromInfoViewModel = (props: Props) => {
+  const matchRef = useRef(null);
+  const matchCountdownRef = useRef(null);
+
   const [animationStarted, setAnimationStarted] = useState(false);
   const [isResumed, setIsResumed] = useState(false);
 
@@ -63,6 +74,62 @@ const CaromInfoViewModel = (props: Props) => {
     animationStarted,
   ]);
 
+  useEffect(() => {
+    if (
+      !matchRef.current ||
+      !matchCountdownRef.current ||
+      !props.playerSettings ||
+      props.playerSettings.playingPlayers.length > 2
+    ) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      if (!matchRef.current || !matchCountdownRef.current) {
+        return;
+      }
+
+      captureRef(matchRef, {
+        format: 'jpg',
+        quality: 0.1,
+      })
+        .then(
+          async uri => {
+            const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
+            const _path = uri.slice(7);
+
+            RNFS.copyFile(_path, matchImagePath);
+          },
+          error => console.error('Oops, match info failed', error),
+        )
+        .catch(e => {
+          if (__DEV__) {
+            console.log('Capture match info error', e);
+          }
+        });
+
+      captureRef(matchCountdownRef, {
+        format: 'png',
+        quality: 0.1,
+      })
+        .then(
+          async uri => {
+            const matchCountdownImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_COUNTDOWN}`;
+            const _path = uri.slice(7);
+
+            RNFS.copyFile(_path, matchCountdownImagePath);
+          },
+          error => console.error('Oops, match countdown failed', error),
+        )
+        .catch(e => {
+          if (__DEV__) {
+            console.log('Capture countdown error', e);
+          }
+        });
+      clearTimeout(timeout);
+    }, 1000);
+  }, [props.countdownTime, props.playerSettings]);
+
   return useMemo(() => {
     const currentTotalPoints =
       props.playerSettings.playingPlayers[props.currentPlayerIndex].totalPoint;
@@ -70,11 +137,18 @@ const CaromInfoViewModel = (props: Props) => {
     const player1 = props.playerSettings.playingPlayers[1];
 
     return {
+      matchRef,
+      matchCountdownRef,
       currentTotalPoints,
       player0,
       player1,
     };
-  }, [props.currentPlayerIndex, props.playerSettings]);
+  }, [
+    matchRef,
+    matchCountdownRef,
+    props.currentPlayerIndex,
+    props.playerSettings,
+  ]);
 };
 
 export default CaromInfoViewModel;

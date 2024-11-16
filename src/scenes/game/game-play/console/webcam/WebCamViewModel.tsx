@@ -118,6 +118,7 @@ const WebCamViewModel = (props: Props) => {
           _url,
           webcamType,
           !!gameSettings?.mode.countdownTime,
+          gameSettings?.category,
         );
         return;
       }

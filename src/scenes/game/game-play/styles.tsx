@@ -39,7 +39,10 @@ const styles = StyleSheet.create({
   },
   extraText: {},
   overlayWrapper: {
-    borderRadius: 64,
+    backgroundColor: colors.white,
+  },
+  countdownContainer: {
+    backgroundColor: colors.transparent,
   },
 });
 

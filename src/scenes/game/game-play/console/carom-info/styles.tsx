@@ -11,19 +11,23 @@ const styles = StyleSheet.create({
   },
   totalTurnWrapper: {
     backgroundColor: colors.darkPurple,
+    marginRight: responsiveDimension(4),
   },
   turnImage: {
-    width: responsiveDimension(24),
-    height: responsiveDimension(24),
+    width: responsiveDimension(40),
+    height: responsiveDimension(40),
     tintColor: colors.red,
-    marginHorizontal: responsiveDimension(10),
+    marginLeft: responsiveDimension(10),
+    marginRight: responsiveDimension(-5),
   },
   empty: {
-    width: responsiveDimension(24),
-    height: responsiveDimension(24),
-    marginHorizontal: responsiveDimension(10),
+    width: responsiveDimension(40),
+    height: responsiveDimension(40),
+    marginLeft: responsiveDimension(10),
   },
-  countdownContainer: {},
+  countdownContainer: {
+    backgroundColor: colors.darkPurple,
+  },
   linearWrapper: {
     flex: 1,
     height: 40,

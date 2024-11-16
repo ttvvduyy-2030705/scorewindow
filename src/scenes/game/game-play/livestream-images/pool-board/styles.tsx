@@ -6,22 +6,22 @@ const styles = StyleSheet.create({
   matchInfo: {
     position: 'absolute',
     bottom: responsiveDimension(-512),
-    width: '150%',
-    borderRadius: 8,
+    width: '200%',
     borderWidth: 1,
     borderColor: colors.white,
     overflow: 'hidden',
+    backgroundColor: colors.transparent,
   },
   whiteBlock: {
-    height: 50,
+    height: '100%',
     width: 26,
     backgroundColor: colors.white,
     marginRight: -10,
   },
   blackBlock: {
-    height: 50,
+    height: '100%',
     width: 16,
-    backgroundColor: colors.overlay,
+    backgroundColor: colors.transparent,
   },
   imageTurnLeft: {
     width: responsiveDimension(24),
@@ -39,15 +39,14 @@ const styles = StyleSheet.create({
     height: responsiveDimension(24),
   },
   matchBackground: {
-    backgroundColor: colors.error,
-    height: 50,
-    borderRadius: 8,
+    backgroundColor: colors.darkRed,
   },
   matchRace: {
     height: '100%',
   },
   matchPointText: {
-    marginTop: -7,
+    marginTop: responsiveDimension(-10),
+    marginBottom: responsiveDimension(-8),
   },
 });
 

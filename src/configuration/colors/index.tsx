@@ -58,6 +58,7 @@ let colors: Colors = {
   red: '#DE5346',
   lightRed: '#f7766a',
   lightRed2: '#ff998f',
+  darkRed: '#DD0000',
 
   transparent: 'transparent',
 };

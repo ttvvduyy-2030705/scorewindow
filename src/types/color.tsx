@@ -59,6 +59,7 @@ export type Colors = {
   red: string;
   lightRed: string;
   lightRed2: string;
+  darkRed: string;
 
   transparent: string;
 };

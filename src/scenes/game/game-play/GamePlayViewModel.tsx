@@ -10,7 +10,7 @@ import {cancelStreamWebcamToFile} from 'services/ffmpeg/local';
 import i18n from 'i18n';
 
 import {goBack} from 'utils/navigation';
-import {isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
+import {isCaromGame, isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
 import Sound from 'utils/sound';
 // import RemoteControl from 'utils/remote';
 
@@ -198,17 +198,17 @@ const GamePlayViewModel = () => {
   }, [isStarted, soundEnabled, countdownTime, gameSettings]);
 
   useEffect(() => {
-    if (!matchCountdownRef.current) {
+    if (!matchCountdownRef.current || isCaromGame(gameSettings?.category)) {
       return;
     }
 
     const timeout = setTimeout(() => {
-      if (!matchCountdownRef.current) {
+      if (!matchCountdownRef.current || isCaromGame(gameSettings?.category)) {
         return;
       }
 
       captureRef(matchCountdownRef, {
-        format: 'jpg',
+        format: 'png',
         quality: 0.1,
       })
         .then(
@@ -228,7 +228,7 @@ const GamePlayViewModel = () => {
 
       clearTimeout(timeout);
     }, 1000);
-  }, [countdownTime]);
+  }, [countdownTime, gameSettings]);
 
   useEffect(() => {
     return () => {

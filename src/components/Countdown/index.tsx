@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import View from 'components/View';
 import colors from 'configuration/colors';
 
@@ -13,19 +13,17 @@ interface Props {
 }
 
 const Countdown = (props: Props) => {
-  const getCountdownWidthItem = useCallback(() => {
-    if (!props.originalCountdownTime) {
-      return;
-    }
+  const [itemWidth, setItemWidth] = useState(0);
 
-    return (
-      Math.round(props.countdownWidth / props.originalCountdownTime!) -
-      (props.marginHorizontal ? props.marginHorizontal * 2 : 10)
+  useEffect(() => {
+    setItemWidth(
+      Number((props.countdownWidth / props.originalCountdownTime!).toFixed(2)) -
+        (props.marginHorizontal ? props.marginHorizontal * 2 : 10),
     );
   }, [
-    props.originalCountdownTime,
     props.countdownWidth,
     props.marginHorizontal,
+    props.originalCountdownTime,
   ]);
 
   const getCountdownColor = useCallback(
@@ -69,7 +67,7 @@ const Countdown = (props: Props) => {
         return (
           <View
             key={`countdown-item-hide-${index}`}
-            style={[styles.countdownItem, {width: getCountdownWidthItem()}]}
+            style={[styles.countdownItem, {width: itemWidth}]}
           />
         );
       }
@@ -82,7 +80,7 @@ const Countdown = (props: Props) => {
             {
               height: ITEM_HEIGHT,
               marginHorizontal: MARGIN_HORIZONTAL,
-              width: getCountdownWidthItem(),
+              width: itemWidth,
               backgroundColor: getCountdownColor(index),
             },
           ]}
@@ -90,12 +88,12 @@ const Countdown = (props: Props) => {
       );
     }).reverse();
   }, [
+    props.originalCountdownTime,
+    props.currentCountdownTime,
     ITEM_HEIGHT,
     MARGIN_HORIZONTAL,
-    props.currentCountdownTime,
-    props.originalCountdownTime,
+    itemWidth,
     getCountdownColor,
-    getCountdownWidthItem,
   ]);
 
   return (

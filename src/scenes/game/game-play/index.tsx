@@ -267,17 +267,17 @@ const GamePlay = () => {
         <View
           ref={viewModel.matchCountdownRef}
           collapsable={false}
+          style={styles.countdownContainer}
           direction={'row'}
           alignItems={'center'}
           marginRight={'20'}>
-          <View flex={'1'} marginLeft={'20'}>
+          <View flex={'1'} alignItems={'end'}>
             <View
-              style={[
-                styles.overlayWrapper,
-                {backgroundColor: colors.whiteDarkerOverlay},
-              ]}
-              marginVertical={'20'}
-              paddingHorizontal={'15'}>
+              style={styles.overlayWrapper}
+              marginVertical={'15'}
+              paddingHorizontal={'15'}
+              paddingVertical={'5'}
+              marginRight={'5'}>
               <Text fontSize={48}>{viewModel.countdownTime}</Text>
             </View>
             {viewModel.countdownTime >

@@ -68,14 +68,14 @@ const CaromInfo = (props: Props) => {
   return (
     <View style={styles.container} direction={'row'} marginTop={'10'}>
       <View flex={'1'}>
-        <View direction={'row'}>
+        <View ref={viewModel.matchRef} collapsable={false} direction={'row'}>
           <View>
             <View
               flex={'1'}
               justify={'center'}
               style={styles.totalTurnWrapper}
-              paddingHorizontal={'15'}>
-              <Text color={colors.white} fontSize={72} lineHeight={86}>
+              paddingHorizontal={'20'}>
+              <Text color={colors.white} fontSize={56} lineHeight={86}>
                 {props.totalTurns}
               </Text>
             </View>
@@ -87,10 +87,15 @@ const CaromInfo = (props: Props) => {
         </View>
 
         <View
+          ref={viewModel.matchCountdownRef}
+          collapsable={false}
           style={styles.countdownContainer}
           direction={'row'}
           alignItems={'center'}>
-          <View style={styles.countdownWrapper} paddingHorizontal={'10'}>
+          <View
+            style={styles.countdownWrapper}
+            paddingHorizontal={'20'}
+            marginLeft={'5'}>
             <Text fontSize={20} color={colors.white}>
               {props.countdownTime}
             </Text>
@@ -100,7 +105,7 @@ const CaromInfo = (props: Props) => {
               originalCountdownTime={props.gameSettings.mode?.countdownTime}
               currentCountdownTime={props.countdownTime}
               countdownWidth={dims.screenWidth * 0.28}
-              heightItem={15}
+              heightItem={27}
               marginHorizontal={2}
             />
           </View>

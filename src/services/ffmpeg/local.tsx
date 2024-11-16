@@ -47,13 +47,13 @@ const streamWebcamToFile = async (
 
   if (webcamType === WebcamType.webcam) {
     FFmpegKit.executeAsync(
-      `-i ${url} -acodec copy -vcodec copy -f segment -segment_time ${segmentTime} ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
+      `-i ${url} -acodec copy -vcodec copy -f segment -segment_time ${segmentTime} -preset medium -b:v 9000k -maxrate 9000k -bufsize 12000k ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
     );
     return;
   }
 
   FFmpegKit.executeAsync(
-    `-f android_camera -i 0 -f segment -segment_time ${segmentTime} ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
+    `-f android_camera -i 0 -f segment -segment_time ${segmentTime} -preset medium -b:v 9000k -maxrate 9000k -bufsize 12000k ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
   );
 };
 

@@ -2,10 +2,9 @@ import React, {lazy, memo, Suspense, useCallback} from 'react';
 import Image from 'components/Image';
 import View from 'components/View';
 
-import {isCaromGame} from 'utils/game';
+import {isPoolGame} from 'utils/game';
 
 import LiveStreamImagesViewModel, {Props} from './LiveStreamImagesViewModel';
-const CaromBoard = lazy(() => import('./carom-board'));
 const PoolBoard = lazy(() => import('./pool-board'));
 import styles from './styles';
 
@@ -83,15 +82,7 @@ const LiveStreamImages = (props: Props) => {
 
   return (
     <>
-      {isCaromGame(props.gameSettings?.category) ? (
-        <Suspense>
-          <CaromBoard
-            currentPlayerIndex={props.currentPlayerIndex}
-            gameSettings={props.gameSettings}
-            playerSettings={props.playerSettings}
-          />
-        </Suspense>
-      ) : (
+      {isPoolGame(props.gameSettings?.category) ? (
         <Suspense>
           <PoolBoard
             currentPlayerIndex={props.currentPlayerIndex}
@@ -99,6 +90,8 @@ const LiveStreamImages = (props: Props) => {
             playerSettings={props.playerSettings}
           />
         </Suspense>
+      ) : (
+        <View />
       )}
       {renderTopLeftImages()}
       {renderTopRightImages()}

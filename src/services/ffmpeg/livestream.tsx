@@ -11,7 +11,9 @@ import {
 } from 'constants/webcam';
 import {FFmpegKit} from 'ffmpeg-kit-react-native';
 import RNFS from 'react-native-fs';
+import {BilliardCategory} from 'types/category';
 import {LiveStreamCamera, WebcamType} from 'types/webcam';
+import {isCaromGame} from 'utils/game';
 
 const _mapThumbnailItem = (
   imagePath: string,
@@ -20,7 +22,7 @@ const _mapThumbnailItem = (
   left: string,
 ) => {
   return {
-    inputPrompt: `-r 15 -i ${imagePath}`,
+    inputPrompt: `-framerate 30 -i ${imagePath}`,
     filterPrompt: `[${currentFilterIndex}]overlay=${top}:${left}`,
   };
 };
@@ -52,6 +54,7 @@ const liveStreamFromCamera = async (
   webcamUrl?: string,
   webcamType?: WebcamType,
   countdownEnabled?: boolean,
+  category?: BilliardCategory,
 ) => {
   const folderPath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}`;
   const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
@@ -63,16 +66,21 @@ const liveStreamFromCamera = async (
     await RNFS.mkdir(folderPath);
   }
 
+  const countdownPosition = isCaromGame(category)
+    ? '90:(H-h)-50'
+    : '(W-w)/2:(H-h)-50';
+  const boardPosition = isCaromGame(category)
+    ? '90:(H-h)-85'
+    : '(W-w)/2:(H-h)-85';
   const showThumbnailsOnLiveStream =
     (await AsyncStorage.getItem(keys.SHOW_THUMBNAILS_ON_LIVESTREAM)) === '1';
-  const videoAndMatchInfo = `-y -video_size 1920x1080 -f android_camera -i 0 -f image2 -stream_loop -1 -r 15 -i ${matchImagePath}`;
-  const audioAndOutput = `-f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
-      -f flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1 -preset medium -b:v 5000k -maxrate 6000k -bufsize 12000k ${liveStream?.rtmpUrl}/${liveStream?.streamKey}`;
+  const videoAndMatchInfo = `-y -video_size 1920x1080 -input_queue_size 120 -f android_camera -framerate 30 -i 0 -f image2 -stream_loop -1 -framerate 30 -i ${matchImagePath}`;
+  const audioAndOutput = `-f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -framerate 30 \
+      -f flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1 -preset medium -b:v 9000k -maxrate 9000k -bufsize 24000k ${liveStream?.rtmpUrl}/${liveStream?.streamKey}`;
 
   let overlayInput = `-i ${matchCountdownImagePath}`;
-  let overlayFilter =
-    '-filter_complex "hflip[flipped];[flipped][1]overlay=(W-w)/2:(H-h)-60[img1];[2:v]scale=640:35[img2];[img1][img2]overlay=(W-w)/2:(H-h)-25';
-  let filterComplex = '-f image2 -stream_loop -1 -r 15';
+  let overlayFilter = `-filter_complex "hflip[flipped];[flipped][1]overlay=${boardPosition}[img1];[2:v]scale=620:35[img2];[img1][img2]overlay=${countdownPosition}`;
+  let filterComplex = '-f image2 -stream_loop -1 -framerate 30';
 
   if (showThumbnailsOnLiveStream) {
     const result = _buildThumbnailUrls();
@@ -102,6 +110,7 @@ const liveStreamFromCamera = async (
   );
 };
 
+//-vf scale=iw*3:ih*3:flags=neighbor
 // -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
 // -f image2 -stream_loop -1 -i ${matchImagePath} -stream_loop -1 -i ${matchCountdownImagePath} -filter_complex "overlay=25:25,overlay=25:180"
 //-input_queue_size 2048

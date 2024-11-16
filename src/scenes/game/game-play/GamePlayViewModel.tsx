@@ -2,10 +2,10 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import RNFS from 'react-native-fs';
+import {captureRef} from 'react-native-view-shot';
 import {useRealm} from '@realm/react';
 import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
-import colors from 'configuration/colors';
 import {cancelStreamWebcamToFile} from 'services/ffmpeg/local';
 import i18n from 'i18n';
 
@@ -18,8 +18,6 @@ import {Player, PlayerSettings} from 'types/player';
 // import {RemoteControlKeys} from 'types/bluetooth';
 import {BallType, PoolBallType} from 'types/ball';
 
-import {COUNTDOWN_WIDTH} from './styles';
-import {captureRef} from 'react-native-view-shot';
 import {MATCH_COUNTDOWN, WEBCAM_BASE_CAMERA_FOLDER} from 'constants/webcam';
 
 let countdownInterval: NodeJS.Timeout, warmUpCountdownInterval: NodeJS.Timeout;
@@ -210,8 +208,8 @@ const GamePlayViewModel = () => {
       }
 
       captureRef(matchCountdownRef, {
-        format: 'png',
-        quality: 1,
+        format: 'jpg',
+        quality: 0.1,
       })
         .then(
           async uri => {
@@ -238,42 +236,9 @@ const GamePlayViewModel = () => {
     };
   }, []);
 
-  const getCountdownWidthItem = useCallback(() => {
-    if (!gameSettings?.mode?.countdownTime) {
-      return;
-    }
-
-    return COUNTDOWN_WIDTH / gameSettings!.mode?.countdownTime! - 10;
-  }, [gameSettings]);
-
   const updateWebcamFolderName = useCallback((name: string) => {
     setWebcamFolderName(name);
   }, []);
-
-  const getCountdownColor = useCallback(
-    (index: number) => {
-      if (!gameSettings?.mode?.countdownTime) {
-        return;
-      }
-
-      const _time = gameSettings!.mode?.countdownTime!;
-      const section = _time / 4;
-
-      switch (true) {
-        case index > section * 3:
-          return colors.green;
-        case index > section * 2:
-          return colors.primary;
-        case index > section * 1:
-          return colors.yellow;
-        case index >= 0:
-          return colors.red;
-        default:
-          return colors.primary;
-      }
-    },
-    [gameSettings],
-  );
 
   const _resetCountdown = useCallback(
     (isResume?: boolean, cumulativeTime?: boolean) => {
@@ -544,6 +509,10 @@ const GamePlayViewModel = () => {
     [gameSettings],
   );
 
+  const onIncreaseTotalTurns = useCallback(() => {
+    setTotalTurns(prev => prev + 1);
+  }, []);
+
   const onDecreaseTotalTurns = useCallback(() => {
     setTotalTurns(prev => prev - 1);
   }, []);
@@ -806,8 +775,6 @@ const GamePlayViewModel = () => {
       poolBreakEnabled,
       proModeEnabled,
       webcamFolderName,
-      getCountdownWidthItem,
-      getCountdownColor,
       onEditPlayerName,
       onChangePlayerPoint,
       onPressGiveMoreTime,
@@ -819,6 +786,7 @@ const GamePlayViewModel = () => {
       onSwitchTurn,
       onSwitchPoolBreakPlayerIndex,
       onSwapPlayers,
+      onIncreaseTotalTurns,
       onDecreaseTotalTurns,
       onToggleSound,
       onToggleProMode,
@@ -856,8 +824,6 @@ const GamePlayViewModel = () => {
     poolBreakEnabled,
     proModeEnabled,
     webcamFolderName,
-    getCountdownWidthItem,
-    getCountdownColor,
     onEditPlayerName,
     onChangePlayerPoint,
     onPressGiveMoreTime,
@@ -869,6 +835,7 @@ const GamePlayViewModel = () => {
     onSwitchTurn,
     onSwitchPoolBreakPlayerIndex,
     onSwapPlayers,
+    onIncreaseTotalTurns,
     onDecreaseTotalTurns,
     onToggleSound,
     onToggleProMode,

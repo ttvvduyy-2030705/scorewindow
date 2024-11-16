@@ -4,15 +4,13 @@ import {responsiveDimension} from 'utils/helper';
 
 const styles = StyleSheet.create({
   container: {
-    // width: '100%',
-    // aspectRatio: 1.542,
-    // alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: colors.black,
-    marginTop: responsiveDimension(40),
+    borderTopWidth: 1,
+    borderRightWidth: responsiveDimension(20),
+    borderColor: colors.darkPurple,
+    backgroundColor: colors.darkPurple,
   },
-  totalPointWrapper: {
-    backgroundColor: colors.lightBlack,
+  totalTurnWrapper: {
+    backgroundColor: colors.darkPurple,
   },
   turnImage: {
     width: responsiveDimension(24),
@@ -39,11 +37,23 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   countdownWrapper: {
-    backgroundColor: colors.error,
     height: '100%',
   },
   currentTotalPoint: {
     marginBottom: responsiveDimension(3),
+  },
+  totalPointWrapper: {
+    backgroundColor: colors.darkPurple,
+  },
+  totalPointText0: {
+    marginBottom: responsiveDimension(-11),
+  },
+  totalPointText1: {
+    marginTop: responsiveDimension(4),
+    marginBottom: responsiveDimension(-11),
+  },
+  currentPointText: {
+    marginBottom: responsiveDimension(-11),
   },
 });
 

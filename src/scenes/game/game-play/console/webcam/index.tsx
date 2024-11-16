@@ -58,13 +58,14 @@ const WebCam = (props: Props) => {
     );
   }, []);
 
+  const CONTAINER_STYLE = useMemo(
+    () => [styles.container, {aspectRatio: props.functionDisabled ? 2 : 1.542}],
+    [props.functionDisabled],
+  );
+
   return (
-    <View style={styles.container}>
-      <View
-        flex={'1'}
-        style={styles.webcamWrapper}
-        direction={'row'}
-        marginTop={'10'}>
+    <View style={CONTAINER_STYLE} marginTop={'10'}>
+      <View flex={'1'} style={styles.webcamWrapper} direction={'row'}>
         <View flex={'1'}>
           {viewModel.connectCountdownTime > 0 ? (
             WEBCAM_LOADING_INTRO
@@ -99,22 +100,23 @@ const WebCam = (props: Props) => {
           {props.renderMatchInfo()}
         </View>
       </View>
-      <View direction={'row'} alignItems={'center'}>
-        <View flex={'1'} direction={'row'} justify={'center'}>
-          <Button onPress={viewModel.onRefresh}>
-            <View
-              direction={'row'}
-              alignItems={'center'}
-              paddingVertical={'10'}>
-              <View marginRight={'10'}>
-                <Text>{i18n.t('refresh')}</Text>
+      {!props.functionDisabled ? (
+        <View direction={'row'} alignItems={'center'}>
+          <View flex={'1'} direction={'row'} justify={'center'}>
+            <Button onPress={viewModel.onRefresh}>
+              <View
+                direction={'row'}
+                alignItems={'center'}
+                paddingVertical={'10'}>
+                <View marginRight={'10'}>
+                  <Text>{i18n.t('refresh')}</Text>
+                </View>
+                <Image source={images.webcam.refresh} style={styles.icon} />
               </View>
-              <Image source={images.webcam.refresh} style={styles.icon} />
-            </View>
-          </Button>
-        </View>
-        <Divider vertical size={'small'} />
-        {/* <View flex={'1'} direction={'row'} justify={'center'}>
+            </Button>
+          </View>
+          <Divider vertical size={'small'} />
+          {/* <View flex={'1'} direction={'row'} justify={'center'}>
           <Button onPress={viewModel.onDelay}>
             <View
               direction={'row'}
@@ -127,21 +129,24 @@ const WebCam = (props: Props) => {
             </View>
           </Button>
         </View> */}
-        {/* <Divider vertical size={'small'} /> */}
-        <View flex={'1'} direction={'row'} justify={'center'}>
-          <Button onPress={viewModel.onReWatch}>
-            <View
-              direction={'row'}
-              alignItems={'center'}
-              paddingVertical={'10'}>
-              <View marginRight={'10'}>
-                <Text>{i18n.t('reWatch')}</Text>
+          {/* <Divider vertical size={'small'} /> */}
+          <View flex={'1'} direction={'row'} justify={'center'}>
+            <Button onPress={viewModel.onReWatch}>
+              <View
+                direction={'row'}
+                alignItems={'center'}
+                paddingVertical={'10'}>
+                <View marginRight={'10'}>
+                  <Text>{i18n.t('reWatch')}</Text>
+                </View>
+                <Image source={images.webcam.watch} style={styles.icon} />
               </View>
-              <Image source={images.webcam.watch} style={styles.icon} />
-            </View>
-          </Button>
+            </Button>
+          </View>
         </View>
-      </View>
+      ) : (
+        <View />
+      )}
     </View>
   );
 };

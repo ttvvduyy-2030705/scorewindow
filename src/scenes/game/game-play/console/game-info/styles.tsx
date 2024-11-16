@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     borderRadius: 0,
-    paddingVertical: responsiveDimension(20),
+    paddingVertical: responsiveDimension(10),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -23,6 +23,15 @@ const styles = StyleSheet.create({
   },
   textPointNoMarginBottom: {
     marginTop: responsiveDimension(-16),
+  },
+  pointWrapper: {
+    height: '100%',
+  },
+  valueWrapper: {
+    width: '30%',
+  },
+  valueText: {
+    position: 'absolute',
   },
 });
 

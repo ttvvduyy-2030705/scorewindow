@@ -35,6 +35,7 @@ import {LiveStreamCamera, OutputType, Webcam, WebcamType} from 'types/webcam';
 import {CAMERA_PLAYBACK_DURATION} from './constants';
 
 export interface Props {
+  functionDisabled?: boolean;
   webcamFolderName?: string;
   renderMatchInfo: () => ReactNode;
   updateWebcamFolderName: (name: string) => void;

@@ -35,6 +35,7 @@ export interface Props {
   onWarmUp: () => void;
   onSwitchTurn: () => void;
   onSwapPlayers: () => void;
+  onIncreaseTotalTurns: () => void;
   onDecreaseTotalTurns: () => void;
   onToggleSound: () => void;
   onToggleProMode: () => void;

@@ -8,7 +8,6 @@ import {
   LIVESTREAM_IMAGE_BOTTOM_RIGHT,
   LIVESTREAM_IMAGE_TOP_LEFT,
   LIVESTREAM_IMAGE_TOP_RIGHT,
-  MATCH_IMAGE,
   WEBCAM_BASE_CAMERA_FOLDER,
 } from 'constants/webcam';
 import {keys} from 'configuration/keys';
@@ -23,7 +22,6 @@ export interface Props {
 }
 
 const LiveStreamImagesViewModel = (props: Props) => {
-  const matchRef = useRef(null);
   const topLeftRef = useRef(null);
   const topRightRef = useRef(null);
   const bottomLeftRef = useRef(null);
@@ -47,8 +45,8 @@ const LiveStreamImagesViewModel = (props: Props) => {
       }
 
       captureRef(ref, {
-        format: 'png',
-        quality: 1,
+        format: 'jpg',
+        quality: 0.1,
       })
         .then(
           async uri => {
@@ -115,42 +113,6 @@ const LiveStreamImagesViewModel = (props: Props) => {
       }, 2000);
     });
   }, []);
-
-  useEffect(() => {
-    if (
-      !matchRef.current ||
-      !props.playerSettings ||
-      props.playerSettings.playingPlayers.length > 2
-    ) {
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      if (!matchRef.current) {
-        return;
-      }
-
-      captureRef(matchRef, {
-        format: 'png',
-        quality: 1,
-      })
-        .then(
-          async uri => {
-            const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
-            const _path = uri.slice(7);
-
-            RNFS.copyFile(_path, matchImagePath);
-          },
-          error => console.error('Oops, match info failed', error),
-        )
-        .catch(e => {
-          if (__DEV__) {
-            console.log('Capture match info error', e);
-          }
-        });
-      clearTimeout(timeout);
-    }, 1000);
-  }, [props.playerSettings]);
 
   useEffect(() => {
     if (
@@ -221,11 +183,7 @@ const LiveStreamImagesViewModel = (props: Props) => {
   }, [isLoading, bottomRightImages]);
 
   return useMemo(() => {
-    const player0 = props.playerSettings?.playingPlayers[0];
-    const player1 = props.playerSettings?.playingPlayers[1];
-
     return {
-      matchRef,
       topLeftRef,
       topRightRef,
       bottomLeftRef,
@@ -234,11 +192,8 @@ const LiveStreamImagesViewModel = (props: Props) => {
       topRightImages,
       bottomLeftImages,
       bottomRightImages,
-      player0,
-      player1,
     };
   }, [
-    matchRef,
     topLeftRef,
     topRightRef,
     bottomLeftRef,
@@ -247,7 +202,6 @@ const LiveStreamImagesViewModel = (props: Props) => {
     topRightImages,
     bottomLeftImages,
     bottomRightImages,
-    props.playerSettings,
   ]);
 };
 

@@ -2,15 +2,16 @@ import React, {memo, useCallback, useMemo} from 'react';
 import Container from 'components/Container';
 import View from 'components/View';
 import Text from 'components/Text';
-import i18n from 'i18n';
 import Button from 'components/Button';
+import Countdown from 'components/Countdown';
 import colors from 'configuration/colors';
+import i18n from 'i18n';
 
 import GamePlayViewModel from './GamePlayViewModel';
 import GamePlayer from './player';
 import GameConsole from './console';
 import LivestreamImages from './livestream-images';
-import styles from './styles';
+import styles, {COUNTDOWN_WIDTH} from './styles';
 
 const GamePlay = () => {
   const viewModel = GamePlayViewModel();
@@ -136,37 +137,11 @@ const GamePlay = () => {
 
     return (
       <Button style={styles.countdown} onPress={viewModel.onToggleCountDown}>
-        <View flex={'1'} direction={'row'}>
-          {Array.from(
-            {length: viewModel.gameSettings.mode?.countdownTime},
-            (_, index) => {
-              if (viewModel.countdownTime <= index) {
-                return (
-                  <View
-                    key={`countdown-item-hide-${index}`}
-                    style={[
-                      styles.countdownItem,
-                      {width: viewModel.getCountdownWidthItem()},
-                    ]}
-                  />
-                );
-              }
-
-              return (
-                <View
-                  key={`countdown-item-${index}`}
-                  style={[
-                    styles.countdownItem,
-                    {
-                      width: viewModel.getCountdownWidthItem(),
-                      backgroundColor: viewModel.getCountdownColor(index),
-                    },
-                  ]}
-                />
-              );
-            },
-          ).reverse()}
-        </View>
+        <Countdown
+          originalCountdownTime={viewModel.gameSettings.mode?.countdownTime}
+          currentCountdownTime={viewModel.countdownTime}
+          countdownWidth={COUNTDOWN_WIDTH}
+        />
       </Button>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,8 +149,6 @@ const GamePlay = () => {
     viewModel.matchCountdownRef,
     viewModel.gameSettings,
     viewModel.countdownTime,
-    viewModel.getCountdownColor,
-    viewModel.getCountdownWidthItem,
   ]);
 
   const renderCameraMatchInfo = useCallback(() => {
@@ -268,6 +241,7 @@ const GamePlay = () => {
           onWarmUp={viewModel.onWarmUp}
           onSwitchTurn={viewModel.onSwitchTurn}
           onSwapPlayers={viewModel.onSwapPlayers}
+          onIncreaseTotalTurns={viewModel.onIncreaseTotalTurns}
           onDecreaseTotalTurns={viewModel.onDecreaseTotalTurns}
           onToggleSound={viewModel.onToggleSound}
           onToggleProMode={viewModel.onToggleProMode}

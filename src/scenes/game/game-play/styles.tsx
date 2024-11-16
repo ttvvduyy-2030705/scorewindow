@@ -14,11 +14,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
-  countdownItem: {
-    height: '100%',
-    marginHorizontal: 5,
-    borderRadius: 10,
-  },
   warmUpContainer: {
     position: 'absolute',
     width: dims.screenWidth,

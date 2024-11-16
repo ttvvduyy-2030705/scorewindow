@@ -49,6 +49,10 @@ const GameConsole = (props: Props) => {
               </View>
               <View flex={'2'} alignItems={'center'} justify={'center'}>
                 {props.totalPlayers < 5 &&
+                !(
+                  isCaromGame(props.gameSettings.category) &&
+                  props.gameSettings.mode?.mode === 'pro'
+                ) &&
                 (props.isStarted || isPoolGame(props.gameSettings.category)) ? (
                   <Image
                     source={images.logo}
@@ -59,7 +63,7 @@ const GameConsole = (props: Props) => {
                   <View />
                 )}
                 <Text fontSize={16}>{viewModel.buildGameModeTitle()}</Text>
-                <View marginTop={'10'}>
+                <View>
                   <Text
                     fontSize={32}
                     fontWeight={'bold'}
@@ -79,10 +83,7 @@ const GameConsole = (props: Props) => {
                   />
                 </View>
                 {!isPoolGame(props.gameSettings?.category) ? (
-                  <View
-                    direction={'row'}
-                    alignItems={'center'}
-                    marginTop={'10'}>
+                  <View direction={'row'} alignItems={'center'}>
                     <View marginRight={'10'}>
                       <Text>{i18n.t('proMode')}</Text>
                     </View>
@@ -110,7 +111,8 @@ const GameConsole = (props: Props) => {
               onStop={viewModel.onStop}
             />
 
-            {isCaromGame(props.gameSettings.category) ? (
+            {isCaromGame(props.gameSettings.category) &&
+            props.gameSettings.mode?.mode === 'pro' ? (
               <CaromInfo
                 isStarted={props.isStarted}
                 isPaused={props.isPaused}
@@ -138,8 +140,8 @@ const GameConsole = (props: Props) => {
                 direction={'row'}
                 justify={'end'}
                 alignItems={'center'}
-                marginHorizontal={'15'}
-                marginTop={'10'}>
+                marginTop={'10'}
+                marginHorizontal={'15'}>
                 {!isPoolGame(props.gameSettings?.category) ? (
                   <View
                     flex={'1'}
@@ -173,12 +175,18 @@ const GameConsole = (props: Props) => {
                 )}
               </View>
             ) : isCaromGame(props.gameSettings.category) && props.isStarted ? (
-              <View direction={'row'} marginHorizontal={'20'}>
+              <View direction={'row'} marginHorizontal={'20'} marginTop={'10'}>
                 <View
                   flex={'1'}
                   direction={'row'}
                   justify={'center'}
                   alignItems={'center'}>
+                  <Button
+                    style={styles.button}
+                    onPress={props.onIncreaseTotalTurns}>
+                    <Text>{i18n.t('increaseTotalTurns')}</Text>
+                  </Button>
+                  <View marginHorizontal={'10'} />
                   <Button
                     style={styles.button}
                     onPress={props.onDecreaseTotalTurns}>
@@ -216,11 +224,15 @@ const GameConsole = (props: Props) => {
               <View flex={props.totalPlayers === 5 ? '0' : '1'}>
                 <GameInfo
                   isStarted={props.isStarted}
+                  webcamFolderName={props.webcamFolderName}
                   goal={props.goal}
                   totalTurns={props.totalTurns}
                   totalPlayers={props.totalPlayers}
                   currentMode={props.currentMode}
+                  gameSettings={props.gameSettings}
                   onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
+                  renderMatchInfo={props.renderMatchInfo}
+                  updateWebcamFolderName={props.updateWebcamFolderName}
                 />
               </View>
             )}

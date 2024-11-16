@@ -51,6 +51,7 @@ let colors: Colors = {
   orange: '#d1801d',
 
   purple: '#8532a8',
+  darkPurple: '#00054B',
 
   brown: '#591e00',
 

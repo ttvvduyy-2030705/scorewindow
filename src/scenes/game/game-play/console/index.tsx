@@ -28,24 +28,38 @@ const GameConsole = (props: Props) => {
               direction={'row'}
               alignItems={'center'}
               marginHorizontal={'15'}>
-              <View flex={'1'} justify={'center'}>
-                <Button
-                  onPress={props.onToggleSound}
-                  style={styles.buttonSound}>
-                  {props.soundEnabled ? (
-                    <Image
-                      key={'sound-on'}
-                      source={images.game.soundOn}
-                      style={styles.icon}
-                    />
+              <View flex={'1'}>
+                <View
+                  flex={'1'}
+                  justify={viewModel.tableNumber ? 'around' : 'center'}>
+                  {viewModel.tableNumber ? (
+                    <View>
+                      <Text fontWeight={'bold'}>
+                        {i18n.t('tableNumber')}{' '}
+                        <Text fontSize={20}>{viewModel.tableNumber}</Text>
+                      </Text>
+                    </View>
                   ) : (
-                    <Image
-                      key={'sound-off'}
-                      source={images.game.soundOff}
-                      style={styles.icon}
-                    />
+                    <View />
                   )}
-                </Button>
+                  <Button
+                    onPress={props.onToggleSound}
+                    style={styles.buttonSound}>
+                    {props.soundEnabled ? (
+                      <Image
+                        key={'sound-on'}
+                        source={images.game.soundOn}
+                        style={styles.icon}
+                      />
+                    ) : (
+                      <Image
+                        key={'sound-off'}
+                        source={images.game.soundOff}
+                        style={styles.icon}
+                      />
+                    )}
+                  </Button>
+                </View>
               </View>
               <View flex={'2'} alignItems={'center'} justify={'center'}>
                 {props.totalPlayers < 5 &&

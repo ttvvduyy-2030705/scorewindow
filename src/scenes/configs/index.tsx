@@ -12,6 +12,7 @@ import {WebcamType} from 'types/webcam';
 import Livestream from './livestream';
 import styles from './styles';
 import Thumbnails from './thumbnails';
+import TableNumber from './table-number';
 
 const Configs = () => {
   const viewModel = ConfigsViewModel();
@@ -22,6 +23,8 @@ const Configs = () => {
         <View flex={'1'} direction={'row'}>
           <View flex={'1'} marginBottom={'20'} marginRight={'20'}>
             <LanguageConfig />
+            <View marginVertical={'10'} />
+            <TableNumber />
           </View>
           <View flex={'1'} direction={'row'} style={styles.fullHeight}>
             <View flex={'1'} style={styles.webcamContainer}>

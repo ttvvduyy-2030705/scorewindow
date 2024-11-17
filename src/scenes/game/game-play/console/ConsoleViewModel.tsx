@@ -1,8 +1,10 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import colors from 'configuration/colors';
+import {keys} from 'configuration/keys';
 import {BALLS_10, BALLS_15, BALLS_9} from 'constants/balls';
 import {RootState} from 'data/redux/reducers';
 import i18n from 'i18n';
-import {ReactNode, useCallback, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {BallType, PoolBallType} from 'types/ball';
 import {Player, PlayerSettings} from 'types/player';
@@ -56,6 +58,7 @@ const ConsoleViewModel = (props: Props) => {
   const {gameSettings} = useSelector((state: RootState) => state.game);
 
   const [remoteEnabled, setRemoteEnabled] = useState(false);
+  const [tableNumber, setTableNumber] = useState('');
 
   //Pool 15-only
   const [balls, setBalls] = useState(
@@ -73,6 +76,16 @@ const ConsoleViewModel = (props: Props) => {
   const [colorRight, setColorRight] = useState(colors.yellow2);
   const [arrowColorLeft, setArrowColorLeft] = useState(colors.gray2);
   const [arrowColorRight, setArrowColorRight] = useState(colors.white);
+
+  useEffect(() => {
+    AsyncStorage.getItem(keys.TABLE_NUMBER).then(result => {
+      if (!result) {
+        return;
+      }
+
+      setTableNumber(result);
+    });
+  }, []);
 
   const onToggleValue = useCallback(
     (setValue: React.Dispatch<React.SetStateAction<boolean>>) => () => {
@@ -222,6 +235,7 @@ const ConsoleViewModel = (props: Props) => {
 
   return useMemo(() => {
     return {
+      tableNumber,
       balls,
       ballLeft,
       ballRight,
@@ -247,6 +261,7 @@ const ConsoleViewModel = (props: Props) => {
       onStop,
     };
   }, [
+    tableNumber,
     balls,
     ballLeft,
     ballRight,

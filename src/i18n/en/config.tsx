@@ -35,6 +35,8 @@ const config = {
   bitrate: 'Maximum Bitrate',
   loginWithGoogle: 'Google',
   platform: 'Platform',
+  tableNumberConfig: 'Table',
+  tableNumber: 'Table number',
 };
 
 export default config;

@@ -22,6 +22,8 @@ const keys = {
   THUMBNAILS_TOP_RIGHT: 'ThumbnailsTopRight',
   THUMBNAILS_BOTTOM_LEFT: 'ThumbnailsBottomLeft',
   THUMBNAILS_BOTTOM_RIGHT: 'ThumbnailsBottomRight',
+
+  TABLE_NUMBER: 'TableNumber',
 };
 
 export {keys};

@@ -35,6 +35,8 @@ const config = {
   bitrate: 'Bitrate tối đa',
   loginWithGoogle: 'Google',
   platform: 'Nền tảng',
+  tableNumberConfig: 'Bàn',
+  tableNumber: 'Bàn số',
 };
 
 export default config;

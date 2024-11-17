@@ -104,7 +104,7 @@ const WebCamViewModel = (props: Props) => {
       return;
     }
 
-    requestReadWriteStorage().then(isGranted => {
+    requestReadWriteStorage().then(async isGranted => {
       if (!isGranted) {
         return;
       }
@@ -143,6 +143,14 @@ const WebCamViewModel = (props: Props) => {
         webcamType === WebcamType.camera &&
         _outputType === OutputType.local
       ) {
+        await new Promise(resolve => {
+          const timeout = setTimeout(async () => {
+            resolve(true);
+
+            clearTimeout(timeout);
+          }, CAMERA_PLAYBACK_DURATION * 1000);
+        });
+
         let i = -1;
         cameraInterval = setInterval(async () => {
           i++;
@@ -153,13 +161,8 @@ const WebCamViewModel = (props: Props) => {
             i < 10 ? `0${i}` : i
           }${WEBCAM_FILE_EXTENSION}`;
 
-          let isExist = false;
-          do {
-            isExist = await RNFS.exists(_newCameraUrl);
-          } while (!isExist);
-
           setUrl(_newCameraUrl);
-        }, CAMERA_PLAYBACK_DURATION * 1000 + 500);
+        }, CAMERA_PLAYBACK_DURATION * 1000 + 100);
       } else {
         setUrl(_url);
       }

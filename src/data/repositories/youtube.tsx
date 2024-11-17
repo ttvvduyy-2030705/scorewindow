@@ -3,7 +3,7 @@ const retrieveYoutubeStreamKey = async (accessToken: string) => {
     'part=id,snippet,contentDetails,status&broadcastType=persistent&mine=true';
 
   const res = await fetch(
-    `https://www.googleapis.com/youtube/v3/liveBroadcasts?${params}`,
+    `https://www.googleapis.com/youtube/v3/liveStreams?${params}`,
     {
       method: 'GET',
       headers: {

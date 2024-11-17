@@ -9,6 +9,7 @@ const keys = {
   WEBCAM_TRANSLATE_X: 'WebcamTranslateX',
   WEBCAM_TRANSLATE_Y: 'WebcamTranslateY',
 
+  CAMERA_USERNAME: 'CameraUsername',
   CAMERA_RTMP_URL: 'CameraRTMPURL',
   CAMERA_STREAM_KEY: 'CameraStreamKey',
   CAMERA_RESOLUTION: 'CameraResolution',

@@ -59,7 +59,7 @@ const WebCam = (props: Props) => {
   }, []);
 
   const CONTAINER_STYLE = useMemo(
-    () => [styles.container, {aspectRatio: props.functionDisabled ? 2 : 1.542}],
+    () => [styles.container, {aspectRatio: props.functionDisabled ? 2 : 1.565}],
     [props.functionDisabled],
   );
 

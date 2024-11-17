@@ -30,13 +30,13 @@ const WEBCAM_OUTPUT_FILE_NAME = 'output_camera';
 const WEBCAM_OUTPUT_TEMP_FILE_NAME = 'output_temp_camera';
 const CAMERA_FILE_EXTENSION = '.ts';
 
-const MATCH_IMAGE = 'match_info.jpg';
+const MATCH_IMAGE = 'match_info.png';
 const MATCH_COUNTDOWN = 'match_countdown.png';
 
-const LIVESTREAM_IMAGE_TOP_LEFT = 'image_top_left.jpg';
-const LIVESTREAM_IMAGE_TOP_RIGHT = 'image_top_right.jpg';
-const LIVESTREAM_IMAGE_BOTTOM_LEFT = 'image_bottom_left.jpg';
-const LIVESTREAM_IMAGE_BOTTOM_RIGHT = 'image_bottom_right.jpg';
+const LIVESTREAM_IMAGE_TOP_LEFT = 'image_top_left.png';
+const LIVESTREAM_IMAGE_TOP_RIGHT = 'image_top_right.png';
+const LIVESTREAM_IMAGE_BOTTOM_LEFT = 'image_bottom_left.png';
+const LIVESTREAM_IMAGE_BOTTOM_RIGHT = 'image_bottom_right.png';
 
 export {
   WEBCAM_HOST,

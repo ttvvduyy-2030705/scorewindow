@@ -8,6 +8,7 @@ import {
   WEBCAM_BUFFER_CONFIG,
   WEBCAM_SELECTED_VIDEO_TRACK,
 } from 'constants/webcam';
+import colors from 'configuration/colors';
 
 import VideoViewModel, {Props} from './VideoViewModel';
 import styles from './styles';
@@ -41,6 +42,8 @@ const Video = (props: Props, ref: React.LegacyRef<VideoRef>) => {
           source={props.source}
           selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
           bufferConfig={WEBCAM_BUFFER_CONFIG}
+          shutterColor={colors.transparent}
+          onReadyForDisplay={viewModel.onReadyForDisplay}
           onFullscreenPlayerDidPresent={viewModel.onFullscreenPlayerDidPresent}
           onBuffer={viewModel.onBuffer}
           onSeek={viewModel.onSeek}

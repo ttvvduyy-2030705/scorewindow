@@ -33,7 +33,7 @@ const config = {
   resolution: 'Maximum Resolution',
   frame: 'Maximum Fps',
   bitrate: 'Maximum Bitrate',
-  loginWithGoogle: 'Google',
+  loginWithGoogle: 'Youtube',
   platform: 'Platform',
   tableNumberConfig: 'Table',
   tableNumber: 'Table number',

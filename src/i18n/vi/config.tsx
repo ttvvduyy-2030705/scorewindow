@@ -33,7 +33,7 @@ const config = {
   resolution: 'Độ phân giải tối đa',
   frame: 'Fps tối đa',
   bitrate: 'Bitrate tối đa',
-  loginWithGoogle: 'Google',
+  loginWithGoogle: 'Youtube',
   platform: 'Nền tảng',
   tableNumberConfig: 'Bàn',
   tableNumber: 'Bàn số',

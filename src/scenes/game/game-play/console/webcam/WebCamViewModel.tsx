@@ -144,7 +144,7 @@ const WebCamViewModel = (props: Props) => {
         _outputType === OutputType.local
       ) {
         let i = -1;
-        cameraInterval = setInterval(() => {
+        cameraInterval = setInterval(async () => {
           i++;
 
           const _newCameraUrl = `${
@@ -152,6 +152,11 @@ const WebCamViewModel = (props: Props) => {
           }/${now}/${WEBCAM_BASE_FILE_NAME}${
             i < 10 ? `0${i}` : i
           }${WEBCAM_FILE_EXTENSION}`;
+
+          let isExist = false;
+          do {
+            isExist = await RNFS.exists(_newCameraUrl);
+          } while (!isExist);
 
           setUrl(_newCameraUrl);
         }, CAMERA_PLAYBACK_DURATION * 1000 + 500);

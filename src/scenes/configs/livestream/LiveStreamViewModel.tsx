@@ -30,6 +30,7 @@ const LiveStreamViewModel = () => {
         keys.CAMERA_RESOLUTION,
         keys.CAMERA_FPS,
         keys.CAMERA_BITRATE,
+        keys.CAMERA_USERNAME,
       ],
       (error, result) => {
         if (!error && result) {
@@ -39,6 +40,7 @@ const LiveStreamViewModel = () => {
           const _resolution = result[3][1];
           const _fps = result[4][1];
           const _bitrate = result[5][1];
+          const _username = result[6][1];
 
           if (!_rtmpUrl || !_streamKey || !_outputType) {
             return;
@@ -51,6 +53,7 @@ const LiveStreamViewModel = () => {
             resolution: (_resolution || Resolution.FullHD) as Resolution,
             fps: (_fps || Fps.F30) as Fps,
             bitrate: (_bitrate || Bitrate.B9000) as Bitrate,
+            username: _username || undefined,
           });
         }
       },
@@ -74,6 +77,18 @@ const LiveStreamViewModel = () => {
     [],
   );
 
+  const onUpdateYouTubeLiveStreamData = useCallback(
+    (username: string, url: string, streamKey: string) => {
+      setLiveStreamData(prev => ({
+        ...prev,
+        rtmpUrl: url,
+        streamKey,
+        username,
+      }));
+    },
+    [],
+  );
+
   const onSaveConfig = useCallback(() => {
     AsyncStorage.setItem(keys.WEBCAM_TYPE, WebcamType.camera);
     AsyncStorage.setItem(keys.CAMERA_RTMP_URL, liveStreamData.rtmpUrl);
@@ -91,6 +106,7 @@ const LiveStreamViewModel = () => {
       keys.CAMERA_BITRATE,
       liveStreamData.bitrate.toString(),
     );
+    AsyncStorage.setItem(keys.CAMERA_USERNAME, liveStreamData.username || '');
 
     setAllowToSave(false);
 
@@ -112,9 +128,16 @@ const LiveStreamViewModel = () => {
       onSelectResolution: onChangeValue('resolution'),
       onSelectFpsLiveStream: onChangeValue('fps'),
       onSelectBitrateLiveStream: onChangeValue('bitrate'),
+      onUpdateYouTubeLiveStreamData,
       onSaveConfig,
     };
-  }, [liveStreamData, allowToSave, onChangeValue, onSaveConfig]);
+  }, [
+    liveStreamData,
+    allowToSave,
+    onChangeValue,
+    onUpdateYouTubeLiveStreamData,
+    onSaveConfig,
+  ]);
 };
 
 export default LiveStreamViewModel;

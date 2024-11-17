@@ -175,12 +175,15 @@ const VideoViewModel = (props: Props) => {
     [props],
   );
 
+  const onReadyForDisplay = useCallback(() => {}, []);
+
   return useMemo(() => {
     return {
       pinch,
       pan,
       gestureComposed,
       animatedStyles,
+      onReadyForDisplay,
       onFullscreenPlayerDidPresent,
       onBuffer,
       onSeek,
@@ -194,6 +197,7 @@ const VideoViewModel = (props: Props) => {
     pan,
     gestureComposed,
     animatedStyles,
+    onReadyForDisplay,
     onFullscreenPlayerDidPresent,
     onBuffer,
     onSeek,

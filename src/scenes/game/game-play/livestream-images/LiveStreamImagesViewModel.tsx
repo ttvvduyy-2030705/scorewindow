@@ -45,7 +45,7 @@ const LiveStreamImagesViewModel = (props: Props) => {
       }
 
       captureRef(ref, {
-        format: 'jpg',
+        format: 'png',
         quality: 0.1,
       })
         .then(

@@ -146,7 +146,7 @@ const LiveStream = () => {
               Resolution.FullHD.toString(),
             )}>
             <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'FullHD'}</Text>
+              <Text>{'1080p'}</Text>
             </View>
           </Button>
           <View marginHorizontal={'10'} />
@@ -161,7 +161,7 @@ const LiveStream = () => {
               Resolution.QHD.toString(),
             )}>
             <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'2K'}</Text>
+              <Text>{'1440p'}</Text>
             </View>
           </Button>
         </View>
@@ -302,7 +302,12 @@ const LiveStream = () => {
               <Text fontSize={12}>{i18n.t('platform')}</Text>
             </View>
             <View flex={'1'} marginRight={'10'}>
-              <Google />
+              <Google
+                liveStreamData={viewModel.liveStreamData}
+                onUpdateYouTubeLiveStreamData={
+                  viewModel.onUpdateYouTubeLiveStreamData
+                }
+              />
             </View>
           </View>
 

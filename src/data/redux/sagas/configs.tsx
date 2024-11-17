@@ -7,6 +7,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {retrieveYoutubeStreamKey} from 'data/repositories/youtube';
+import {YouTubeResponse} from 'types/webcam';
 
 const retrieveStreamKey = function* ({onSuccess, onError}: ReturnType<any>) {
   try {
@@ -19,12 +20,12 @@ const retrieveStreamKey = function* ({onSuccess, onError}: ReturnType<any>) {
     }
 
     const tokenData: GetTokensResponse = yield call(GoogleSignin.getTokens);
-    const data: Response = yield call(
+    const data: YouTubeResponse = yield call(
       retrieveYoutubeStreamKey,
       tokenData.accessToken,
     );
 
-    onSuccess(data);
+    onSuccess({user: info.data, data});
     yield put(configsActions.retrieveStreamKeySuccess());
   } catch (error: any) {
     const {code} = error;

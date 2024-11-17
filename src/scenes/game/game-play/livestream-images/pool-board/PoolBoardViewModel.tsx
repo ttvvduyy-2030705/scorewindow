@@ -30,7 +30,7 @@ const PoolBoardViewModel = (props: Props) => {
       }
 
       captureRef(matchRef, {
-        format: 'jpg',
+        format: 'png',
         quality: 0.1,
       })
         .then(

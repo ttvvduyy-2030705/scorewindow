@@ -6,7 +6,7 @@ export const enum OutputType {
 export const enum Resolution {
   HD = '0.75',
   FullHD = '1',
-  QHD = '2',
+  QHD = '1,33333333',
 }
 
 export const enum Fps {
@@ -37,6 +37,7 @@ export type Webcam = {
 };
 
 export type LiveStreamCamera = {
+  username?: string;
   rtmpUrl: string;
   streamKey: string;
   outputType: OutputType;
@@ -50,9 +51,32 @@ export enum WebcamType {
   camera = 'camera',
 }
 
+export type YouTubeItem = {
+  kind: string;
+  etag: string;
+  id: string;
+  snippet: {
+    publishedAt: string;
+    channelId: string;
+    title: string;
+    description: string;
+    isDefaultStream: boolean;
+  };
+  status: {
+    streamStatus: string;
+    healthStatus: {
+      status: string;
+    };
+  };
+  contentDetails: {
+    closedCaptionsIngestionUrl: string;
+    isReusable: boolean;
+  };
+};
+
 export type YouTubeResponse = {
   etag: string;
-  items: any[];
+  items: YouTubeItem[];
   kind: string;
   pageInfo: {resultsPerPage: number; totalResults: number};
 };

@@ -10,7 +10,12 @@ import {
   WebcamType,
 } from 'types/webcam';
 
-const LiveStreamViewModel = () => {
+export interface Props {
+  configOnly?: boolean;
+  onChangeLiveStreamData?: (data: LiveStreamCamera) => void;
+}
+
+const LiveStreamViewModel = (props: Props) => {
   const [liveStreamData, setLiveStreamData] = useState<LiveStreamCamera>({
     rtmpUrl: '',
     streamKey: '',
@@ -68,7 +73,11 @@ const LiveStreamViewModel = () => {
           : false
         : true,
     );
-  }, [liveStreamData]);
+
+    if (props.onChangeLiveStreamData) {
+      props.onChangeLiveStreamData(liveStreamData);
+    }
+  }, [liveStreamData, props]);
 
   const onChangeValue = useCallback(
     (key: string) => (value: string) => {

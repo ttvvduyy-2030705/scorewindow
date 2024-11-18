@@ -9,52 +9,11 @@ import i18n from 'i18n';
 import {Bitrate, Fps, OutputType, Resolution} from 'types/webcam';
 
 import Google from './google';
-import LiveStreamViewModel from './LiveStreamViewModel';
+import LiveStreamViewModel, {Props} from './LiveStreamViewModel';
 import styles from './styles';
 
-const LiveStream = () => {
-  const viewModel = LiveStreamViewModel();
-
-  // const renderInput = useCallback(
-  //   (
-  //     title: string,
-  //     value: string,
-  //     placeholder: string,
-  //     keyboardType: KeyboardTypeOptions,
-  //     returnKeyType: 'next' | 'default',
-  //     onChangeText: (value: string) => void,
-  //     {
-  //       secureTextEntry,
-  //       secureTextView,
-  //     }: {
-  //       secureTextEntry?: boolean;
-  //       secureTextView?: boolean;
-  //     },
-  //   ) => {
-  //     return (
-  //       <View direction={'row'} marginTop={'15'}>
-  //         <View flex={'1'}>
-  //           <View marginLeft={'10'} marginBottom={'5'}>
-  //             <Text fontSize={12}>{title}</Text>
-  //           </View>
-  //           <View direction={'row'}>
-  //             <TextInput
-  //               inputStyle={styles.input}
-  //               value={value}
-  //               placeholder={placeholder}
-  //               onChange={onChangeText}
-  //               secureTextEntry={secureTextEntry}
-  //               keyboardType={keyboardType}
-  //               returnKeyType={returnKeyType}
-  //               secureTextView={secureTextView}
-  //             />
-  //           </View>
-  //         </View>
-  //       </View>
-  //     );
-  //   },
-  //   [],
-  // );
+const LiveStream = (props: Props) => {
+  const viewModel = LiveStreamViewModel(props);
 
   const renderOutput = useCallback(() => {
     return (
@@ -269,33 +228,18 @@ const LiveStream = () => {
 
   return (
     <View padding={'20'}>
-      <View marginHorizontal={'10'}>
-        <Text fontWeight={'bold'}>{i18n.t('cameraConfig')}</Text>
-      </View>
+      {!props.configOnly ? (
+        <View marginHorizontal={'10'}>
+          <Text fontWeight={'bold'}>{i18n.t('cameraConfig')}</Text>
+        </View>
+      ) : (
+        <View />
+      )}
 
-      {renderOutput()}
+      {!props.configOnly ? renderOutput() : <View />}
 
-      {viewModel.liveStreamData.outputType === OutputType.livestream ? (
-        // <>
-        //   {renderInput(
-        //     i18n.t('rtmpUrl'),
-        //     viewModel.liveStreamData.rtmpUrl,
-        //     i18n.t('txtEnterRTMPUrl'),
-        //     'url',
-        //     'next',
-        //     viewModel.onChangeRTMPUrl,
-        //     {},
-        //   )}
-        //   {renderInput(
-        //     i18n.t('streamKey'),
-        //     viewModel.liveStreamData.streamKey,
-        //     i18n.t('txtEnterStreamKey'),
-        //     'default',
-        //     'next',
-        //     viewModel.onChangeStreamKey,
-        //     {secureTextEntry: true, secureTextView: true},
-        //   )}
-        // </>
+      {props.configOnly ||
+      viewModel.liveStreamData.outputType === OutputType.livestream ? (
         <View style={styles.liveStreamConfigWrapper} padding={'10'}>
           <View direction={'row'} alignItems={'center'} marginVertical={'10'}>
             <View marginHorizontal={'10'}>
@@ -319,20 +263,24 @@ const LiveStream = () => {
         <View />
       )}
 
-      <View direction={'row'} marginTop={'20'} marginHorizontal={'20'}>
-        <View
-          flex={'1'}
-          direction={'row'}
-          alignItems={'center'}
-          justify={'end'}>
-          <Button
-            disable={!viewModel.allowToSave}
-            onPress={viewModel.onSaveConfig}
-            style={styles.buttonSaveConfig}>
-            <Text>{i18n.t('saveConfig')}</Text>
-          </Button>
+      {!props.configOnly ? (
+        <View direction={'row'} marginTop={'20'} marginHorizontal={'20'}>
+          <View
+            flex={'1'}
+            direction={'row'}
+            alignItems={'center'}
+            justify={'end'}>
+            <Button
+              disable={!viewModel.allowToSave}
+              onPress={viewModel.onSaveConfig}
+              style={styles.buttonSaveConfig}>
+              <Text>{i18n.t('saveConfig')}</Text>
+            </Button>
+          </View>
         </View>
-      </View>
+      ) : (
+        <View />
+      )}
     </View>
   );
 };

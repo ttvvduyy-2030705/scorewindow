@@ -4,7 +4,7 @@ import {responsiveDimension, responsiveFontSize} from 'utils/helper';
 
 const styles = StyleSheet.create({
   configIPWrapper: {
-    backgroundColor: colors.lightPrimary1,
+    backgroundColor: colors.lightPrimary2,
     borderBottomRightRadius: 8,
     borderBottomLeftRadius: 8,
   },

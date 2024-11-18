@@ -43,7 +43,7 @@ import {
 import {CAMERA_PLAYBACK_DURATION} from './constants';
 
 export interface Props {
-  functionDisabled?: boolean;
+  innerControls?: boolean;
   webcamFolderName?: string;
   renderMatchInfo: () => ReactNode;
   updateWebcamFolderName: (name: string) => void;
@@ -63,6 +63,7 @@ const WebCamViewModel = (props: Props) => {
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
   const [isWebcamStarted, setIsWebcamStarted] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [innerControlsShow, setInnerControlsShow] = useState<boolean>(false);
   const [url, setUrl] = useState<string | undefined>();
   const [currentSeekPosition, setCurrentSeekPosition] = useState<number>(0);
 
@@ -352,9 +353,18 @@ const WebCamViewModel = (props: Props) => {
     [webcamType, currentSeekPosition],
   );
 
+  const onToggleInnerControls = useCallback(() => {
+    if (!props.innerControls) {
+      return;
+    }
+
+    setInnerControlsShow(prev => !prev);
+  }, [props.innerControls]);
+
   return useMemo(() => {
     return {
       videoRef,
+      innerControlsShow,
       refreshing,
       autoConnect,
       webcamType,
@@ -375,9 +385,11 @@ const WebCamViewModel = (props: Props) => {
       onVideoTracks,
       onEnd,
       onWebcamError,
+      onToggleInnerControls,
     };
   }, [
     videoRef,
+    innerControlsShow,
     refreshing,
     autoConnect,
     webcamType,
@@ -395,6 +407,7 @@ const WebCamViewModel = (props: Props) => {
     onVideoTracks,
     onEnd,
     onWebcamError,
+    onToggleInnerControls,
   ]);
 };
 

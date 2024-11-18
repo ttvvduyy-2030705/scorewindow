@@ -59,49 +59,62 @@ const WebCam = (props: Props) => {
   }, []);
 
   const CONTAINER_STYLE = useMemo(
-    () => [styles.container, {aspectRatio: props.functionDisabled ? 2 : 1.565}],
-    [props.functionDisabled],
+    () => [styles.container, {aspectRatio: props.innerControls ? 2 : 1.565}],
+    [props.innerControls],
+  );
+
+  const CONTROL_STYLE = useMemo(
+    () =>
+      props.innerControls ? styles.innerControlWrapper : styles.controlWrapper,
+    [props.innerControls],
   );
 
   return (
     <View style={CONTAINER_STYLE} marginTop={'10'}>
-      <View flex={'1'} style={styles.webcamWrapper} direction={'row'}>
-        <View flex={'1'}>
-          {viewModel.connectCountdownTime > 0 ? (
-            WEBCAM_LOADING_INTRO
-          ) : viewModel.refreshing ? (
-            WEBCAM_LOADER
-          ) : viewModel.source.uri ? (
-            <Video
-              key={'webcam-billiards'}
-              ref={viewModel.videoRef}
-              gestureDisabled
-              source={viewModel.source}
-              initialScale={viewModel.webcam?.scale}
-              initialTranslateX={viewModel.webcam?.translateX}
-              initialTranslateY={viewModel.webcam?.translateY}
-              onFullscreenPlayerDidPresent={
-                viewModel.onFullscreenPlayerDidPresent
-              }
-              onBuffer={viewModel.onBuffer}
-              onSeek={viewModel.onSeek}
-              onLoad={viewModel.onLoad}
-              onVideoTracks={viewModel.onVideoTracks}
-              onEnd={viewModel.onEnd}
-              onError={viewModel.onWebcamError}
-              loadingDisabled
-            />
-          ) : viewModel.liveStream?.outputType === OutputType.livestream ? (
-            LIVESTREAM_MESSAGE
-          ) : (
-            <View />
-          )}
+      <View flex={'1'} direction={'row'}>
+        <Button
+          style={styles.webcamButton}
+          onPress={viewModel.onToggleInnerControls}>
+          <View flex={'1'} style={styles.webcamWrapper} direction={'row'}>
+            <View flex={'1'}>
+              {viewModel.connectCountdownTime > 0 ? (
+                WEBCAM_LOADING_INTRO
+              ) : viewModel.refreshing ? (
+                WEBCAM_LOADER
+              ) : viewModel.source.uri ? (
+                <Video
+                  key={'webcam-billiards'}
+                  ref={viewModel.videoRef}
+                  gestureDisabled
+                  source={viewModel.source}
+                  initialScale={viewModel.webcam?.scale}
+                  initialTranslateX={viewModel.webcam?.translateX}
+                  initialTranslateY={viewModel.webcam?.translateY}
+                  onFullscreenPlayerDidPresent={
+                    viewModel.onFullscreenPlayerDidPresent
+                  }
+                  onBuffer={viewModel.onBuffer}
+                  onSeek={viewModel.onSeek}
+                  onLoad={viewModel.onLoad}
+                  onVideoTracks={viewModel.onVideoTracks}
+                  onEnd={viewModel.onEnd}
+                  onError={viewModel.onWebcamError}
+                  loadingDisabled
+                />
+              ) : viewModel.liveStream?.outputType === OutputType.livestream ? (
+                LIVESTREAM_MESSAGE
+              ) : (
+                <View />
+              )}
 
-          {props.renderMatchInfo()}
-        </View>
+              {props.renderMatchInfo()}
+            </View>
+          </View>
+        </Button>
       </View>
-      {!props.functionDisabled ? (
-        <View direction={'row'} alignItems={'center'}>
+
+      {!props.innerControls || viewModel.innerControlsShow ? (
+        <View style={CONTROL_STYLE} direction={'row'} alignItems={'center'}>
           <View flex={'1'} direction={'row'} justify={'center'}>
             <Button onPress={viewModel.onRefresh}>
               <View
@@ -116,20 +129,6 @@ const WebCam = (props: Props) => {
             </Button>
           </View>
           <Divider vertical size={'small'} />
-          {/* <View flex={'1'} direction={'row'} justify={'center'}>
-          <Button onPress={viewModel.onDelay}>
-            <View
-              direction={'row'}
-              alignItems={'center'}
-              paddingVertical={'10'}>
-              <View marginRight={'10'}>
-                <Text>{i18n.t('delay')}</Text>
-              </View>
-              <Image source={images.webcam.delay} style={styles.icon} />
-            </View>
-          </Button>
-        </View> */}
-          {/* <Divider vertical size={'small'} /> */}
           <View flex={'1'} direction={'row'} justify={'center'}>
             <Button onPress={viewModel.onReWatch}>
               <View

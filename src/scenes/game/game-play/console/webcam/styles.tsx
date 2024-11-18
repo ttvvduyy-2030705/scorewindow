@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
   },
+  webcamButton: {
+    flex: 1,
+  },
   webcamWrapper: {
     backgroundColor: colors.black,
     overflow: 'hidden',
@@ -23,6 +26,11 @@ const styles = StyleSheet.create({
     padding: responsiveDimension(10),
     backgroundColor: colors.whiteDarkerOverlay,
     borderRadius: 20,
+  },
+  controlWrapper: {},
+  innerControlWrapper: {
+    marginTop: responsiveDimension(-48),
+    backgroundColor: colors.white,
   },
 });
 

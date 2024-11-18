@@ -74,7 +74,7 @@ const GameInfo = (props: Props) => {
           webcamFolderName={props.webcamFolderName}
           renderMatchInfo={props.renderMatchInfo}
           updateWebcamFolderName={props.updateWebcamFolderName}
-          functionDisabled
+          innerControls
         />
       ) : (
         <View />

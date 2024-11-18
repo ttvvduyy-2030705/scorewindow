@@ -20,12 +20,21 @@ const PlayBackWebcamViewModel = (props: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    RNFS.readDir(
-      `${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`,
-    ).then(result => {
-      const numOfFiles: number = result.length;
-      setTotalFiles(numOfFiles);
-    });
+    RNFS.exists(`${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`).then(
+      isExist => {
+        if (!isExist) {
+          return;
+        }
+
+        RNFS.readDir(
+          `${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`,
+        ).then(result => {
+          const numOfFiles: number = result.length;
+          setTotalFiles(numOfFiles);
+        });
+      },
+    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -75,7 +75,7 @@ const CaromInfo = (props: Props) => {
               justify={'center'}
               style={styles.totalTurnWrapper}
               paddingHorizontal={'20'}>
-              <Text color={colors.white} fontSize={56} lineHeight={86}>
+              <Text color={colors.white} fontSize={56} lineHeight={70}>
                 {props.totalTurns}
               </Text>
             </View>

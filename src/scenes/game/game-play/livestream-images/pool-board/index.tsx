@@ -47,7 +47,11 @@ const PoolBoard = (props: Props) => {
         alignItems={'center'}>
         <View flex={'1'} direction={'row'} alignItems={'center'}>
           <View flex={'1'} justify={'center'} paddingHorizontal={'20'}>
-            <Text fontWeight={'bold'} color={colors.white}>
+            <Text
+              fontWeight={'900'}
+              fontSize={16}
+              letterSpacing={2}
+              color={colors.white}>
               {viewModel.player0?.name}
             </Text>
           </View>

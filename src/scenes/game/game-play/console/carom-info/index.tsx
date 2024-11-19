@@ -24,7 +24,7 @@ const CaromInfo = (props: Props) => {
           alignItems={'center'}>
           <View direction={'row'} alignItems={'center'} paddingLeft={'10'}>
             <View flex={'1'}>
-              <Text fontSize={20} fontWeight={'bold'} numberOfLines={1}>
+              <Text fontSize={22} fontWeight={'900'} numberOfLines={1}>
                 {player.name.toUpperCase()}
               </Text>
             </View>

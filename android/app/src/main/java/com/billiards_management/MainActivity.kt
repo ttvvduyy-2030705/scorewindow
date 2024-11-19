@@ -1,5 +1,6 @@
 package com.billiards_management
 
+import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.WindowManager
@@ -13,6 +14,10 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 
 class MainActivity : ReactActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(null)
+    }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

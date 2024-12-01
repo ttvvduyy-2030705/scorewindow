@@ -1,11 +1,11 @@
-import React, {memo, useCallback} from 'react';
+import React, { memo, useCallback } from 'react';
 import View from 'components/View';
-import {GameSettings, GameSettingsMode} from 'types/settings';
+import { GameSettings, GameSettingsMode } from 'types/settings';
 import Text from 'components/Text';
 import i18n from 'i18n';
 import colors from 'configuration/colors';
 import Button from 'components/Button';
-import {isCaromGame} from 'utils/game';
+import { isCaromGame } from 'utils/game';
 import styles from './styles';
 import Webcam from '../webcam';
 
@@ -62,14 +62,17 @@ const GameInfo = (props: Props) => {
 
   return (
     <View flex={isFullPlayer ? '0' : '1'}>
-      <View flex={isFullPlayer ? '0' : '1'} direction={'row'}>
-        {renderPoint(i18n.t('totalTurns'), props.totalTurns)}
-        {renderPoint(i18n.t('goal'), props.goal)}
-      </View>
+      {!isCaromGame(props.gameSettings.category) && (
+        <View flex={isFullPlayer ? '0' : '1'} direction={'row'}>
+          {renderPoint(i18n.t('totalTurns'), props.totalTurns)}
+          {renderPoint(i18n.t('goal'), props.goal)}
+        </View>
+      )}
+
 
       {isCaromGame(props.gameSettings.category) &&
-      props.totalPlayers < 5 &&
-      props.currentMode?.mode === 'pro' ? (
+        props.totalPlayers < 5 &&
+        props.currentMode?.mode === 'pro' ? (
         <Webcam
           webcamFolderName={props.webcamFolderName}
           renderMatchInfo={props.renderMatchInfo}
@@ -80,15 +83,26 @@ const GameInfo = (props: Props) => {
         <View />
       )}
 
-      <View style={styles.buttonWrapper} direction={'row'} alignItems={'end'}>
-        <Button
-          onPress={props.onPressGiveMoreTime}
-          style={[styles.button, styles.buttonGiveMoreTime]}>
-          <Text color={colors.white} fontSize={16}>
-            {i18n.t('giveMoreTime')}
-          </Text>
-        </Button>
-      </View>
+      {isCaromGame(props.gameSettings.category) && (
+        <View flex={isFullPlayer ? '0' : '1'} direction={'row'}>
+          {renderPoint(i18n.t('totalTurns'), props.totalTurns)}
+          {renderPoint(i18n.t('goal'), props.goal)}
+        </View>
+      )}
+
+      {!isCaromGame(props.gameSettings.category) && (
+        <View style={styles.buttonWrapper} direction={'row'} alignItems={'end'}>
+          <Button
+            onPress={props.onPressGiveMoreTime}
+            style={[styles.button, styles.buttonGiveMoreTime]}>
+            <Text color={colors.white} fontSize={16}>
+              {i18n.t('giveMoreTime')}
+            </Text>
+          </Button>
+        </View>
+      )
+      }
+
     </View>
   );
 };

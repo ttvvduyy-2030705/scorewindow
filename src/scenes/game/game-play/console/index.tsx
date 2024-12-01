@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 import View from 'components/View';
 import Text from 'components/Text';
 import Button from 'components/Button';
@@ -6,9 +6,9 @@ import Image from 'components/Image';
 import Switch from 'components/Switch';
 import images from 'assets';
 import i18n from 'i18n';
-import ConsoleViewModel, {Props} from './ConsoleViewModel';
+import ConsoleViewModel, { Props } from './ConsoleViewModel';
 import colors from 'configuration/colors';
-import {isCaromGame, isPoolGame} from 'utils/game';
+import { isCaromGame, isPoolGame } from 'utils/game';
 import ButtonsConsole from './buttons';
 import GameInfo from './game-info';
 import Webcam from './webcam';
@@ -63,11 +63,11 @@ const GameConsole = (props: Props) => {
               </View>
               <View flex={'2'} alignItems={'center'} justify={'center'}>
                 {props.totalPlayers < 5 &&
-                !(
-                  isCaromGame(props.gameSettings.category) &&
-                  props.gameSettings.mode?.mode === 'pro'
-                ) &&
-                (props.isStarted || isPoolGame(props.gameSettings.category)) ? (
+                  !(
+                    isCaromGame(props.gameSettings.category) &&
+                    props.gameSettings.mode?.mode === 'pro'
+                  ) &&
+                  (props.isStarted || isPoolGame(props.gameSettings.category)) ? (
                   <Image
                     source={images.logo}
                     style={styles.logo}
@@ -125,8 +125,9 @@ const GameConsole = (props: Props) => {
               onStop={viewModel.onStop}
             />
 
+
             {isCaromGame(props.gameSettings.category) &&
-            props.gameSettings.mode?.mode === 'pro' ? (
+              props.gameSettings.mode?.mode === 'pro' ? (
               <CaromInfo
                 isStarted={props.isStarted}
                 isPaused={props.isPaused}
@@ -148,69 +149,75 @@ const GameConsole = (props: Props) => {
               <View />
             )}
 
-            {props.totalPlayers === 2 &&
-            (props.currentMode?.mode === 'fast' || !props.isStarted) ? (
-              <View
-                direction={'row'}
-                justify={'end'}
-                alignItems={'center'}
-                marginTop={'10'}
-                marginHorizontal={'15'}>
-                {!isPoolGame(props.gameSettings?.category) ? (
+            {/* doi bi */}
+            {
+              !isCaromGame(props.gameSettings?.category) && (
+                props.totalPlayers === 2 &&
+                  (props.currentMode?.mode === 'fast' || !props.isStarted) ? (
                   <View
-                    flex={'1'}
                     direction={'row'}
-                    justify={'center'}
-                    alignItems={'center'}>
-                    <Button
-                      style={styles.button}
-                      onPress={viewModel.onSwitchTurn}>
-                      <Text>{i18n.t('switchTurn')}</Text>
-                    </Button>
+                    justify={'end'}
+                    alignItems={'center'}
+                    marginTop={'10'}
+                    marginHorizontal={'15'}>
+                    {!isPoolGame(props.gameSettings?.category) ? (
+                      <View
+                        flex={'1'}
+                        direction={'row'}
+                        justify={'center'}
+                        alignItems={'center'}>
+                        <Button
+                          style={styles.button}
+                          onPress={viewModel.onSwitchTurn}>
+                          <Text>{i18n.t('switchTurn')}</Text>
+                        </Button>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                    <View marginHorizontal={'10'} />
+                    {!isPoolGame(props.gameSettings?.category) ? (
+                      <View
+                        flex={'1'}
+                        direction={'row'}
+                        justify={'center'}
+                        alignItems={'center'}>
+                        <Button
+                          style={styles.button}
+                          onPress={viewModel.onSwapPlayers}>
+                          <Text>{i18n.t('switchPlayer')}</Text>
+                        </Button>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                  </View>
+                ) : isCaromGame(props.gameSettings.category) && props.isStarted ? (
+                  <View direction={'row'} marginHorizontal={'20'} marginTop={'10'}>
+                    <View
+                      flex={'1'}
+                      direction={'row'}
+                      justify={'center'}
+                      alignItems={'center'}>
+                      <Button
+                        style={styles.button}
+                        onPress={props.onIncreaseTotalTurns}>
+                        <Text>{i18n.t('increaseTotalTurns')}</Text>
+                      </Button>
+                      <View marginHorizontal={'10'} />
+                      <Button
+                        style={styles.button}
+                        onPress={props.onDecreaseTotalTurns}>
+                        <Text>{i18n.t('decreaseTotalTurns')}</Text>
+                      </Button>
+                    </View>
                   </View>
                 ) : (
                   <View />
-                )}
-                <View marginHorizontal={'10'} />
-                {!isPoolGame(props.gameSettings?.category) ? (
-                  <View
-                    flex={'1'}
-                    direction={'row'}
-                    justify={'center'}
-                    alignItems={'center'}>
-                    <Button
-                      style={styles.button}
-                      onPress={viewModel.onSwapPlayers}>
-                      <Text>{i18n.t('switchPlayer')}</Text>
-                    </Button>
-                  </View>
-                ) : (
-                  <View />
-                )}
-              </View>
-            ) : isCaromGame(props.gameSettings.category) && props.isStarted ? (
-              <View direction={'row'} marginHorizontal={'20'} marginTop={'10'}>
-                <View
-                  flex={'1'}
-                  direction={'row'}
-                  justify={'center'}
-                  alignItems={'center'}>
-                  <Button
-                    style={styles.button}
-                    onPress={props.onIncreaseTotalTurns}>
-                    <Text>{i18n.t('increaseTotalTurns')}</Text>
-                  </Button>
-                  <View marginHorizontal={'10'} />
-                  <Button
-                    style={styles.button}
-                    onPress={props.onDecreaseTotalTurns}>
-                    <Text>{i18n.t('decreaseTotalTurns')}</Text>
-                  </Button>
-                </View>
-              </View>
-            ) : (
-              <View />
-            )}
+                )
+              )
+            }
+            {/* end doi bi */}
 
             {isPoolGame(props.gameSettings?.category) ? (
               <BallsView
@@ -250,6 +257,90 @@ const GameConsole = (props: Props) => {
                 />
               </View>
             )}
+            {/* doi bi */}
+            {
+              isCaromGame(props.gameSettings?.category) && (
+                props.totalPlayers === 2 &&
+                  (props.currentMode?.mode === 'fast' || !props.isStarted) ? (
+                  <View
+                    direction={'row'}
+                    justify={'end'}
+                    alignItems={'center'}
+                    marginTop={'10'}
+                    marginHorizontal={'15'}>
+                    {!isPoolGame(props.gameSettings?.category) ? (
+                      <View
+                        flex={'1'}
+                        direction={'row'}
+                        justify={'center'}
+                        alignItems={'center'}>
+                        <Button
+                          style={styles.button}
+                          onPress={viewModel.onSwitchTurn}>
+                          <Text>{i18n.t('switchTurn')}</Text>
+                        </Button>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                    <View marginHorizontal={'10'} />
+                    {!isPoolGame(props.gameSettings?.category) ? (
+                      <View
+                        flex={'1'}
+                        direction={'row'}
+                        justify={'center'}
+                        alignItems={'center'}>
+                        <Button
+                          style={styles.button}
+                          onPress={viewModel.onSwapPlayers}>
+                          <Text>{i18n.t('switchPlayer')}</Text>
+                        </Button>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                  </View>
+                ) : isCaromGame(props.gameSettings.category) && props.isStarted ? (
+                  <View direction={'row'} marginHorizontal={'20'} marginTop={'10'}>
+                    <View
+                      flex={'1'}
+                      direction={'row'}
+                      justify={'center'}
+                      alignItems={'center'}>
+                      <Button
+                        style={styles.button}
+                        onPress={props.onIncreaseTotalTurns}>
+                        <Text>{i18n.t('increaseTotalTurns')}</Text>
+                      </Button>
+                      <View marginHorizontal={'10'} />
+                      <Button
+                        style={styles.button}
+                        onPress={props.onDecreaseTotalTurns}>
+                        <Text>{i18n.t('decreaseTotalTurns')}</Text>
+                      </Button>
+                    </View>
+                  </View>
+                ) : (
+                  <View />
+                )
+              )
+            }
+            {/* end doi bi */}
+
+            {
+              isCaromGame(props.gameSettings.category) && (<View
+                style={styles.buttonWrapper}
+                direction={'row'} alignItems={'end'}>
+                <Button
+                  onPress={viewModel.onPressGiveMoreTime}
+                  style={[styles.button, styles.buttonGiveMoreTime]}
+                >
+                  <Text color={colors.white} fontSize={16}>
+                    {i18n.t('giveMoreTime')}
+                  </Text>
+                </Button>
+              </View>)
+            }
 
             {props.totalPlayers === 5 ? (
               <View flex={'1'} direction={'row'} marginTop={'20'}>

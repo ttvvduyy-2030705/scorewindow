@@ -1,7 +1,7 @@
-import {dims} from 'configuration';
+import { dims } from 'configuration';
 import colors from 'configuration/colors';
-import {StyleSheet} from 'react-native';
-import {responsiveDimension} from 'utils/helper';
+import { StyleSheet } from 'react-native';
+import { responsiveDimension } from 'utils/helper';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +33,14 @@ const styles = StyleSheet.create({
   logo: {
     height: dims.screenHeight * 0.07,
     width: dims.screenWidth * 0.1,
+  },
+  buttonWrapper: {
+    overflow: 'hidden',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+  },
+  buttonGiveMoreTime: {
+    backgroundColor: colors.yellow,
   },
 });
 

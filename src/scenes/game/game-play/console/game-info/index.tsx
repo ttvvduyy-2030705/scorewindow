@@ -44,7 +44,7 @@ const GameInfo = (props: Props) => {
           marginLeft={'5'}>
           <Text
             style={styles.valueText}
-            fontSize={72}
+            fontSize={40}
             adjustsFontSizeToFit={true}
             color={colors.grayBlue}
             fontWeight={'bold'}>
@@ -92,7 +92,7 @@ const GameInfo = (props: Props) => {
         </View>
       )}
 
-      {(isCaromGame(props.gameSettings.category) && !props.isStarted) &&
+      {/* {(isCaromGame(props.gameSettings.category) && !props.isStarted) &&
         <View
         flex={'1'}
         direction={'row'}
@@ -104,9 +104,52 @@ const GameInfo = (props: Props) => {
             <Text>{i18n.t('switchPlayer')}</Text>
           </Button>
         </View>
-      }
+      } */}
      
-     {(isCaromGame(props.gameSettings.category) && props.isStarted) && (
+        {(isCaromGame(props.gameSettings.category) && (
+           <View style={styles.buttonWrapper} direction={'row'} alignItems={'end'}>
+
+          {props.isStarted ? (
+                  <>
+                  <Button
+                        style={[styles.button, styles.buttonTurns]}
+                        onPress={props.onIncreaseTotalTurns}>
+                        <Text color={colors.white} fontSize={16}>{i18n.t('increaseTotalTurns')}</Text>
+                      </Button>
+                  <Button
+                    onPress={props.onPressGiveMoreTime}
+                    style={[styles.button, styles.buttonGiveMoreTime]}>
+                    <Text color={colors.white} fontSize={16}>
+                      {i18n.t('giveMoreTime')}
+                    </Text>
+                  </Button>
+                  <Button
+                        style={[styles.button, styles.buttonTurns]}
+                        onPress={props.onDecreaseTotalTurns}>
+                        <Text color={colors.white} fontSize={16}>{i18n.t('decreaseTotalTurns')}</Text>
+                 </Button>
+                </>
+              )
+              : (
+                <View
+                  flex={'1'}
+                  direction={'row'}
+                  justify={'center'}
+                  alignItems={'center'}>
+                  <Button
+                    style={[styles.button, styles.buttonSwapPlayers]}
+                    onPress={props.onSwapPlayers}>
+                    <Text>{i18n.t('switchPlayer')}</Text>
+                  </Button>
+                </View>
+              )}
+                </View>
+                )  
+              )}
+        
+
+
+     {/* {(isCaromGame(props.gameSettings.category) && props.isStarted) && (
                   <View direction={'row'} marginHorizontal={'20'} marginTop={'10'}>
                     <View
                       flex={'1'}
@@ -127,9 +170,11 @@ const GameInfo = (props: Props) => {
                     </View>
                   </View>
                 )
-              }
+              } */}
 
-      {isCaromGame(props.gameSettings.category) && props.isStarted && (
+              
+
+      {/* {isCaromGame(props.gameSettings.category) && props.isStarted && (
         <View style={styles.buttonWrapper} direction={'row'} alignItems={'end'}>
           <Button
             onPress={props.onPressGiveMoreTime}
@@ -140,7 +185,7 @@ const GameInfo = (props: Props) => {
           </Button>
         </View>
       )
-      }
+      } */}
 
     </View>
   );

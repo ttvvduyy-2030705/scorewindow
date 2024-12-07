@@ -59,7 +59,7 @@ const WebCamViewModel = (props: Props) => {
   const [webcamType, setWebcamType] = useState<WebcamType>();
   const [webcam, setWebcam] = useState<Webcam>();
   const [liveStream, setLiveStream] = useState<LiveStreamCamera>();
-  const [connectCountdownTime, setConnectCountdownTime] = useState<number>(10);
+  const [connectCountdownTime, setConnectCountdownTime] = useState<number>(2);
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
   const [isWebcamStarted, setIsWebcamStarted] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);

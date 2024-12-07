@@ -33,6 +33,12 @@ const styles = StyleSheet.create({
   valueText: {
     position: 'absolute',
   },
+  buttonTurns: {
+    backgroundColor: colors.gray2,
+  },
+  buttonSwapPlayers: {
+    backgroundColor: colors.yellow,
+  },
 });
 
 export default styles;

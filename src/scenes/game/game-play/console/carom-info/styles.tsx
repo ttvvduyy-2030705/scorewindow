@@ -59,6 +59,11 @@ const styles = StyleSheet.create({
   currentPointText: {
     marginBottom: responsiveDimension(-11),
   },
+  buttonTurns: {
+    borderColor: colors.black,
+    borderWidth: 0.5,
+    backgroundColor: colors.yellow,
+  },
 });
 
 export default styles;

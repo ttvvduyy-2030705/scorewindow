@@ -37,7 +37,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray2,
   },
   buttonSwapPlayers: {
-    backgroundColor: colors.yellow,
+    borderWidth: 0.5,
+    borderColor: colors.yellow,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
   },
 });
 

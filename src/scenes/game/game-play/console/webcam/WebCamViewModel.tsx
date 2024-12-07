@@ -59,7 +59,7 @@ const WebCamViewModel = (props: Props) => {
   const [webcamType, setWebcamType] = useState<WebcamType>();
   const [webcam, setWebcam] = useState<Webcam>();
   const [liveStream, setLiveStream] = useState<LiveStreamCamera>();
-  const [connectCountdownTime, setConnectCountdownTime] = useState<number>(2);
+  const [connectCountdownTime, setConnectCountdownTime] = useState<number>(5);
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
   const [isWebcamStarted, setIsWebcamStarted] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -93,7 +93,7 @@ const WebCamViewModel = (props: Props) => {
   useEffect(() => {
     const _countdownTime = (webcam?.syncTime || CAMERA_PLAYBACK_DURATION) * 2;
     const canConnect =
-      _countdownTime > 10 ? true : _countdownTime - connectCountdownTime >= 0;
+      _countdownTime > 5 ? true : _countdownTime - connectCountdownTime >= 0;
 
     if (!canConnect) {
       return;

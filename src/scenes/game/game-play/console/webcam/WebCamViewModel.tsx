@@ -8,7 +8,7 @@ import {
 } from 'react';
 import {RootState} from 'data/redux/reducers';
 import {useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFS from 'react-native-fs';
 import {keys} from 'configuration/keys';
 import {
@@ -59,7 +59,7 @@ const WebCamViewModel = (props: Props) => {
   const [webcamType, setWebcamType] = useState<WebcamType>();
   const [webcam, setWebcam] = useState<Webcam>();
   const [liveStream, setLiveStream] = useState<LiveStreamCamera>();
-  const [connectCountdownTime, setConnectCountdownTime] = useState<number>(5);
+  const [connectCountdownTime, setConnectCountdownTime] = useState<number>(10);
   const [autoConnect, setAutoConnect] = useState<boolean>(false);
   const [isWebcamStarted, setIsWebcamStarted] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -93,7 +93,7 @@ const WebCamViewModel = (props: Props) => {
   useEffect(() => {
     const _countdownTime = (webcam?.syncTime || CAMERA_PLAYBACK_DURATION) * 2;
     const canConnect =
-      _countdownTime > 5 ? true : _countdownTime - connectCountdownTime >= 0;
+      _countdownTime > 10 ? true : _countdownTime - connectCountdownTime >= 0;
 
     if (!canConnect) {
       return;

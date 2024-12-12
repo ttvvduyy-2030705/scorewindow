@@ -1,21 +1,16 @@
 // import {
-//   NativeEventEmitter,
+//   // NativeEventEmitter,
 //   NativeModules,
 //   PermissionsAndroid,
 // } from 'react-native';
-// import {BleManager, Device} from 'react-native-ble-plx';
-// import BLEManager, {
-//   Peripheral,
-//   Characteristic,
-//   BleDisconnectPeripheralEvent,
-// } from 'react-native-ble-manager';
+// import {BleManager, Device } from 'react-native-ble-plx';
 // import {DiscoverableDevices} from 'types/bluetooth';
-// import ConvertString from 'convert-string';
 
 // const BleManagerModule = NativeModules.BleManager;
-// const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+// // const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 // class BLEServiceInstance {
+//   [x: string]: any;
 //   private manager: BleManager;
 //   isPermissionsGranted: boolean = false;
 
@@ -26,7 +21,8 @@
 //   requestBluetoothPermissions = async () => {
 //     const result = await PermissionsAndroid.requestMultiple([
 //       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-//       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+//       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
 //     ]);
 //     const isGranted =
 //       result['android.permission.BLUETOOTH_CONNECT'] ===
@@ -34,13 +30,28 @@
 //       result['android.permission.BLUETOOTH_SCAN'] ===
 //         PermissionsAndroid.RESULTS.GRANTED;
 
+
 //     this.isPermissionsGranted = isGranted;
 
 //     return isGranted;
 //   };
 
 //   scanAndConnect = async () => {
-//     this.manager.startDeviceScan(null, null, (error, device) => {
+
+//     debugger
+//     console.log("start scan devices");
+
+//     console.log(  "grnted "  +  this.isPermissionsGranted);
+
+//     const SERVICE_UUID = "00001800-0000-1000-8000-00805f9b34fb"; // Replace with your service UUID
+
+//     console.log(JSON.stringify( SERVICE_UUID));
+
+//     this.manager.startDeviceScan([], null , (error, device) => {
+
+//       console.log("startDeviceScan");
+
+
 //       if (error) {
 //         console.log('Scan error', error);
 //         return;
@@ -55,54 +66,70 @@
 //           console.log('Connect to remote device');
 //         }
 
-//         this.manager.stopDeviceScan();
+//         console.log(device?.name);
 
-//         this.connectRemoteDevice(device);
+//         if (device) {
+//           // console.log('Discovered device:', device.name, device.id);
+//           // if (!this.devices.some((d) => d.id === device.id)) {
+//           //   this.devices.push(device as Device)
+//           // }
+
+//           this.manager.stopDeviceScan();
+
+//           this.connectRemoteDevice(device);
+//         }
 //       }
 //     });
+
+//     setTimeout(() => {
+//       this.manager.stopDeviceScan();
+//     }, 10000);
+
 //   };
 
 //   private connectRemoteDevice = async (device: Device) => {
 //     this.manager
 //       .connectToDevice(device.id)
-//       .then(device1 => {
+//       .then((device1: { id: any; }) => {
+//         console.log('servicesForDevice', device1.id);
+
 //         return this.manager.discoverAllServicesAndCharacteristicsForDevice(
 //           device1.id,
 //         );
 //       })
-//       .then(async device2 => {
+//       .then(async (device2: { id: any; }) => {
 //         console.log('servicesForDevice', device2.id);
 //         const services = await this.manager.servicesForDevice(device2.id);
 
-//         services.forEach(async service => {
+//         services.forEach(async (service: { characteristics: () => any; monitorCharacteristic: (arg0: any, arg1: (characteristicError: any, characteristic: any) => void) => void; }) => {
 //           const serviceCharacteristics = await service.characteristics();
 
-//           serviceCharacteristics.forEach(async serviceCharacteristic => {
+//           serviceCharacteristics.forEach(async (serviceCharacteristic: { isIndicatable: any; uuid: any; monitor: (arg0: (characteristicError: any, characteristic: any) => void) => void; isNotifiable: any; deviceID: any; serviceUUID: any; isReadable: any; isWritableWithResponse: any; }) => {
 //             if (
-//               // serviceCharacteristic.isNotifiable ||
+//               serviceCharacteristic.isNotifiable ||
 //               serviceCharacteristic.isIndicatable
 //             ) {
-//               // service.monitorCharacteristic(
-//               //   serviceCharacteristic.uuid,
-//               //   (characteristicError, characteristic) => {
-//               //     console.log(
-//               //       'Monitor serviceCharacteristic ',
-//               //       characteristicError,
-//               //       characteristic,
-//               //     );
-//               //   },
-//               // );
-//               // serviceCharacteristic.monitor(
-//               //   (characteristicError, characteristic) => {
-//               //     console.log(
-//               //       'Monitor serviceCharacteristic ',
-//               //       characteristicError,
-//               //       characteristic,
-//               //     );
-//               //   },
-//               // );
+//               service.monitorCharacteristic(
+//                 serviceCharacteristic.uuid,
+//                 (characteristicError: any, characteristic: any) => {
+//                   console.log(
+//                     'Monitor serviceCharacteristic ',
+//                     characteristicError,
+//                     characteristic,
+//                   );
+//                 },
+//               );
+//               serviceCharacteristic.monitor(
+//                 (characteristicError: any, characteristic: any) => {
+//                   console.log(
+//                     'Monitor serviceCharacteristic ',
+//                     characteristicError,
+//                     characteristic,
+//                   );
+//                 },
+//               );
 //               console.log(
-//                 'monitorCharacteristicForDevice',
+//                'monitorCharacteristicForDevice',
 //                 serviceCharacteristic.isNotifiable,
 //                 serviceCharacteristic.isIndicatable,
 //                 serviceCharacteristic.deviceID,
@@ -114,7 +141,7 @@
 //                 serviceCharacteristic.deviceID,
 //                 serviceCharacteristic.serviceUUID,
 //                 serviceCharacteristic.uuid,
-//                 (characteristicError, characteristic) => {
+//                 (characteristicError, characteristic): void => {
 //                   console.log(
 //                     'Monitor serviceCharacteristic ',
 //                     characteristicError?.errorCode,
@@ -130,170 +157,49 @@
 //               );
 //             }
 
-//             // if (serviceCharacteristic.isReadable) {
-//             //   const result = await this.manager.readCharacteristicForDevice(
-//             //     serviceCharacteristic.deviceID,
-//             //     serviceCharacteristic.serviceUUID,
-//             //     serviceCharacteristic.uuid,
-//             //   );
+//             if (serviceCharacteristic.isReadable) {
+//               const result = await this.manager.readCharacteristicForDevice(
+//                 serviceCharacteristic.deviceID,
+//                 serviceCharacteristic.serviceUUID,
+//                 serviceCharacteristic.uuid,
+//               );
 
-//             //   console.log(
-//             //     'read character',
-//             //     serviceCharacteristic.uuid,
-//             //     result.value,
-//             //   );
-//             // }
+//               console.log(
+//                 'read character',
+//                 serviceCharacteristic.uuid,
+//                 result.value,
+//               );
+//             }
 
-//             // if(serviceCharacteristic.isWritableWithResponse) {
-//             //   const result = await this.manager.writeCharacteristicWithResponseForDevice(
-//             //     serviceCharacteristic.deviceID,
-//             //     serviceCharacteristic.serviceUUID,
-//             //     serviceCharacteristic.uuid,
-//             //   );
+//             if(serviceCharacteristic.isWritableWithResponse) {
+//               const result = await this.manager.writeCharacteristicWithResponseForDevice(
+//                 serviceCharacteristic.deviceID,
+//                 serviceCharacteristic.serviceUUID,
+//                 serviceCharacteristic.uuid,
+//                 serviceCharacteristic.isReadable,
 
-//             //   console.log(
-//             //     'read character',
-//             //     serviceCharacteristic.uuid,
-//             //     result.value,
-//             //   );
-//             // }
+//               );
+
+//               console.log(
+//                 'read character',
+//                 serviceCharacteristic.uuid,
+//                 result.value,
+//               );
+//             }
 //           });
 //         });
 
-//         this.manager.onStateChange(newState => {
+//         this.manager.onStateChange((newState: any) => {
 //           console.log('State changed', newState);
 //         });
 //       })
-//       .catch(deviceError => {
+//       .catch((deviceError: any) => {
 //         console.log('Error connect', deviceError);
 //         // Handle errors
 //       });
 //   };
 // }
 
-// class BLEManagerInstance {
-//   isPermissionsGranted: boolean = false;
-
-//   constructor() {
-//     BLEManager.start();
-//   }
-
-//   requestBluetoothPermissions = async () => {
-//     const result = await PermissionsAndroid.requestMultiple([
-//       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-//       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-//     ]);
-//     const isGranted =
-//       result['android.permission.BLUETOOTH_CONNECT'] ===
-//         PermissionsAndroid.RESULTS.GRANTED &&
-//       result['android.permission.BLUETOOTH_SCAN'] ===
-//         PermissionsAndroid.RESULTS.GRANTED;
-
-//     this.isPermissionsGranted = isGranted;
-
-//     return isGranted;
-//   };
-
-//   registerListeners = () => {
-//     const discoverUnsubscribe = bleManagerEmitter.addListener(
-//       'BleManagerDiscoverPeripheral',
-//       async (peripheral: Peripheral) => {
-//         if (peripheral.name === DiscoverableDevices.remote) {
-//           this.connectRemoteDevice(peripheral);
-//         }
-//       },
-//     );
-
-//     const connectUnsubscribe = bleManagerEmitter.addListener(
-//       'BleManagerConnectPeripheral',
-//       (peripheral: Peripheral) => {
-//         console.log(
-//           '[BleManagerConnectPeripheral] new BLE peripheral=',
-//           peripheral,
-//         );
-//       },
-//     );
-
-//     const didUpdateUnsubscribe = bleManagerEmitter.addListener(
-//       'BleManagerDidUpdateValueForCharacteristic',
-//       ({value, peripheral, characteristic, service}) => {
-//         // Convert bytes array to string
-//         const data = ConvertString.convertString.bytesToString(value);
-//         console.log(
-//           `Received ${data} for characteristic ${characteristic}`,
-//           service,
-//           peripheral,
-//         );
-//       },
-//     );
-
-//     const stopScanUnsubscribe = bleManagerEmitter.addListener(
-//       'BleManagerStopScan',
-//       () => {
-//         console.debug('[handleStopScan] scan is stopped.');
-//       },
-//     );
-
-//     const disconnectUnsubscribe = bleManagerEmitter.addListener(
-//       'BleManagerDisconnectPeripheral',
-//       (event: BleDisconnectPeripheralEvent) => {
-//         console.debug(
-//           `[handleDisconnectedPeripheral][${event.peripheral}] disconnected.`,
-//         );
-//       },
-//     );
-
-//     return [
-//       discoverUnsubscribe,
-//       connectUnsubscribe,
-//       didUpdateUnsubscribe,
-//       stopScanUnsubscribe,
-//       disconnectUnsubscribe,
-//     ];
-//   };
-
-//   scanAndConnect = async () => {
-//     BLEManager.scan([], 5, true).then(() => {
-//       // Success code
-//       console.log('Scan started');
-//     });
-//   };
-
-//   private connectRemoteDevice = async (peripheral: Peripheral) => {
-//     await BLEManager.connect(peripheral.id);
-//     const services = await BLEManager.retrieveServices(peripheral.id);
-
-//     for (const characteristic of services.characteristics || []) {
-//       if (characteristic.descriptors) {
-//         for (let descriptor of characteristic.descriptors) {
-//           try {
-//             let data = await BLEManager.readDescriptor(
-//               peripheral.id,
-//               characteristic.service,
-//               characteristic.characteristic,
-//               descriptor.uuid,
-//             );
-//             console.log(
-//               `[connectPeripheral][${peripheral.id}] ${characteristic.service} ${characteristic.characteristic} ${descriptor.uuid} descriptor read as:`,
-//               data,
-//             );
-
-//             BLEManager.startNotification(
-//               peripheral.id,
-//               characteristic.service,
-//               characteristic.characteristic,
-//             );
-//           } catch (error) {
-//             console.log(
-//               `Error: [connectPeripheral][${peripheral.id}] failed to retrieve descriptor ${descriptor} for characteristic ${characteristic}:`,
-//               error,
-//             );
-//           }
-//         }
-//       }
-//     }
-//   };
-// }
 
 // // export const BLEService = new BLEManagerInstance();
 // export const BLEService = new BLEServiceInstance();

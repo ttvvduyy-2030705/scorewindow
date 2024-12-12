@@ -3,7 +3,6 @@ import {LanguageContext} from 'context/language';
 import i18n from 'i18n';
 import {screens} from 'scenes/screens';
 import {Navigation} from 'types/navigation';
-// import {BLEService} from 'utils/bluetooth';
 
 export interface Props extends Navigation {}
 
@@ -16,12 +15,10 @@ const HomeViewModel = (props: Props) => {
 
   const onPressHistory = useCallback(() => {
     props.navigate(screens.history);
-    // BLEService.scanAndConnect();
   }, [props]);
 
   const onPressConfigs = useCallback(() => {
     props.navigate(screens.configs);
-    // BLEService.scanAndConnect();
   }, [props]);
 
   const helloText = useMemo(() => {

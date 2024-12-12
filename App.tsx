@@ -40,6 +40,7 @@ import {logEvent, sendUserId} from 'services/firebase/analytics';
 import {initRemoteConfig} from 'services/firebase/remote-config';
 import analyticsKeys from 'services/firebase/analytics/keys';
 // import {BLEService} from 'utils/bluetooth';
+import { BlueProvider } from 'context/bluetooth';
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/youtube.readonly'],
@@ -95,7 +96,8 @@ const App = (): React.JSX.Element => {
     setLanguage(language);
   }, []);
 
-  return (
+  return ( 
+  <BlueProvider>
     <RealmProvider
       deleteRealmIfMigrationNeeded
       schema={[
@@ -128,6 +130,7 @@ const App = (): React.JSX.Element => {
         </PersistGate>
       </Provider>
     </RealmProvider>
+    </BlueProvider>
   );
 };
 

@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import colors from 'configuration/colors';
 import {keys} from 'configuration/keys';
 import {BALLS_10, BALLS_15, BALLS_9} from 'constants/balls';

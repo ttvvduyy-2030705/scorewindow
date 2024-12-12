@@ -98,6 +98,7 @@ const CaromInfoViewModel = (props: Props) => {
           async uri => {
             const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
             const _path = uri.slice(7);
+            console.log('path connection', _path);
 
             RNFS.copyFile(_path, matchImagePath);
           },

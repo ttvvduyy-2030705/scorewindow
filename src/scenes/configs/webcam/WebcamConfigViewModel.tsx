@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import {TextInput, ViewStyle} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {OnLoadData, OnVideoErrorData, VideoRef} from 'react-native-video';
 import {keys} from 'configuration/keys';
 import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';

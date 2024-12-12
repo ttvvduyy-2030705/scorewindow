@@ -44,7 +44,7 @@ const GameInfo = (props: Props) => {
           marginLeft={'5'}>
           <Text
             style={styles.valueText}
-            fontSize={40}
+            fontSize={30}
             adjustsFontSizeToFit={true}
             color={colors.grayBlue}
             fontWeight={'bold'}>

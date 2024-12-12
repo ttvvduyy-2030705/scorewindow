@@ -1,5 +1,5 @@
 export enum DiscoverableDevices {
-  remote = 'G10S PRO',
+  remote = 'AJBHJZ001',
   remote2 = 'MOCUTE-052Fe-AUTO',
   remote3 = 'M585/M590',
 }

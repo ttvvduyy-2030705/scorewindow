@@ -57,8 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
   },
   buttonSwapPlayers: {
-    borderWidth: 0.5,
-    borderColor: colors.yellow,
+    backgroundColor: colors.yellow,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
   },

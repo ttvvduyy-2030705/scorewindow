@@ -29,7 +29,7 @@ const _saveVideoInRange = async (
     }
 
     noneVideosExist = false;
-    await RNFS.write(mergeFilesTemp, `file '${_filePath}'\r\n`);
+    //await RNFS.write(mergeFilesTemp, `file '${_filePath}'\r\n`);
   }
 
   return {noneVideosExist, mergeFilesTemp};
@@ -41,20 +41,20 @@ const streamWebcamToFile = async (
   webcamType?: WebcamType,
   url?: string,
 ) => {
-  const folderPath = `${RNFS.DownloadDirectoryPath}/${folderName}`;
+  // const folderPath = `${RNFS.DownloadDirectoryPath}/${folderName}`;
 
-  await RNFS.mkdir(folderPath);
+  // await RNFS.mkdir(folderPath);
 
-  if (webcamType === WebcamType.webcam) {
-    FFmpegKit.executeAsync(
-      `-i ${url} -acodec copy -vcodec copy -f segment -segment_time ${segmentTime} -preset veryslow -b:v 9000k -maxrate 18000k -bufsize 12000k ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
-    );
-    return;
-  }
+  // if (webcamType === WebcamType.webcam) {
+  //   FFmpegKit.executeAsync(
+  //     `-i ${url} -acodec copy -vcodec copy -f segment -segment_time ${segmentTime} -preset veryslow -b:v 9000k -maxrate 18000k -bufsize 12000k ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
+  //   );
+  //   return;
+  // }
 
-  FFmpegKit.executeAsync(
-    `-f android_camera -i 0 -f segment -segment_time ${segmentTime} -preset veryslow -b:v 9000k -maxrate 18000k -bufsize 12000k ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
-  );
+  // FFmpegKit.executeAsync(
+  //   `-f android_camera -i 0 -f segment -segment_time ${segmentTime} -preset veryslow -b:v 9000k -maxrate 18000k -bufsize 12000k ${folderPath}/${WEBCAM_BASE_FILE_NAME}%02d${WEBCAM_FILE_EXTENSION}`,
+  // );
 };
 
 const mergeVideos = async (

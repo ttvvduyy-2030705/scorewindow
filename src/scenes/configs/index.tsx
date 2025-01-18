@@ -23,7 +23,7 @@ const Configs = () => {
         <View flex={'1'} direction={'row'}>
           <View flex={'1'} marginBottom={'20'} marginRight={'20'}>
             <LanguageConfig />
-            <BluetoothConfig />
+            {/* <BluetoothConfig /> */}
             <View marginVertical={'10'} />
             <TableNumber />
           </View>

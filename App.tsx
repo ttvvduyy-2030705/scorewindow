@@ -40,7 +40,7 @@ import {logEvent, sendUserId} from 'services/firebase/analytics';
 import {initRemoteConfig} from 'services/firebase/remote-config';
 import analyticsKeys from 'services/firebase/analytics/keys';
 // import {BLEService} from 'utils/bluetooth';
-import { BlueProvider } from 'context/bluetooth';
+import { PreviewVideoProvider } from 'context/PreviewVideo';
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/youtube.readonly'],
@@ -53,7 +53,15 @@ const App = (): React.JSX.Element => {
   const [currentLanguage, setCurrentLanguage] = useState('vi');
 
   useEffect(() => {
-    _init();
+
+    console.log("start app");
+    try {
+      _init();
+    }catch(error: any){
+
+      console.error(JSON.stringify(error))
+    }
+
 
     // BLEService.requestBluetoothPermissions();
     // const [
@@ -81,8 +89,8 @@ const App = (): React.JSX.Element => {
   const _init = useCallback(async () => {
     const deviceId = await DeviceInfo.getInstanceId();
 
-    sendUserId(deviceId);
-    logEvent(analyticsKeys.deviceId, {device_id: deviceId});
+    //sendUserId(deviceId);
+    //logEvent(analyticsKeys.deviceId, {device_id: deviceId});
     initRemoteConfig();
 
     const _currentLanguage = await loadLanguage();
@@ -97,7 +105,7 @@ const App = (): React.JSX.Element => {
   }, []);
 
   return ( 
-  // <BlueProvider>
+   <PreviewVideoProvider>
     <RealmProvider
       deleteRealmIfMigrationNeeded
       schema={[
@@ -130,7 +138,7 @@ const App = (): React.JSX.Element => {
         </PersistGate>
       </Provider>
     </RealmProvider>
-    // </BlueProvider>
+    </PreviewVideoProvider>
   );
 };
 

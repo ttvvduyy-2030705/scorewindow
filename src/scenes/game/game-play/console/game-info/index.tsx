@@ -77,10 +77,12 @@ const GameInfo = (props: Props) => {
         props.totalPlayers < 5 &&
         props.currentMode?.mode === 'pro' ? (
         <Webcam
-          webcamFolderName={props.webcamFolderName}
-          renderMatchInfo={props.renderMatchInfo}
-          updateWebcamFolderName={props.updateWebcamFolderName}
-        />
+            webcamFolderName={props.webcamFolderName}
+            renderMatchInfo={props.renderMatchInfo}
+            updateWebcamFolderName={props.updateWebcamFolderName}
+             cameraRef={undefined}
+              isStarted={false}
+              isPaused={false} isPreview={false}        />
       ) : (
         <View />
       )}

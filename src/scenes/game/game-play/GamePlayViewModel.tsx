@@ -1,27 +1,26 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import RNFS from 'react-native-fs';
-import {captureRef} from 'react-native-view-shot';
+import RNFS, { ReadDirItem } from 'react-native-fs';
+// import {captureRef} from 'react-native-view-shot';
 import {useRealm} from '@realm/react';
 import {RootState} from 'data/redux/reducers';
 import {gameActions} from 'data/redux/actions/game';
-import {cancelStreamWebcamToFile} from 'services/ffmpeg/local';
 import i18n from 'i18n';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
-
+import  { Camera, useCameraPermission}from 'react-native-vision-camera';
 import {goBack} from 'utils/navigation';
-import {isCaromGame, isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
+import {isPool10Game, isPool9Game, isPoolGame} from 'utils/game';
 import Sound from 'utils/sound';
 import RemoteControl from 'utils/remote';
-
 import {Player, PlayerSettings} from 'types/player';
 import {RemoteControlKeys} from 'types/bluetooth';
 import {BallType, PoolBallType} from 'types/ball';
-import KeyEvent from 'react-native-keyevent';
-
-
-import {MATCH_COUNTDOWN, WEBCAM_BASE_CAMERA_FOLDER} from 'constants/webcam';
+import { CameraRoll, SaveToCameraRollOptions } from "@react-native-camera-roll/camera-roll";
+import {navigate} from 'utils/navigation';
+import {screens} from 'scenes/screens';
+import { PlayBackWebcamViewModelProps } from 'scenes/playback/PlayBackViewModel';
+import { usePreviewContext } from 'context/PreviewVideo';
+//import {MATCH_COUNTDOWN, WEBCAM_BASE_CAMERA_FOLDER} from 'constants/webcam';
 
 let countdownInterval: NodeJS.Timeout, warmUpCountdownInterval: NodeJS.Timeout;
 
@@ -30,9 +29,10 @@ const GamePlayViewModel = () => {
   const dispatch = useDispatch();
   const {updateGameSettings} = useSelector((state: RootState) => state.UI.game);
   const {gameSettings} = useSelector((state: RootState) => state.game);
-
+  const cameraRef = useRef<Camera>(null)
   const matchCountdownRef = useRef(null);
-
+  const [isRecording, setIsRecording] = useState(false);
+  const {hasPermission, requestPermission} = useCameraPermission();
   const [poolBreakPlayerIndex, setPoolBreakPlayerIndex] = useState<number>(0);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [totalTurns, setTotalTurns] = useState(1);
@@ -40,14 +40,18 @@ const GamePlayViewModel = () => {
   const [countdownTime, setCountdownTime] = useState<number>(0);
   const [warmUpCount, setWarmUpCount] = useState<number>();
   const [warmUpCountdownTime, setWarmUpCountdownTime] = useState<number>();
-
   const [playerSettings, setPlayerSettings] = useState<PlayerSettings>();
   const [winner, setWinner] = useState<Player>();
-  const [webcamFolderName, setWebcamFolderName] = useState<string>();
+
+  const now = Date.now().toString();
+  const [webcamFolderName, setWebcamFolderName] = useState<string>(now)
 
   const [isStarted, setIsStarted] = useState(
     gameSettings?.mode?.mode === 'fast' ? true : false,
   );
+
+  const { isPreview, setIsPreview,   videoUri, setVideoUri, setIsRewatch } = usePreviewContext();
+
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [isMatchPaused, setIsMatchPaused] = useState<boolean>(false);
   const [gameBreakEnabled, setGameBreakEnabled] = useState<boolean>(false);
@@ -56,6 +60,12 @@ const GamePlayViewModel = () => {
   const [proModeEnabled, setProModeEnabled] = useState(
     gameSettings?.mode?.mode !== 'fast',
   );
+
+  useEffect(() => {
+       if(!hasPermission){
+         requestPermission()
+       }
+  }, [hasPermission]);
 
   useEffect(() => {
     RemoteControl.instance.registerKeyEvents(
@@ -204,37 +214,41 @@ const GamePlayViewModel = () => {
     }
   }, [isStarted, soundEnabled, countdownTime, gameSettings]);
 
-  useEffect(() => {
-    if (!matchCountdownRef.current || isCaromGame(gameSettings?.category)) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!matchCountdownRef.current || isCaromGame(gameSettings?.category)) {
+  //     return;
+  //   }
 
-    captureRef(matchCountdownRef, {
-      format: 'png',
-      quality: 0.01,
-      width: 1242,
-    })
-      .then(
-        async uri => {
-          const matchCountdownImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_COUNTDOWN}`;
-          const _path = uri.slice(7);
+  //   captureRef(matchCountdownRef, {
+  //     format: 'png',
+  //     quality: 0.01,
+  //     width: 1242,
+  //   })
+  //     .then(
+  //       async uri => {
+  //         const matchCountdownImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_COUNTDOWN}`;
 
-          RNFS.copyFile(_path, matchCountdownImagePath);
-        },
-        error => console.error('Oops, match countdown failed', error),
-      )
-      .catch(e => {
-        if (__DEV__) {
-          console.log('Capture countdown error', e);
-        }
-      });
-  }, [countdownTime, gameSettings]);
+  //         console.log("matchCountdownImagePath" + matchCountdownImagePath)
 
-  useEffect(() => {
-    return () => {
-      cancelStreamWebcamToFile();
-    };
-  }, []);
+  //         const _path = uri.slice(7);
+  //         console.log("prh" + _path)
+
+  //         RNFS.copyFile(_path, matchCountdownImagePath);
+  //       },
+  //       error => console.log('Oops, match countdown failed', error),
+  //     )
+  //     .catch(e => {
+  //       if (__DEV__) {
+  //         console.log('Capture countdown error', e);
+  //       }
+  //     });
+  // }, [countdownTime, gameSettings]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     cancelStreamWebcamToFile();
+  //   };
+  // }, []);
 
   const updateWebcamFolderName = useCallback((name: string) => {
     setWebcamFolderName(name);
@@ -658,12 +672,14 @@ const GamePlayViewModel = () => {
     } as PlayerSettings);
   }, [playerSettings]);
 
-  const onStart = useCallback(() => {
+  const onStart = useCallback( async () =>  {
     if (isStarted) {
       return;
     }
 
     setIsStarted(true);
+    await startVideoRecording()
+
   }, [isStarted]);
 
   const onToggleCountDown = useCallback(() => {
@@ -676,16 +692,23 @@ const GamePlayViewModel = () => {
 
   const onPause = useCallback(() => {
     if (isPaused) {
-      //Resume game
+      console.log("pause test countdown top" +isPaused )
       _resetCountdown(true);
+       startVideoRecording();
+       setIsRecording(true)
+       setIsRewatch(false);
     } else {
+      console.log("end pause test countdown top"+ isPaused)
+
       clearInterval(countdownInterval);
+      setIsRewatch(true);
+      stopVideoRecording();
     }
 
     setIsPaused(prev => !prev);
   }, [isPaused, _resetCountdown]);
 
-  const onStop = useCallback(() => {
+  const onStop = useCallback( async () => {
     Alert.alert(i18n.t('stop'), i18n.t('msgStopGame'), [
       {
         text: i18n.t('txtCancel'),
@@ -705,10 +728,16 @@ const GamePlayViewModel = () => {
               },
             }),
           );
+          
+          if(isRecording){
+           stopVideoRecording();
+           setIsRecording(prev => !prev);
+          }
           goBack();
         },
       },
     ]);
+
   }, [
     dispatch,
     realm,
@@ -752,6 +781,121 @@ const GamePlayViewModel = () => {
     playerSettings,
     onSwitchPoolBreakPlayerIndex,
   ]);
+ 
+  const startVideoRecording = async () => {
+
+    if(!cameraRef.current) return;
+
+    try {
+      setIsRecording(true);
+      console.log('Starting recording...');
+      cameraRef.current?.startRecording({
+       // flash: 'on',
+        // path: cacheDirectory,
+
+        onRecordingFinished: async (video) => {
+          console.log('Recording finished:', video);
+          setIsRewatch(false);
+          const path = video.path;
+          const fileName = getFileName(video.path);
+
+         // Define the destination folder and file name
+            const destinationPath = `${RNFS.DownloadDirectoryPath}/${webcamFolderName}/${fileName}`;
+
+            try {
+              // Ensure the destination folder exists
+              const folderPath = `${RNFS.DownloadDirectoryPath}/${webcamFolderName}`;
+              if (!(await RNFS.exists(folderPath))) {
+                await RNFS.mkdir(folderPath);
+              }
+              // Copy the video file
+              await RNFS.copyFile(path, destinationPath);
+              setVideoUri(destinationPath);
+              console.log('Video saved to:', destinationPath);
+            } catch (error) {
+              console.error('Error saving video file:', error);
+            }
+
+            setIsRewatch(true);
+
+        },
+        onRecordingError: (error) => {
+          console.error('Recording error:', error);
+        },
+      });
+    } catch (error) {
+      console.error('Failed to start recording:', error);
+    }
+  };
+
+  const getFileName = (filePath: string) => {
+    return filePath.split('/').pop();
+  };
+
+  const stopVideoRecording = async () => {
+    console.log('Stopping recording...');
+    if(cameraRef.current){
+      try {
+        await cameraRef.current?.stopRecording();
+      } catch (error) {
+        console.error('Failed to stop recording:', error);
+      }
+    }
+  
+    setIsRecording(pre => !pre);
+  };
+
+  const pauseVideoRecording = async () => {
+    
+    if(!cameraRef.current) return;
+    try {
+      console.log('pause recording...');
+      await cameraRef.current?.pauseRecording();
+
+    //  await getLatestCachedVideo();
+
+    } catch (error) {
+      console.error('Failed to stop recording:', error);
+    }
+  };
+
+  const resumeVideoRecording = async () => {
+    try {
+      console.log('resume recording...');
+      await cameraRef.current?.resumeRecording();
+    } catch (error) {
+      console.error('Failed to stop recording:', error);
+    }
+  };
+
+  // const getLatestCachedVideo = async () => {
+  //   try {
+  //     const cacheDir = RNFS.TemporaryDirectoryPath; // Path to cache directory
+  //     const files = await RNFS.readDir(cacheDir); // Get all files in the cache
+
+  //     if (files.length === 0) {
+  //       console.log('No files in the cache directory.');
+  //       return;
+  //     }
+
+  //     // Sort files by modification time (most recent first)
+  //     const sortedFiles = files
+  //       .filter((file: ReadDirItem) => file.name.endsWith('.mov')).sort((a, b) => b.mtime!.getTime() - a.mtime!.getTime());
+
+        
+  //     if (sortedFiles.length > 0) {
+
+  //       console.log("set video url " + `file:/${sortedFiles[0].path}`);
+
+  //       setVideoUri(`file://${sortedFiles[0].path}`); // Set the path of the latest video
+  //     } else {
+  //       console.log('No video files found in cache.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error reading cache files:', error);
+  //   }
+  // };
+
 
   return useMemo(() => {
     return {
@@ -802,6 +946,14 @@ const GamePlayViewModel = () => {
       onStop,
       onReset,
       onResetTurn,
+      cameraRef,
+      isPreview,
+      setIsPreview,
+      pauseVideoRecording,
+      resumeVideoRecording,
+      stopVideoRecording,
+      videoUri,
+      setVideoUri
     };
   }, [
     matchCountdownRef,
@@ -851,6 +1003,16 @@ const GamePlayViewModel = () => {
     onStop,
     onReset,
     onResetTurn,
+    cameraRef,
+    isPaused,
+    isStarted,
+    isPreview,
+    setIsPreview,
+    pauseVideoRecording,
+    videoUri,
+    resumeVideoRecording,
+    stopVideoRecording,
+    setVideoUri
   ]);
 };
 

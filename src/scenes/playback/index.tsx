@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useEffect, useMemo, useState} from 'react';
 import {ScrollView} from 'react-native';
 import Video from 'react-native-video';
 
@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import Loading from 'components/Loading';
 import Image from 'components/Image';
-
+import RNFS from 'react-native-fs';
 import images from 'assets';
 import i18n from 'i18n';
 import {goBack} from 'utils/navigation';
@@ -18,13 +18,14 @@ import {
   WEBCAM_SELECTED_VIDEO_TRACK,
 } from 'constants/webcam';
 
-import PlayBackWebcamViewModel, {Props} from './PlayBackViewModel';
+import PlayBackWebcamViewModel, {PlayBackWebcamViewModelProps} from './PlayBackViewModel';
 import {DURATION_LIST} from './constants';
 import styles from './styles';
+import { usePreviewContext } from 'context/PreviewVideo';
 
-const PlayBackWebcam = (props: Props) => {
+const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
   const viewModel = PlayBackWebcamViewModel(props);
-
+  
   const WEBCAM_LOADER = useMemo(() => {
     return (
       <View
@@ -97,9 +98,9 @@ const PlayBackWebcam = (props: Props) => {
                 controls
                 source={{uri: viewModel.webcamUrl}}
                 selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
-                bufferConfig={WEBCAM_BUFFER_CONFIG}
                 onError={viewModel.onWebcamError}
                 renderLoader={WEBCAM_LOADER}
+                
               />
               <Button
                 style={styles.buttonShare}

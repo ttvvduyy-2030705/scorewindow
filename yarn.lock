@@ -3241,6 +3241,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-camera-roll/camera-roll@npm:^7.9.0":
+  version: 7.9.0
+  resolution: "@react-native-camera-roll/camera-roll@npm:7.9.0"
+  peerDependencies:
+    react-native: ">=0.59"
+  checksum: aec50584e45fa5f678cf0405d9ceec7f6962946fdf483ffb1d138fac601433265cfffe0aad961dc4e1b97ab3dbf7a141e2fef6d7f0b17884116112c8cf341afe
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:13.6.9":
   version: 13.6.9
   resolution: "@react-native-community/cli-clean@npm:13.6.9"
@@ -5688,6 +5697,7 @@ __metadata:
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
     "@react-native-async-storage/async-storage": ^2.1.0
+    "@react-native-camera-roll/camera-roll": ^7.9.0
     "@react-native-community/cli": ^15.1.2
     "@react-native-community/slider": ^4.5.5
     "@react-native-firebase/analytics": ^21.0.0
@@ -5725,6 +5735,7 @@ __metadata:
     react-native-ble-manager: 11.5.7
     react-native-ble-plx: ^3.2.1
     react-native-device-info: ^13.0.0
+    react-native-file-access: ^3.1.1
     react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.20.0
     react-native-get-random-values: ^1.11.0
@@ -5732,6 +5743,7 @@ __metadata:
     react-native-linear-gradient: ^2.8.3
     react-native-localize: ^3.2.0
     react-native-reanimated: ^3.12.1
+    react-native-rtmp: ^1.0.1
     react-native-safe-area-context: ^4.10.7
     react-native-screens: ^3.32.0
     react-native-share: ^11.0.3
@@ -5740,6 +5752,9 @@ __metadata:
     react-native-uuid: ^2.0.2
     react-native-video: ^6.5.0
     react-native-view-shot: ^3.8.0
+    react-native-vision-camera: ^4.6.3
+    react-native-vlc-media-player: ^1.0.70
+    react-native-worklets-core: ^1.5.0
     react-redux: ^9.2.0
     react-test-renderer: 18.2.0
     realm: ^12.13.1
@@ -6163,6 +6178,17 @@ __metadata:
     strip-ansi: ^6.0.0
     wrap-ansi: ^6.2.0
   checksum: 4fcfd26d292c9f00238117f39fc797608292ae36bac2168cfee4c85923817d0607fe21b3329a8621e01aedf512c99b7eaa60e363a671ffd378df6649fb48ae42
+  languageName: node
+  linkType: hard
+
+"cliui@npm:^7.0.2":
+  version: 7.0.4
+  resolution: "cliui@npm:7.0.4"
+  dependencies:
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.0
+    wrap-ansi: ^7.0.0
+  checksum: ce2e8f578a4813806788ac399b9e866297740eecd4ad1823c27fd344d78b22c5f8597d548adbcc46f0573e43e21e751f39446c5a5e804a12aace402b7a315d7f
   languageName: node
   linkType: hard
 
@@ -12024,7 +12050,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.6, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -12215,6 +12241,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-file-access@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "react-native-file-access@npm:3.1.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 5f405bfe61d6d02f18f93929a9029359a198fd523183e2435ef020df4307dd9da714b3d94141412373a16264f039ae7a1ac3c5ee8991137b3e97633778bf1cba
+  languageName: node
+  linkType: hard
+
 "react-native-fs@npm:^2.20.0":
   version: 2.20.0
   resolution: "react-native-fs@npm:2.20.0"
@@ -12314,6 +12350,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-rtmp@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "react-native-rtmp@npm:1.0.1"
+  checksum: 6f22b552ae9c656340f4ed470a7177858bb7dea5a8d1c956d046ebfa438f5e5f1dfe78f0481ab5df1c90cf9c63bee674f468f1d2f21cf5e4eaa4841f03e6e9a8
+  languageName: node
+  linkType: hard
+
 "react-native-safe-area-context@npm:^4.10.7":
   version: 4.14.1
   resolution: "react-native-safe-area-context@npm:4.14.1"
@@ -12344,6 +12387,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-slider@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "react-native-slider@npm:0.11.0"
+  dependencies:
+    prop-types: ^15.5.6
+  checksum: e63030f795a85594f8a6999f05aa261e1c480197838469e4fbb77018510cf2281b57a198ae7cf39099e510f2be2c921af3f57db4d8aa3d986f46a437d344f3c3
+  languageName: node
+  linkType: hard
+
 "react-native-sound-player@npm:^0.14.3":
   version: 0.14.3
   resolution: "react-native-sound-player@npm:0.14.3"
@@ -12362,6 +12414,19 @@ __metadata:
   version: 2.0.3
   resolution: "react-native-uuid@npm:2.0.3"
   checksum: e47774481feaed5d38f75fb4b03f5189c03e7452038f1b0fa56677add8a8bdef64ec7ad5e83f9fa761d8788cac5c8e554ade07e82a2818145337df7c883e2124
+  languageName: node
+  linkType: hard
+
+"react-native-vector-icons@npm:^9.2.0":
+  version: 9.2.0
+  resolution: "react-native-vector-icons@npm:9.2.0"
+  dependencies:
+    prop-types: ^15.7.2
+    yargs: ^16.1.1
+  bin:
+    fa5-upgrade: bin/fa5-upgrade.sh
+    generate-icon: bin/generate-icon.js
+  checksum: 222baf88c3f269234c08a41680e6400a4bf1f4c170f7c2ffac34b2c1c089cdb1084223db2a7d9cc54ee212eec20ff1478f3f482df19062e3057c328642da0be2
   languageName: node
   linkType: hard
 
@@ -12384,6 +12449,48 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 9e3044da325b44c90238d1eac54ab0a0a9bdab9b7b93f05409e402890c982ee854ae93ff3b6f0d7befe8f2c53df7cf0c708782c007c4c3c4a007a4844b658fde
+  languageName: node
+  linkType: hard
+
+"react-native-vision-camera@npm:^4.6.3":
+  version: 4.6.3
+  resolution: "react-native-vision-camera@npm:4.6.3"
+  peerDependencies:
+    "@shopify/react-native-skia": "*"
+    react: "*"
+    react-native: "*"
+    react-native-reanimated: "*"
+    react-native-worklets-core: "*"
+  peerDependenciesMeta:
+    "@shopify/react-native-skia":
+      optional: true
+    react-native-reanimated:
+      optional: true
+    react-native-worklets-core:
+      optional: true
+  checksum: ea75d22d465caa054642d38b4953e92b7f88da1860ac0e1d3f8cdeab27ab8093dfcdbe1ac6dca2e2c9d38bd1eb07a361cde96438d29238c55662fb31fa6d6227
+  languageName: node
+  linkType: hard
+
+"react-native-vlc-media-player@npm:^1.0.70":
+  version: 1.0.70
+  resolution: "react-native-vlc-media-player@npm:1.0.70"
+  dependencies:
+    react-native-slider: ^0.11.0
+    react-native-vector-icons: ^9.2.0
+  checksum: 48d2208c91874dbf202170b4d6b6021ecba595ad5a13532dafe6f0a9635794d57cb81222bd5380b931f01dae524a814775297458ca0f4667f8bc96a4fa5f4615
+  languageName: node
+  linkType: hard
+
+"react-native-worklets-core@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "react-native-worklets-core@npm:1.5.0"
+  dependencies:
+    string-hash-64: ^1.0.3
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 36c7353ceeb7cdd3a56c9d765a940b4b59b4a16549edf14e444292baa629b60fd284021a9db73a764a555d1ac03a1ca9b27ff328ed3d671a4bc6ff8cfbc079cf
   languageName: node
   linkType: hard
 
@@ -13571,6 +13678,13 @@ __metadata:
   version: 2.0.0
   resolution: "strict-uri-encode@npm:2.0.0"
   checksum: eaac4cf978b6fbd480f1092cab8b233c9b949bcabfc9b598dd79a758f7243c28765ef7639c876fa72940dac687181b35486ea01ff7df3e65ce3848c64822c581
+  languageName: node
+  linkType: hard
+
+"string-hash-64@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "string-hash-64@npm:1.0.3"
+  checksum: 79de8431b4fa3e85a2429cd52a34f7948221ff167b7a094e05d6bcfd0173474b232e0c9845c96f74b0d7b6b0c8bbe2c3532a4cacb21635293ef0cf3cc8e77f06
   languageName: node
   linkType: hard
 
@@ -15030,6 +15144,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"yargs-parser@npm:^20.2.2":
+  version: 20.2.9
+  resolution: "yargs-parser@npm:20.2.9"
+  checksum: 8bb69015f2b0ff9e17b2c8e6bfe224ab463dd00ca211eece72a4cd8a906224d2703fb8a326d36fdd0e68701e201b2a60ed7cf81ce0fd9b3799f9fe7745977ae3
+  languageName: node
+  linkType: hard
+
 "yargs-parser@npm:^21.1.1":
   version: 21.1.1
   resolution: "yargs-parser@npm:21.1.1"
@@ -15053,6 +15174,21 @@ __metadata:
     y18n: ^4.0.0
     yargs-parser: ^18.1.2
   checksum: 40b974f508d8aed28598087720e086ecd32a5fd3e945e95ea4457da04ee9bdb8bdd17fd91acff36dc5b7f0595a735929c514c40c402416bbb87c03f6fb782373
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^16.1.1":
+  version: 16.2.0
+  resolution: "yargs@npm:16.2.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.0
+    y18n: ^5.0.5
+    yargs-parser: ^20.2.2
+  checksum: b14afbb51e3251a204d81937c86a7e9d4bdbf9a2bcee38226c900d00f522969ab675703bee2a6f99f8e20103f608382936034e64d921b74df82b63c07c5e8f59
   languageName: node
   linkType: hard
 

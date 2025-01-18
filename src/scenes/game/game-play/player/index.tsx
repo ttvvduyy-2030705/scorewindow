@@ -53,13 +53,13 @@ const GamePlayer = (props: Props) => {
         marginHorizontal={'20'}
         marginTop={'10'}>
         <Button style={styles.button} onPress={viewModel.onDecreasePoint}>
-          <Text fontSize={24} fontWeight={'bold'}>
+          <Text fontSize={15} fontWeight={'bold'}>
             {'-'}
           </Text>
         </Button>
         <View marginHorizontal={'10'} />
         <Button style={styles.button} onPress={viewModel.onIncreasePoint}>
-          <Text fontSize={24} fontWeight={'bold'}>
+          <Text fontSize={15} fontWeight={'bold'}>
             {'+'}
           </Text>
         </Button>

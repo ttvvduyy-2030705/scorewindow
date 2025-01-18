@@ -6,7 +6,7 @@ import Image from 'components/Image';
 import Switch from 'components/Switch';
 import images from 'assets';
 import i18n from 'i18n';
-import ConsoleViewModel, { Props } from './ConsoleViewModel';
+import ConsoleViewModel, { ConsoleViewModelProps } from './ConsoleViewModel';
 import colors from 'configuration/colors';
 import { isCaromGame, isPoolGame } from 'utils/game';
 import ButtonsConsole from './buttons';
@@ -16,7 +16,7 @@ import styles from './styles';
 import BallsView from './balls-view';
 import CaromInfo from './carom-info';
 
-const GameConsole = (props: Props) => {
+const GameConsole = (props: ConsoleViewModelProps) => {
   const viewModel = ConsoleViewModel(props);
 
   return (
@@ -144,6 +144,15 @@ const GameConsole = (props: Props) => {
                 webcamFolderName={props.webcamFolderName}
                 renderMatchInfo={props.renderMatchInfo}
                 updateWebcamFolderName={props.updateWebcamFolderName}
+                cameraRef={props.cameraRef}
+                isPaused={props.isPaused}
+                isStarted={props.isStarted}
+                isPreview={props.isPreview}
+                pauseVideoRecording={props.pauseVideoRecording}
+                videoUri={props.videoUri}
+                resumeVideoRecording={props.resumeVideoRecording}
+                stopVideoRecording={props.stopVideoRecording}
+                setVideoUri={props.setVideoUri}
               />
             ) : (
               <View />

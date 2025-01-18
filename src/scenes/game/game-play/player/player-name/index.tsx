@@ -43,11 +43,11 @@ const PlayerName = (props: Props) => {
             },
             isPairPlay
               ? {
-                  fontSize: responsiveDimension(32),
-                  height: responsiveDimension(56),
+                  fontSize: responsiveDimension(72),
+                  height: responsiveDimension(80),
                 }
               : {
-                  fontSize: responsiveDimension(40),
+                  fontSize: responsiveDimension(60),
                   height: responsiveDimension(72),
                 },
           ]}

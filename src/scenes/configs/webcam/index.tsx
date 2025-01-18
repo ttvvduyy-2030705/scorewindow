@@ -266,7 +266,11 @@ const WebcamConfig = () => {
                   onLoad={viewModel.onLoad}
                   onError={viewModel.onWebcamError}
                   onPosition={viewModel.onSaveWebcamPosition}
-                />
+                  //cameraRef={viewModel.webcam}
+                  isStarted={false}
+                  isPaused={false}
+                  isPreview={false}
+                  />
               </View>
             </View>
           </View>

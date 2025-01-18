@@ -15,42 +15,42 @@ export interface Props {
 const PoolBoardViewModel = (props: Props) => {
   const matchRef = useRef(null);
 
-  useEffect(() => {
-    if (
-      !matchRef.current ||
-      !props.playerSettings ||
-      props.playerSettings.playingPlayers.length > 2
-    ) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (
+  //     !matchRef.current ||
+  //     !props.playerSettings ||
+  //     props.playerSettings.playingPlayers.length > 2
+  //   ) {
+  //     return;
+  //   }
 
-    const timeout = setTimeout(() => {
-      if (!matchRef.current) {
-        return;
-      }
+  //   const timeout = setTimeout(() => {
+  //     if (!matchRef.current) {
+  //       return;
+  //     }
 
-      captureRef(matchRef, {
-        format: 'png',
-        quality: 0.01,
-        width: 256,
-      })
-        .then(
-          async uri => {
-            const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
-            const _path = uri.slice(7);
+  //     // captureRef(matchRef, {
+  //     //   format: 'png',
+  //     //   quality: 0.01,
+  //     //   width: 256,
+  //     // })
+  //     //   .then(
+  //     //     async uri => {
+  //     //       const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${MATCH_IMAGE}`;
+  //     //       const _path = uri.slice(7);
 
-            RNFS.copyFile(_path, matchImagePath);
-          },
-          error => console.error('Oops, match info failed', error),
-        )
-        .catch(e => {
-          if (__DEV__) {
-            console.log('Capture match info error', e);
-          }
-        });
-      clearTimeout(timeout);
-    }, 1000);
-  }, [props.playerSettings]);
+  //     //       RNFS.copyFile(_path, matchImagePath);
+  //     //     },
+  //     //     error => console.error('Oops, match info failed', error),
+  //     //   )
+  //     //   .catch(e => {
+  //     //     if (__DEV__) {
+  //     //       console.log('Capture match info error', e);
+  //     //     }
+  //     //   });
+  //     clearTimeout(timeout);
+  //   }, 1000);
+  // }, [props.playerSettings]);
 
   return useMemo(() => {
     const player0 = props.playerSettings?.playingPlayers[0];

@@ -11,11 +11,21 @@ const styles = StyleSheet.create({
   webcam: {
     width: '100%',
     height: '100%',
+    flex:1
   },
   loading: {
     width: '100%',
     height: '100%',
   },
+  video: {
+    width: '100%',
+    height: 300,
+  },
+  errorText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  controls: { position: 'absolute', bottom: 50, alignSelf: 'center' },
 });
 
 export default styles;

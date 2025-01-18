@@ -16,9 +16,11 @@ import {OutputType} from 'types/webcam';
 
 import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
+import { usePreviewContext } from 'context/PreviewVideo';
 
 const WebCam = (props: Props) => {
   const viewModel = WebCamViewModel(props);
+  const {isRewatch} = usePreviewContext();
 
   const WEBCAM_LOADER = useMemo(() => {
     return (
@@ -83,23 +85,27 @@ const WebCam = (props: Props) => {
                 WEBCAM_LOADER
               ) : viewModel.source.uri ? (
                 <Video
-                  key={'webcam-billiards'}
-                  ref={viewModel.videoRef}
-                  gestureDisabled
-                  source={viewModel.source}
-                  initialScale={viewModel.webcam?.scale}
-                  initialTranslateX={viewModel.webcam?.translateX}
-                  initialTranslateY={viewModel.webcam?.translateY}
-                  onFullscreenPlayerDidPresent={
-                    viewModel.onFullscreenPlayerDidPresent
-                  }
-                  onBuffer={viewModel.onBuffer}
-                  onSeek={viewModel.onSeek}
-                  onLoad={viewModel.onLoad}
-                  onVideoTracks={viewModel.onVideoTracks}
-                  onEnd={viewModel.onEnd}
-                  onError={viewModel.onWebcamError}
-                  loadingDisabled
+                      key={'webcam-billiards'}
+                      //ref={props.cameraRef}
+                      gestureDisabled
+                      source={viewModel.source}
+                      initialScale={viewModel.webcam?.scale}
+                      initialTranslateX={viewModel.webcam?.translateX}
+                      initialTranslateY={viewModel.webcam?.translateY}
+                      onFullscreenPlayerDidPresent={viewModel.onFullscreenPlayerDidPresent}
+                      onBuffer={viewModel.onBuffer}
+                      onSeek={viewModel.onSeek}
+                      onLoad={viewModel.onLoad}
+                      onVideoTracks={viewModel.onVideoTracks}
+                      onEnd={viewModel.onEnd}
+                      onError={viewModel.onWebcamError}
+                      loadingDisabled
+                      cameraRef={props.cameraRef}
+                      isPaused={props.isPaused}
+                      isStarted={props.isStarted}
+                      isPreview={props.isPreview}
+                      videoUri={props.videoUri}
+                      
                 />
               ) : viewModel.liveStream?.outputType === OutputType.livestream ? (
                 LIVESTREAM_MESSAGE
@@ -130,7 +136,7 @@ const WebCam = (props: Props) => {
           </View>
           <Divider vertical size={'small'} />
           <View flex={'1'} direction={'row'} justify={'center'}>
-            <Button onPress={viewModel.onReWatch}>
+            <Button onPress={viewModel.onReWatch} disable={!isRewatch} >
               <View
                 direction={'row'}
                 alignItems={'center'}

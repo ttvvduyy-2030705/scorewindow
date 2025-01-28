@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webcamWrapper: {
-    backgroundColor: colors.black,
+    //backgroundColor: colors.black,
     overflow: 'hidden',
   },
   icon: {
@@ -31,6 +31,11 @@ const styles = StyleSheet.create({
   innerControlWrapper: {
     marginTop: responsiveDimension(-48),
     backgroundColor: colors.white,
+  },
+  background: {
+    flex: 1, // Fill the screen
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
   },
 });
 

@@ -33,11 +33,12 @@ import {
 } from 'data/realm/models/player';
 import RemoteControl from 'utils/remote';
 
+// Disable frame processors globall
+
 import {logEvent, sendUserId} from 'services/firebase/analytics';
 import {initRemoteConfig} from 'services/firebase/remote-config';
 import analyticsKeys from 'services/firebase/analytics/keys';
 // import {BLEService} from 'utils/bluetooth';
-import { PreviewVideoProvider } from 'context/PreviewVideo';
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/youtube.readonly'],
@@ -49,13 +50,12 @@ const App = (): React.JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentLanguage, setCurrentLanguage] = useState('vi');
 
-  useEffect(() => {
 
-    console.log("start app");
+  useEffect(() => {
     try {
+      
       _init();
     }catch(error: any){
-
       console.error(JSON.stringify(error))
     }
 
@@ -102,8 +102,6 @@ const App = (): React.JSX.Element => {
   }, []);
 
   return ( 
-
-   <PreviewVideoProvider>
     <RealmProvider
       deleteRealmIfMigrationNeeded
       schema={[
@@ -136,7 +134,6 @@ const App = (): React.JSX.Element => {
         </PersistGate>
       </Provider>
     </RealmProvider>
-    </PreviewVideoProvider>
   );
 };
 

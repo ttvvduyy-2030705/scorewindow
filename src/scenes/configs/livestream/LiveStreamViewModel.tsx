@@ -51,15 +51,15 @@ const LiveStreamViewModel = (props: Props) => {
             return;
           }
 
-          setLiveStreamData({
-            rtmpUrl: _rtmpUrl,
-            streamKey: _streamKey,
-            outputType: _outputType as OutputType,
-            resolution: (_resolution || Resolution.FullHD) as Resolution,
-            fps: (_fps || Fps.F30) as Fps,
-            bitrate: (_bitrate || Bitrate.B9000) as Bitrate,
-            username: _username || undefined,
-          });
+          // setLiveStreamData({
+          //   rtmpUrl: _rtmpUrl,
+          //   streamKey: _streamKey,
+          //   outputType: _outputType as OutputType,
+          //   resolution: (_resolution || Resolution.FullHD) as Resolution,
+          //   fps: (_fps || Fps.F30) as Fps,
+          //   bitrate: (_bitrate || Bitrate.B9000) as Bitrate,
+          //   username: _username || undefined,
+          // });
         }
       },
     );
@@ -102,20 +102,20 @@ const LiveStreamViewModel = (props: Props) => {
     AsyncStorage.setItem(keys.WEBCAM_TYPE, WebcamType.camera);
     AsyncStorage.setItem(keys.CAMERA_RTMP_URL, liveStreamData.rtmpUrl);
     AsyncStorage.setItem(keys.CAMERA_STREAM_KEY, liveStreamData.streamKey);
-    AsyncStorage.setItem(
-      keys.OUTPUT_TYPE,
-      liveStreamData.outputType.toString(),
-    );
-    AsyncStorage.setItem(
-      keys.CAMERA_RESOLUTION,
-      liveStreamData.resolution.toString(),
-    );
-    AsyncStorage.setItem(keys.CAMERA_FPS, liveStreamData.fps.toString());
-    AsyncStorage.setItem(
-      keys.CAMERA_BITRATE,
-      liveStreamData.bitrate.toString(),
-    );
-    AsyncStorage.setItem(keys.CAMERA_USERNAME, liveStreamData.username || '');
+    // AsyncStorage.setItem(
+    //   keys.OUTPUT_TYPE,
+    //   liveStreamData.outputType.toString(),
+    // );
+    // AsyncStorage.setItem(
+    //   keys.CAMERA_RESOLUTION,
+    //   liveStreamData.resolution.toString(),
+    // );
+    // AsyncStorage.setItem(keys.CAMERA_FPS, liveStreamData.fps.toString());
+    // AsyncStorage.setItem(
+    //   keys.CAMERA_BITRATE,
+    //   liveStreamData.bitrate.toString(),
+    // );
+    // AsyncStorage.setItem(keys.CAMERA_USERNAME, liveStreamData.username || '');
 
     setAllowToSave(false);
 

@@ -45,7 +45,7 @@ export interface ConsoleViewModelProps {
   onPoolScore: (ball: PoolBallType) => void;
   onSelectWinner: () => void;
   onClearWinner: () => void;
-  renderMatchInfo: () => ReactNode;
+ // renderMatchInfo: () => ReactNode;
   renderLastPlayer: () => ReactNode;
   onStart: () => void; 
   onPause: () => void;
@@ -55,11 +55,11 @@ export interface ConsoleViewModelProps {
   updateWebcamFolderName: (name: string) => void;
   cameraRef : RefObject<Camera>;
   isPreview: boolean;
-  videoUri?: string;
-  pauseVideoRecording: () => void;
-  resumeVideoRecording: () => void;
-  stopVideoRecording: () => void;
-  setVideoUri: (name: string) => void;
+  // videoUri?: string;
+  // setVideoUri: (name: string) => void;
+  //pauseVideoRecording: () => void;
+  //resumeVideoRecording: () => void;
+  //stopVideoRecording: () => void;
 }
 
 const ConsoleViewModel = (props: ConsoleViewModelProps) => {
@@ -299,7 +299,7 @@ const ConsoleViewModel = (props: ConsoleViewModelProps) => {
     props.isPreview,
     props.isPaused,
     props.isStarted,
-    props.videoUri
+    //props.videoUri
   ]);
 };
 

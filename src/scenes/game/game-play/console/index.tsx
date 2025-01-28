@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, RefObject } from 'react';
 import View from 'components/View';
 import Text from 'components/Text';
 import Button from 'components/Button';
@@ -142,17 +142,17 @@ const GameConsole = (props: ConsoleViewModelProps) => {
             ) : props.totalPlayers < 5 || props.currentMode?.mode === 'fast' ? (
               <Webcam
                 webcamFolderName={props.webcamFolderName}
-                renderMatchInfo={props.renderMatchInfo}
+               // enderMatchInfo={props.renderMatchInfo}
                 updateWebcamFolderName={props.updateWebcamFolderName}
                 cameraRef={props.cameraRef}
                 isPaused={props.isPaused}
                 isStarted={props.isStarted}
-                isPreview={props.isPreview}
-                pauseVideoRecording={props.pauseVideoRecording}
-                videoUri={props.videoUri}
-                resumeVideoRecording={props.resumeVideoRecording}
-                stopVideoRecording={props.stopVideoRecording}
-                setVideoUri={props.setVideoUri}
+                //isPreview={props.isPreview}
+                //pauseVideoRecording={props.pauseVideoRecording}
+                // videoUri={props.videoUri}
+                // setVideoUri={props.setVideoUri}
+                //resumeVideoRecording={props.resumeVideoRecording}
+                //stopVideoRecording={props.stopVideoRecording}
               />
             ) : (
               <View />
@@ -261,7 +261,7 @@ const GameConsole = (props: ConsoleViewModelProps) => {
                   currentMode={props.currentMode}
                   gameSettings={props.gameSettings}
                   onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
-                  renderMatchInfo={props.renderMatchInfo}
+                  //renderMatchInfo={props.renderMatchInfo}
                   updateWebcamFolderName={props.updateWebcamFolderName}
                   onIncreaseTotalTurns = {props.onIncreaseTotalTurns}
                   onDecreaseTotalTurns = {props.onDecreaseTotalTurns}

@@ -43,22 +43,22 @@ import {
   WebcamType,
 } from 'types/webcam';
 import {CAMERA_PLAYBACK_DURATION} from './constants';
-import { Camera } from 'react-native-vision-camera';
 import { PlayBackWebcamViewModelProps } from 'scenes/playback/PlayBackViewModel';
+import { Camera } from 'react-native-vision-camera';
 
 export interface Props {
   innerControls?: boolean;
   webcamFolderName?: string;
-  renderMatchInfo: () => ReactNode;
+  //renderMatchInfo: () => ReactNode;
   updateWebcamFolderName: (name: string) => void;
   cameraRef? : RefObject<Camera>;
   isStarted: boolean;
   isPaused: boolean;
-  isPreview: boolean;
-  pauseVideoRecording?: () => void;
+  //isPreview: boolean;
+  //pauseVideoRecording?: () => void;
   videoUri? : string;
-  resumeVideoRecording?: () => void,
-  stopVideoRecording?: () => void,
+  //resumeVideoRecording?: () => void,
+  //stopVideoRecording?: () => void,
   setVideoUri?: (name: string) => void;
 }
 
@@ -103,7 +103,7 @@ const WebCamViewModel = (props: Props) => {
       clearInterval(cameraInterval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  },[]);
 
   useEffect(() => {
     const _countdownTime = (webcam?.syncTime || CAMERA_PLAYBACK_DURATION) * 2;
@@ -337,11 +337,9 @@ const WebCamViewModel = (props: Props) => {
   const onDelay = useCallback(() => {}, []);
 
   const onReWatch = useCallback(async () => {
-    // if(!props.isPaused){
-    //   props.stopVideoRecording();
-    // }
+   
 
-    navigate(screens.playback, {webcamFolderName: props.webcamFolderName, videoUrl : props.videoUri } as PlayBackWebcamViewModelProps);
+    navigate(screens.playback, {webcamFolderName: props.webcamFolderName} as PlayBackWebcamViewModelProps);
   }, [props]);
 
   const onFullscreenPlayerDidPresent = useCallback(() => {}, []);
@@ -434,7 +432,6 @@ const WebCamViewModel = (props: Props) => {
     onEnd,
     onWebcamError,
     onToggleInnerControls,
-    props.cameraRef,
   ]);
 };
 

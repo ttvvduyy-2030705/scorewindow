@@ -5,7 +5,6 @@ import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 import {mergeVideoFiles, getFiles} from 'services/ffmpeg/local';
 import i18n from 'i18n';
-import { usePreviewContext } from 'context/PreviewVideo';
 
 export interface PlayBackWebcamViewModelProps {
   webcamFolderName: string;
@@ -19,13 +18,8 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
   const [webcamUrl, setWebcamUrl] = useState<string>();
   const [selectedDurationIndex, setSelectedDurationIndex] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isPreview, setIsPreview , videoUri, setIsRewatch, setVideoUri} = usePreviewContext();
 
   useEffect(() => {
-
-    console.log("Play Back" + props.webcamFolderName);
-    console.log("video Uri " + videoUri);
-
     const folder = `${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`;
 
     RNFS.exists(folder).then(
@@ -50,7 +44,7 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPreview, videoUri, webcamUrl]);
+  }, [ webcamUrl]);
 
   const onSelectMinuteForWebcam = useCallback(
     async (index: number, duration: number) => {
@@ -70,19 +64,10 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
         console.log("file" + JSON.stringify(files));
         if(files){
           setWebcamUrl(files[0].path);
-
         }
  
         setIsLoading(false);
       } else {
-        // const fullVideoPath = await mergeVideos(
-        //   props.webcamFolderName,
-        //   duration === -1 ? totalFiles : duration * 20,
-        //   {
-        //     cache: props.cache,
-        //   },
-        // );
-
         const fullVideoPath = await mergeVideoFiles(props.webcamFolderName)
   
         if (!fullVideoPath) {
@@ -91,7 +76,6 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
         }
   
         setWebcamUrl(fullVideoPath);
-        setVideoUri(fullVideoPath);
         setIsLoading(false);
       }
 
@@ -126,7 +110,6 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
       onSelectMinuteForWebcam,
       onWebcamError,
       onShareVideo,
-      setIsPreview
     };
   }, [
     videoRef,
@@ -136,8 +119,6 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
     onSelectMinuteForWebcam,
     onWebcamError,
     onShareVideo,
-    props.videoUri,
-    setIsPreview
   ]);
 };
 

@@ -200,7 +200,8 @@ const VideoViewModel = (props: Props) => {
       onVideoTracks,
       onEnd,
       onError,
-      webcamType
+      webcamType,
+      
     };
   }, [
     pinch,
@@ -215,7 +216,7 @@ const VideoViewModel = (props: Props) => {
     onVideoTracks,
     onEnd,
     onError,
-    webcamType
+    webcamType,
   ]);
 };
 

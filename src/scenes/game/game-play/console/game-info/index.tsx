@@ -19,7 +19,7 @@ interface Props {
   gameSettings: GameSettings;
   onPressGiveMoreTime: () => void;
   updateWebcamFolderName: (name: string) => void;
-  renderMatchInfo: () => React.ReactNode;
+  //renderMatchInfo: () => React.ReactNode;
   onIncreaseTotalTurns: () => void;
   onDecreaseTotalTurns: () => void;
   onSwapPlayers : () => void;
@@ -78,20 +78,12 @@ const GameInfo = (props: Props) => {
         props.currentMode?.mode === 'pro' ? (
         <Webcam
             webcamFolderName={props.webcamFolderName}
-            renderMatchInfo={props.renderMatchInfo}
+            // renderMatchInfo={props.renderMatchInfo}
             updateWebcamFolderName={props.updateWebcamFolderName}
             isStarted={false}
             isPaused={false}
-            isPreview={false} pauseVideoRecording={function (): void {
-              throw new Error('Function not implemented.');
-            } } resumeVideoRecording={function (): void {
-              throw new Error('Function not implemented.');
-            } } stopVideoRecording={function (): void {
-              throw new Error('Function not implemented.');
-            } } setVideoUri={function (name: string): void {
-              throw new Error('Function not implemented.');
-            } }
-                    />
+            //isPreview={false}
+          />
       ) : (
         <View />
       )}

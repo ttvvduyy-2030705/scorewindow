@@ -5,7 +5,7 @@ import Text from 'components/Text';
 import i18n from 'i18n';
 import colors from 'configuration/colors';
 import Button from 'components/Button';
-import { isCaromGame } from 'utils/game';
+import { isCaromGame, isPoolGame } from 'utils/game';
 import styles from './styles';
 import Webcam from '../webcam';
 
@@ -23,6 +23,7 @@ interface Props {
   onIncreaseTotalTurns: () => void;
   onDecreaseTotalTurns: () => void;
   onSwapPlayers : () => void;
+  isPaused: boolean
 }
 
 const GameInfo = (props: Props) => {
@@ -78,11 +79,9 @@ const GameInfo = (props: Props) => {
         props.currentMode?.mode === 'pro' ? (
         <Webcam
             webcamFolderName={props.webcamFolderName}
-            // renderMatchInfo={props.renderMatchInfo}
             updateWebcamFolderName={props.updateWebcamFolderName}
-            isStarted={false}
-            isPaused={false}
-            //isPreview={false}
+            isStarted={props.isStarted}
+            isPaused={props.isPaused}
           />
       ) : (
         <View />
@@ -90,8 +89,8 @@ const GameInfo = (props: Props) => {
 
       {isCaromGame(props.gameSettings.category) && (
         <View flex={isFullPlayer ? '0' : '1'} direction={'row'}>
-          {renderPoint(i18n.t('totalTurns'), props.totalTurns)}
-          {renderPoint(i18n.t('goal'), props.goal)}
+        {renderPoint(i18n.t('totalTurns'), props.totalTurns)}
+        {renderPoint(i18n.t('goal'), props.goal)}
         </View>
       )}
 

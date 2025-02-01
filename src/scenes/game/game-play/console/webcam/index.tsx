@@ -16,52 +16,14 @@ import {OutputType} from 'types/webcam';
 
 import WebCamViewModel, {Props} from './WebCamViewModel';
 import styles from './styles';
-import { ActivityIndicator, ImageBackground } from 'react-native';
+import {ImageBackground } from 'react-native';
 
 const WebCam = (props: Props) => {
   const viewModel = WebCamViewModel(props);
 
-  const WEBCAM_LOADER = useMemo(() => {
-    return (
-      <ImageBackground
-      source={images.logoPhuQuoc} // Replace with your image URL or local asset
-      style={styles.background}
-      resizeMode="contain" // Options: "cover", "contain", "stretch", etc.
-    >
-
-        <View
-        flex={'1'}
-        style={styles.fullWidth}
-        alignItems={'center'}
-        justify={'center'}>
-        <Loading isLoading size={'large'} showPlainLoading />
-      </View>
-
-      </ImageBackground>
-  
-    );
-  }, []);
-
-  const WEBCAM_LOADING_INTRO = useMemo(() => {
-    return (
-      <ImageBackground
-      source={images.logoPhuQuoc} // Replace with your image URL or local asset
-      style={styles.background}
-      resizeMode="contain" // Options: "cover", "contain", "stretch", etc.
-      >
-      <View
-        flex={'1'}
-        style={styles.fullWidth}
-        alignItems={'center'}
-        justify={'center'}>
-        <Text color={colors.white}>
-          {i18n.t('msgWebcamIntro', {second: viewModel.connectCountdownTime})}
-        </Text>
-      </View>
-      </ImageBackground>
-
-    );
-  }, [viewModel.connectCountdownTime]);
+   const canRewatch = useMemo( () => {
+      return  props.isStarted && props.isPaused
+   }, [props.isStarted, props.isPaused])
 
   const CONTAINER_STYLE = useMemo(
     () => [styles.container, {aspectRatio: props.innerControls ? 2 : 1.565}],
@@ -81,10 +43,9 @@ const WebCam = (props: Props) => {
           style={styles.webcamButton}
           onPress={viewModel.onToggleInnerControls}>
           <View flex={'1'} style={styles.webcamWrapper} direction={'row'}>
-            <View flex={'1'}>
+           {!viewModel.refreshing ? ( <View flex={'1'}>
             <Video
                 key={'webcam-billiards'}
-                //ref={props.cameraRef}
                 gestureDisabled
                 source={viewModel.source}
                 initialScale={viewModel.webcam?.scale}
@@ -101,19 +62,24 @@ const WebCam = (props: Props) => {
                 cameraRef={props.cameraRef}
                 isPaused={props.isPaused}
                 isStarted={props.isStarted}
-                //isPreview={props.isPreview}
                 videoUri={props.videoUri}
                 webcamType={viewModel.webcamType!}
               />
               {/* {props.renderMatchInfo()} */}
-            </View>
-
-            {/* <ImageBackground
-      source={images.logoPhuQuoc} // Replace with your image URL or local asset
-      style={styles.background}
-      resizeMode="stretch">
-            </ImageBackground> */}
-
+            </View>) : (
+              <ImageBackground
+                source={images.logoPhuQuoc} // Replace with your image URL or local asset
+                style={styles.background}
+                  resizeMode="stretch">
+                 <View
+                  flex={'1'}
+                  style={styles.fullWidth}
+                  alignItems={'center'}
+                  justify={'center'}>
+                  <Loading isLoading size={'large'} showPlainLoading />
+                </View>
+            </ImageBackground>
+          )}
           </View>
         </Button>
       </View>
@@ -135,7 +101,7 @@ const WebCam = (props: Props) => {
           </View>
           <Divider vertical size={'small'} />
           <View flex={'1'} direction={'row'} justify={'center'}>
-            <Button onPress={viewModel.onReWatch} >
+            <Button onPress={viewModel.onReWatch} disable={!canRewatch} style={{width:"100%", alignItems:"center"}}>
               <View
                 direction={'row'}
                 alignItems={'center'}

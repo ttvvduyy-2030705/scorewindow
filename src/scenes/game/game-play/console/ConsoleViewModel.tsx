@@ -54,7 +54,7 @@ export interface ConsoleViewModelProps {
   onResetTurn: () => void;
   updateWebcamFolderName: (name: string) => void;
   cameraRef : RefObject<Camera>;
-  isPreview: boolean;
+  //isPreview: boolean;
   // videoUri?: string;
   // setVideoUri: (name: string) => void;
   //pauseVideoRecording: () => void;
@@ -236,7 +236,6 @@ const ConsoleViewModel = (props: ConsoleViewModelProps) => {
   }, [props]);
 
   const onPause = useCallback(() => {
-  
     props.onPause();
   }, [props]);
 
@@ -296,7 +295,6 @@ const ConsoleViewModel = (props: ConsoleViewModelProps) => {
     onStart,
     onPause,
     onStop,
-    props.isPreview,
     props.isPaused,
     props.isStarted,
     //props.videoUri

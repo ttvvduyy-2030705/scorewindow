@@ -125,7 +125,6 @@ const GameConsole = (props: ConsoleViewModelProps) => {
               onStop={viewModel.onStop}
             />
 
-
             {isCaromGame(props.gameSettings.category) &&
               props.gameSettings.mode?.mode === 'pro' ? (
               <CaromInfo
@@ -249,6 +248,7 @@ const GameConsole = (props: ConsoleViewModelProps) => {
                 onSwapPlayers={viewModel.onSwapPlayers}
                 onRestart={viewModel.onRestart}
                 onResetTurn={props.onResetTurn}
+                
               />
             ) : (
               <View flex={props.totalPlayers === 5 ? '0' : '1'}>
@@ -266,6 +266,7 @@ const GameConsole = (props: ConsoleViewModelProps) => {
                   onIncreaseTotalTurns = {props.onIncreaseTotalTurns}
                   onDecreaseTotalTurns = {props.onDecreaseTotalTurns}
                   onSwapPlayers = {props.onSwapPlayers}
+                  isPaused ={props.isPaused}
                 />
               </View>
             )}

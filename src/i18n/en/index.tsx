@@ -78,6 +78,7 @@ const en = {
   txtReconnect: 'Reconnect',
   txtMinuteOrder: '{{minute}} minutes',
   txtFullGame: 'Full game',
+  txtTocDoXem: 'PlayBack speed',
 
   month: 'month',
   year: 'year',

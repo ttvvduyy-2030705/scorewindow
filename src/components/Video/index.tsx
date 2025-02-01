@@ -12,7 +12,7 @@ import { Fps, WebcamType } from 'types/webcam';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 import { Dimensions, ImageBackground, Text, ToastAndroid } from 'react-native';
 import images from 'assets';
-import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import { Camera, useCameraDevice, useCameraFormat } from 'react-native-vision-camera';
 
 const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
   const showToast = () => {
@@ -33,6 +33,12 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
     }
   };
   
+  const format = useCameraFormat(device, [
+    { videoResolution: { width: 1280, height: 720 } }
+  ])
+
+  
+
   const WEBCAM_LOADER = useMemo(() => {
     if (props.loadingDisabled) {
       return undefined;
@@ -59,8 +65,9 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
             device={device!}
             isActive={true}
             video={true}
-            // format={format}
+            format={format}
             zoom={zoom}
+          
             /> ): (
               <ImageBackground
                 source={images.logoPhuQuoc} // Replace with your image URL or local asset

@@ -339,7 +339,7 @@ const WebCamViewModel = (props: Props) => {
   const onReWatch = useCallback(async () => {
    
 
-    navigate(screens.playback, {webcamFolderName: props.webcamFolderName} as PlayBackWebcamViewModelProps);
+    navigate(screens.playback, {webcamFolderName: props.webcamFolderName, merged: false} as PlayBackWebcamViewModelProps);
   }, [props]);
 
   const onFullscreenPlayerDidPresent = useCallback(() => {}, []);

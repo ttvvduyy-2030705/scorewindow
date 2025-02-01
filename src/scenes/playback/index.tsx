@@ -21,11 +21,14 @@ import {
 import PlayBackWebcamViewModel, {PlayBackWebcamViewModelProps} from './PlayBackViewModel';
 import {DURATION_LIST} from './constants';
 import styles from './styles';
-import { usePreviewContext } from 'context/PreviewVideo';
+import Slider from '@react-native-community/slider';
 
 const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
   const viewModel = PlayBackWebcamViewModel(props);
-  
+
+  const [playbackRate, setPlaybackRate] = useState(1.0); // Default speed is 1.0 (normal)
+
+
   const WEBCAM_LOADER = useMemo(() => {
     return (
       <View
@@ -37,6 +40,7 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
       </View>
     );
   }, []);
+
 
   const FILE_LIST = useMemo(() => {
     return DURATION_LIST.map((item, index) => {
@@ -71,11 +75,20 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
               </Text>
             </View>
           </View>
-
           <View flex={'1'}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {FILE_LIST}
             </ScrollView>
+            <Text style={styles.label}>{i18n.t('txtTocDoXem')}: {playbackRate.toFixed(2)}x</Text>
+
+            <Slider
+            style={styles.slider}
+            minimumValue={0.25} // Slowest: 0.25x
+            maximumValue={2.0}  // Fastest: 2x
+            step={0.25}
+            value={playbackRate}
+            onValueChange={(value) => setPlaybackRate(value)}
+          />
           </View>
 
           <Button style={styles.buttonBack} onPress={goBack}>
@@ -91,17 +104,22 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
             <View style={styles.webcam}>{WEBCAM_LOADER}</View>
           ) : viewModel.webcamUrl ? (
             <>
-              <Video
-                id={'webcam-billiards-playback'}
-                ref={viewModel.videoRef}
-                style={styles.webcam}
-                controls
-                source={{uri: viewModel.webcamUrl}}
-                selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
-                onError={viewModel.onWebcamError}
-                renderLoader={WEBCAM_LOADER}
-                
-              />
+
+      <Video
+        id={'webcam-billiards-playback'}
+        ref={viewModel.videoRef}
+        style={styles.webcam}
+        controls
+        source={{uri: viewModel.webcamUrl}}
+        selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
+        onError={viewModel.onWebcamError}
+        renderLoader={WEBCAM_LOADER}
+        rate={playbackRate} // Slow motion effect
+        paused={!viewModel.isPlaying}
+        onLoad={viewModel.handleLoad}
+        onProgress={viewModel.handleProgress}
+        />  
+             
               <Button
                 style={styles.buttonShare}
                 onPress={viewModel.onShareVideo}>

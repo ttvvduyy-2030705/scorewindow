@@ -81,7 +81,19 @@ const PoolBoard = (props: Props) => {
             </View>
           </LinearGradient>
         ) : (
-          <View />
+          <LinearGradient colors={[colors.deepGray, colors.black]}>
+            <View
+              paddingHorizontal={'20'}
+              justify={'center'}
+              alignItems={'center'}
+              style={styles.matchRace}>
+              <Text fontSize={12} color={colors.white} fontWeight={'bold'}>
+                {i18n.t('goal', {
+                  goal: props.gameSettings?.players.goal.goal,
+                })}
+              </Text>
+            </View>
+          </LinearGradient>
         )}
         <View flex={'1'} direction={'row'} alignItems={'center'}>
           {renderArrowTurn(0)}

@@ -257,12 +257,6 @@ const GamePlay = () => {
           onResetTurn={viewModel.onResetTurn}
           updateWebcamFolderName={viewModel.updateWebcamFolderName}
           cameraRef={viewModel.cameraRef}
-           isPreview={false}          ///isPreview={viewModel.isPreview}
-          // videoUri={viewModel.videoUri}
-          // setVideoUri={viewModel.setVideoUri}
-          // pauseVideoRecording={viewModel.pauseVideoRecording}
-          // resumeVideoRecording={viewModel.resumeVideoRecording}
-          // stopVideoRecording={viewModel.stopVideoRecording}
           />
         {renderPlayers(
           1,

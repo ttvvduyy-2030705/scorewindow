@@ -150,7 +150,7 @@ const GamePlayViewModel = () => {
 
     if (gameSettings?.mode?.mode === 'fast') {
       setCountdownTime(gameSettings?.mode?.countdownTime || 0);
-      setIsPaused(false);
+      //setIsPaused(false);
     }
 
     if (
@@ -789,33 +789,11 @@ const GamePlayViewModel = () => {
       cameraRef.current?.startRecording({
        // flash: 'on',
         path: `${RNFS.DownloadDirectoryPath}/${webcamFolderName}`,
-        fileType: 'mp4',
+        fileType: 'mov',
         videoCodec:'h265',
         onRecordingFinished: async (video) => {
           console.log('Recording finished:', video);
-          //setIsRewatch(false);
-        //   const path = video.path;
-        //   const fileName = getFileName(video.path);
-
-        //  // Define the destination folder and file name
-        //     const destinationPath = `${RNFS.DownloadDirectoryPath}/${webcamFolderName}/${fileName}`;
-
-  //     try {
-        //       // Ensure the destination folder exists
-  //       const folderPath = `${RNFS.DownloadDirectoryPath}/${webcamFolderName}`;
-  //              if (!(await RNFS.exists(folderPath))) {
-  //               await RNFS.mkdir(folderPath);
-  //          }
-        //       // Copy the video file
-        //       await RNFS.copyFile(path, destinationPath);
-        //       setVideoUri(destinationPath);
-        //       console.log('Video saved to:', destinationPath);
-  //     } catch (error) {
-        //       console.error('Error saving video file:', error);
-  //     }
-
-            //setIsRewatch(true);
-
+        
         },
         onRecordingError: (error) => {
           console.error('Recording error:', error);

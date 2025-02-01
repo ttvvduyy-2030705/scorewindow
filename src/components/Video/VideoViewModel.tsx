@@ -35,7 +35,7 @@ export interface Props {
   onPosition?: (scale: number, translateX: number, translateY: number) => void;
   cameraRef? : RefObject<Camera>;
   isStarted: boolean;
-  isPaused? :boolean;
+  isPaused :boolean;
   isPreview?: boolean;
   videoUri?:  string;
   webcamType : string;

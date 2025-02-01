@@ -8,8 +8,9 @@ import i18n from 'i18n';
 
 export interface PlayBackWebcamViewModelProps {
   webcamFolderName: string;
-  cache?: boolean;
+  merged: boolean;
   videoUri?: string;
+
 }
 
 const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
@@ -18,18 +19,53 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
   const [webcamUrl, setWebcamUrl] = useState<string>();
   const [selectedDurationIndex, setSelectedDurationIndex] = useState<number>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [videoDurations, setVideoDurations] = useState<any>({}); // Store duration per file
+  const [videoFiles, setVideoFiles] = useState<string[]>([]);
+  const [startTime, setStartTime] = useState(0); // Start time in seconds
+  const [endTime, setEndTime] = useState(0); // End time in seconds
+  const handleVideoLoad = (videoUri: any, duration: any) => {
+    setVideoDurations((prev: any) => ({ ...prev, [videoUri]: duration }));
+  };
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+
+  const handleLoad = () => {
+    videoRef.current?.seek(startTime);
+  };
+
+  // Stop the video at the specified end time
+  const handleProgress = (data: any) => {
+    if (data.currentTime >= endTime && isPlaying) {
+      videoRef.current?.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const startPlayback = () => {
+    if (videoRef.current) {
+      videoRef.current.seek(startTime);
+      setIsPlaying(true);
+    }
+  };
 
   useEffect(() => {
     const folder = `${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`;
 
     RNFS.exists(folder).then(
-      isExist => {
+     isExist => {
         if (!isExist) {
 
           console.log("File is not Exit " + folder);
 
           return;
         }
+
+        // const files = await getFiles(props.webcamFolderName);
+
+        // if(files && files?.length > 0){
+        //   setWebcamUrl(files[0].path)
+        // }
 
         RNFS.readDir(
           `${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`,
@@ -50,8 +86,7 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
     async (index: number, duration: number) => {
       setIsLoading(true);
       setSelectedDurationIndex(index);
-      //setIsRewatch(false)
-      //setWebcamUrl(props.videoUri);
+      console.log("index " + index);
 
       console.log("view video");
 
@@ -68,17 +103,33 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
  
         setIsLoading(false);
       } else {
-        const fullVideoPath = await mergeVideoFiles(props.webcamFolderName)
+        if(props.merged){
+          const fullVideoPath = await mergeVideoFiles(props.webcamFolderName)
   
-        if (!fullVideoPath) {
-          Alert.alert(i18n.t('txtError'), i18n.t('msgWebcamVideoNotExist'));
-          return;
+          if (!fullVideoPath) {
+            Alert.alert(i18n.t('txtError'), i18n.t('msgWebcamVideoNotExist'));
+            return;
+          }
+          setWebcamUrl(fullVideoPath);
+        }else{
+          const files = await getFiles(props.webcamFolderName);
+
+          console.log("file" + JSON.stringify(files));
+          if(files){
+            setWebcamUrl(files[0].path);
+          }
         }
+        
   
-        setWebcamUrl(fullVideoPath);
         setIsLoading(false);
       }
 
+      setStartTime(duration*60);
+
+      if (videoRef.current) {
+        videoRef.current.seek(duration);
+        setIsPlaying(true);
+      }
     },
     [props, totalFiles, webcamUrl],
   );
@@ -110,6 +161,10 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
       onSelectMinuteForWebcam,
       onWebcamError,
       onShareVideo,
+      handleVideoLoad,
+      handleProgress,
+      isPlaying,
+      handleLoad
     };
   }, [
     videoRef,
@@ -119,6 +174,10 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
     onSelectMinuteForWebcam,
     onWebcamError,
     onShareVideo,
+    handleVideoLoad,
+    handleProgress,
+    isPlaying,
+    handleLoad
   ]);
 };
 

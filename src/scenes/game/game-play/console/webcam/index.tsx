@@ -68,7 +68,7 @@ const WebCam = (props: Props) => {
               {/* {props.renderMatchInfo()} */}
             </View>) : (
               <ImageBackground
-                source={images.logoPhuQuoc} // Replace with your image URL or local asset
+                source={images.logoclb} // Replace with your image URL or local asset
                 style={styles.background}
                   resizeMode="stretch">
                  <View

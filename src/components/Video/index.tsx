@@ -10,7 +10,7 @@ import colors from 'configuration/colors';
 import { WEBCAM_SELECTED_VIDEO_TRACK } from 'constants/webcam';
 import { Fps, WebcamType } from 'types/webcam';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
-import { Dimensions, ImageBackground, Text, ToastAndroid } from 'react-native';
+import { Alert, ImageBackground, ToastAndroid } from 'react-native';
 import images from 'assets';
 import { Camera, useCameraDevice, useCameraFormat } from 'react-native-vision-camera';
 
@@ -21,7 +21,11 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
   const viewModel = VideoViewModel(props);
   const [isCameraReady, setIsCameraReady] = useState(false);
 
+ const devices = Camera.getAvailableCameraDevices(); 
+
   const device = useCameraDevice('front');
+
+  console.log("device" + JSON.stringify(device));
 
   const [zoom, setZoom] = useState(0); // Initial zoom level
   const maxZoom = device?.maxZoom ?? 1;
@@ -66,10 +70,13 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
             format={format}
             zoom={zoom}
             videoStabilizationMode="standard"
+            enableZoomGesture={true}
+            //enableFpsGraph={true}
+            enableDepthData
             onInitialized={() => setIsCameraReady(true)} // ✅ Set the camera as ready
             /> ): (
               <ImageBackground
-                source={images.logoPhuQuoc} // Replace with your image URL or local asset
+                source={images.logoclb} // Replace with your image URL or local asset
                 style={styles.background}
                 resizeMode="stretch">
                 </ImageBackground> 

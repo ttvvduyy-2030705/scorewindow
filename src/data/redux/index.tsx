@@ -1,42 +1,38 @@
-import {createStore, applyMiddleware, compose, Action} from 'redux';
-import {persistStore, persistReducer} from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
-// import Reactotron, { reactotronConfig } from 'configuration/reactotron';
 
+// Persist configuration
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['game'],
+  blacklist: ['game'], // State slices to exclude from persistence
 };
 
-//Redux saga
-// const reactotronEnable = reactotronConfig.enable;
+// Persisted reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer as any);
 
-// const sagaMiddleWare = reactotronEnable
-//   ? createSagaMiddleware({ sagaMonitor: Reactotron.createSagaMonitor() })
-//   : createSagaMiddleware();
+// Create saga middleware
+const sagaMiddleware = createSagaMiddleware();
 
-const sagaMiddleWare = createSagaMiddleware();
+// Configure the store
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // Disable checks for redux-persist's non-serializable values
+    }).concat(sagaMiddleware), // Add saga middleware
+  devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in development
+});
 
-const middlewares = [sagaMiddleWare];
+// Run the saga
+sagaMiddleware.run(rootSaga);
 
-// const enhancers = reactotronEnable
-//   ? [applyMiddleware(...middlewares), Reactotron.createEnhancer()]
-//   : [applyMiddleware(...middlewares)];
-
-const enhancers = [applyMiddleware(...middlewares)];
-
-//Redux
-const store = createStore(
-  persistReducer<unknown, Action<string>>(persistConfig, rootReducer as any),
-  compose(...enhancers) as any,
-);
+// Create persistor
 const persistor = persistStore(store);
 
-sagaMiddleWare.run(rootSaga);
-
-export {persistor};
+export { persistor };
 export default store;

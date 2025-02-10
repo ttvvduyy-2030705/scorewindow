@@ -151,21 +151,21 @@ const GamePlay = () => {
     viewModel.countdownTime,
   ]);
 
-  const renderCameraMatchInfo = useCallback(() => {
-    return (
-      <LivestreamImages
-        countdownTime={viewModel.countdownTime}
-        gameSettings={viewModel.gameSettings}
-        playerSettings={viewModel.playerSettings}
-        currentPlayerIndex={viewModel.currentPlayerIndex}
-      />
-    );
-  }, [
-    viewModel.countdownTime,
-    viewModel.gameSettings,
-    viewModel.playerSettings,
-    viewModel.currentPlayerIndex,
-  ]);
+  // const renderCameraMatchInfo = useCallback(() => {
+  //   return (
+  //     <LivestreamImages
+  //       countdownTime={viewModel.countdownTime}
+  //       gameSettings={viewModel.gameSettings}
+  //       playerSettings={viewModel.playerSettings}
+  //       currentPlayerIndex={viewModel.currentPlayerIndex}
+  //     />
+  //   );
+  // }, [
+  //   viewModel.countdownTime,
+  //   viewModel.gameSettings,
+  //   viewModel.playerSettings,
+  //   viewModel.currentPlayerIndex,
+  // ]);
 
   const WARM_UP_VIEW = useMemo(() => {
     if (!viewModel.warmUpCountdownTime) {
@@ -247,7 +247,7 @@ const GamePlay = () => {
           onToggleProMode={viewModel.onToggleProMode}
           onPoolScore={viewModel.onPoolScore}
           renderLastPlayer={renderLastPlayer}
-          renderMatchInfo={renderCameraMatchInfo}
+          //renderMatchInfo={renderCameraMatchInfo}
           onSelectWinner={viewModel.onSelectWinner}
           onClearWinner={viewModel.onClearWinner}
           onStart={viewModel.onStart}
@@ -256,7 +256,8 @@ const GamePlay = () => {
           onReset={viewModel.onReset}
           onResetTurn={viewModel.onResetTurn}
           updateWebcamFolderName={viewModel.updateWebcamFolderName}
-        />
+          cameraRef={viewModel.cameraRef}
+          />
         {renderPlayers(
           1,
           viewModel.playerSettings.playingPlayers[3] ? 3 : undefined,

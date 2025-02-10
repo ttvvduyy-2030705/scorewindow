@@ -15,16 +15,13 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from '@react-navigation/native';
 import DeviceInfo from 'react-native-device-info';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
 import {StackScreens} from 'scenes';
 import {LanguageContext} from 'context/language';
 import {loadLanguage, setLanguage} from 'i18n';
 import {navigationRef} from 'utils/navigation';
-
 import Container from 'components/Container';
 import View from 'components/View';
 import Loading from 'components/Loading';
-
 import storage, {persistor} from 'data/redux';
 import {GameSchema, GameSettingsModeSchema} from 'data/realm/models/game';
 import {PoolBallSchema} from 'data/realm/models/ball';
@@ -36,10 +33,12 @@ import {
 } from 'data/realm/models/player';
 import RemoteControl from 'utils/remote';
 
+// Disable frame processors globall
+
 import {logEvent, sendUserId} from 'services/firebase/analytics';
 import {initRemoteConfig} from 'services/firebase/remote-config';
 import analyticsKeys from 'services/firebase/analytics/keys';
-// import {BLEService} from 'utils/bluetooth';
+import { Camera } from 'react-native-vision-camera';
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/youtube.readonly'],
@@ -52,7 +51,22 @@ const App = (): React.JSX.Element => {
   const [currentLanguage, setCurrentLanguage] = useState('vi');
 
   useEffect(() => {
-    _init();
+    async function requestPermissions() {
+      const cameraStatus = await Camera.requestCameraPermission();
+      const micStatus = await Camera.requestMicrophonePermission();
+    }
+    requestPermissions();
+  }, []);
+
+
+  useEffect(() => {
+    try {
+      
+      _init();
+    }catch(error: any){
+      console.error(JSON.stringify(error))
+    }
+
 
     // BLEService.requestBluetoothPermissions();
     // const [
@@ -80,8 +94,8 @@ const App = (): React.JSX.Element => {
   const _init = useCallback(async () => {
     const deviceId = await DeviceInfo.getInstanceId();
 
-    sendUserId(deviceId);
-    logEvent(analyticsKeys.deviceId, {device_id: deviceId});
+    //sendUserId(deviceId);
+    //logEvent(analyticsKeys.deviceId, {device_id: deviceId});
     initRemoteConfig();
 
     const _currentLanguage = await loadLanguage();
@@ -95,7 +109,7 @@ const App = (): React.JSX.Element => {
     setLanguage(language);
   }, []);
 
-  return (
+  return ( 
     <RealmProvider
       deleteRealmIfMigrationNeeded
       schema={[

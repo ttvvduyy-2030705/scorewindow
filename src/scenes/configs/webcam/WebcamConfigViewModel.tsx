@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import {TextInput, ViewStyle} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {OnLoadData, OnVideoErrorData, VideoRef} from 'react-native-video';
 import {keys} from 'configuration/keys';
 import {WEBCAM_HOST, WEBCAM_PATH, WEBCAM_PORT} from 'constants/webcam';
@@ -37,6 +37,7 @@ const WebcamConfigViewModel = () => {
     syncTime: 60,
     outputType: OutputType.local,
   });
+
   const [liveStreamData, setLiveStreamData] = useState<LiveStreamCamera>({
     rtmpUrl: '',
     streamKey: '',
@@ -193,13 +194,13 @@ const WebcamConfigViewModel = () => {
     }
 
     setWebcamUrl('');
-    setWebcam({
-      webcamIP: '',
-      username: '',
-      password: '',
-      syncTime: 60,
-      outputType: OutputType.local,
-    });
+    // setWebcam({
+    //   webcamIP: '',
+    //   username: '',
+    //   password: '',
+    //   syncTime: 60,
+    //   outputType: OutputType.local,
+    // });
     setAllowToSave(false);
   }, []);
 
@@ -264,6 +265,7 @@ const WebcamConfigViewModel = () => {
     onLoad,
     onWebcamError,
     onSaveWebcamPosition,
+    WebcamType
   ]);
 };
 

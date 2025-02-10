@@ -1,5 +1,7 @@
 import {
   ReactNode,
+  Ref,
+  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -8,7 +10,7 @@ import {
 } from 'react';
 import {RootState} from 'data/redux/reducers';
 import {useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFS from 'react-native-fs';
 import {keys} from 'configuration/keys';
 import {
@@ -41,21 +43,30 @@ import {
   WebcamType,
 } from 'types/webcam';
 import {CAMERA_PLAYBACK_DURATION} from './constants';
+import { PlayBackWebcamViewModelProps } from 'scenes/playback/PlayBackViewModel';
+import { Camera } from 'react-native-vision-camera';
 
 export interface Props {
   innerControls?: boolean;
   webcamFolderName?: string;
-  renderMatchInfo: () => ReactNode;
+  //renderMatchInfo: () => ReactNode;
   updateWebcamFolderName: (name: string) => void;
+  cameraRef? : RefObject<Camera>;
+  isStarted: boolean;
+  isPaused: boolean;
+  //isPreview: boolean;
+  //pauseVideoRecording?: () => void;
+  videoUri? : string;
+  //resumeVideoRecording?: () => void,
+  //stopVideoRecording?: () => void,
+  setVideoUri?: (name: string) => void;
 }
 
 let interval: NodeJS.Timeout, cameraInterval: NodeJS.Timeout;
 
 const WebCamViewModel = (props: Props) => {
   const videoRef = useRef<VideoRef>(null);
-
   const {gameSettings} = useSelector((state: RootState) => state.game);
-
   const [webcamType, setWebcamType] = useState<WebcamType>();
   const [webcam, setWebcam] = useState<Webcam>();
   const [liveStream, setLiveStream] = useState<LiveStreamCamera>();
@@ -70,6 +81,7 @@ const WebCamViewModel = (props: Props) => {
   useEffect(() => {
     AsyncStorage.getItem(keys.WEBCAM_TYPE, (error, result) => {
       if (error) {
+
         return;
       }
 
@@ -79,16 +91,19 @@ const WebCamViewModel = (props: Props) => {
         } else {
           getCameraData();
         }
-      }
+        setWebcamType(result as WebcamType);
 
-      setWebcamType(result as WebcamType);
+
+      }else{
+        setWebcamType(WebcamType.webcam);
+      }
     });
 
     return () => {
       clearInterval(cameraInterval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  },[]);
 
   useEffect(() => {
     const _countdownTime = (webcam?.syncTime || CAMERA_PLAYBACK_DURATION) * 2;
@@ -174,7 +189,7 @@ const WebCamViewModel = (props: Props) => {
         setUrl(_url);
       }
 
-      props.updateWebcamFolderName(now);
+      //props.updateWebcamFolderName(now);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -187,7 +202,7 @@ const WebCamViewModel = (props: Props) => {
   ]);
 
   // const recordLocalCamera = useCallback(() => {
-  //   cameraRef.current?.startRecording({
+  //   cameraRef.current?.({
   //     onRecordingFinished: video => {
   //       console.log('Record finished', video);
   //       RNFS.copyFile(video.path);
@@ -322,7 +337,9 @@ const WebCamViewModel = (props: Props) => {
   const onDelay = useCallback(() => {}, []);
 
   const onReWatch = useCallback(async () => {
-    navigate(screens.playback, {webcamFolderName: props.webcamFolderName});
+   
+
+    navigate(screens.playback, {webcamFolderName: props.webcamFolderName, merged: false} as PlayBackWebcamViewModelProps);
   }, [props]);
 
   const onFullscreenPlayerDidPresent = useCallback(() => {}, []);
@@ -333,14 +350,14 @@ const WebCamViewModel = (props: Props) => {
 
   const onLoad = useCallback(
     (_data: OnLoadData) => {
-      videoRef.current?.setVolume(0);
+      //videoRef.current?.setVolume(0);
 
-      if (webcamType === WebcamType.camera) {
-        videoRef.current?.seek(currentSeekPosition);
-        videoRef.current?.resume();
+      // if (webcamType === WebcamType.camera) {
+      //   videoRef.current?.seek(currentSeekPosition);
+      //   videoRef.current?.resume();
 
-        setCurrentSeekPosition(currentSeekPosition + CAMERA_PLAYBACK_DURATION);
-      }
+      //   setCurrentSeekPosition(currentSeekPosition + CAMERA_PLAYBACK_DURATION);
+      // }
     },
     [webcamType, currentSeekPosition],
   );
@@ -392,6 +409,7 @@ const WebCamViewModel = (props: Props) => {
       onEnd,
       onWebcamError,
       onToggleInnerControls,
+
     };
   }, [
     videoRef,
@@ -416,5 +434,6 @@ const WebCamViewModel = (props: Props) => {
     onToggleInnerControls,
   ]);
 };
+
 
 export default WebCamViewModel;

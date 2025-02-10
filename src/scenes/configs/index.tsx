@@ -4,7 +4,6 @@ import View from 'components/View';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import i18n from 'i18n';
-
 import LanguageConfig from './language';
 import WebcamConfig from './webcam';
 import ConfigsViewModel from './ConfigsViewModel';
@@ -13,6 +12,7 @@ import Livestream from './livestream';
 import styles from './styles';
 import Thumbnails from './thumbnails';
 import TableNumber from './table-number';
+import BluetoothConfig from './buetooth'
 
 const Configs = () => {
   const viewModel = ConfigsViewModel();
@@ -23,6 +23,7 @@ const Configs = () => {
         <View flex={'1'} direction={'row'}>
           <View flex={'1'} marginBottom={'20'} marginRight={'20'}>
             <LanguageConfig />
+            {/* <BluetoothConfig /> */}
             <View marginVertical={'10'} />
             <TableNumber />
           </View>

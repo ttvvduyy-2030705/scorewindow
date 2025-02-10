@@ -1,6 +1,7 @@
-import {useCallback, useEffect, useMemo} from 'react';
+import {Ref, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {Gesture} from 'react-native-gesture-handler';
 import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
+
 import {
   OnBufferData,
   OnLoadData,
@@ -9,6 +10,7 @@ import {
   OnVideoTracksData,
   ReactVideoSourceProperties,
 } from 'react-native-video';
+import { Camera } from 'react-native-vision-camera';
 
 export interface Props {
   gestureDisabled?: boolean;
@@ -31,12 +33,19 @@ export interface Props {
   onEnd?: (() => void) | undefined;
   onError?: ((e: OnVideoErrorData) => void) | undefined;
   onPosition?: (scale: number, translateX: number, translateY: number) => void;
+  cameraRef? : RefObject<Camera>;
+  isStarted: boolean;
+  isPaused :boolean;
+  isPreview?: boolean;
+  videoUri?:  string;
+  webcamType : string;
 }
 
 const VideoViewModel = (props: Props) => {
   const offset = useSharedValue<number>(1);
   const translateX = useSharedValue<number>(0);
   const translateY = useSharedValue<number>(0);
+  const [webcamType, setWebcamType] = useState<string>(props.webcamType);
 
   useEffect(() => {
     return () => {
@@ -191,6 +200,8 @@ const VideoViewModel = (props: Props) => {
       onVideoTracks,
       onEnd,
       onError,
+      webcamType,
+      
     };
   }, [
     pinch,
@@ -205,6 +216,7 @@ const VideoViewModel = (props: Props) => {
     onVideoTracks,
     onEnd,
     onError,
+    webcamType,
   ]);
 };
 

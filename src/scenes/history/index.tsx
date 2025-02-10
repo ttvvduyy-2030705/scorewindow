@@ -90,6 +90,7 @@ const History = () => {
               onPress={viewModel.onReWatchGame.bind(
                 History,
                 item.webcamFolderName,
+                
               )}>
               <Text>{i18n.t('reWatch')}</Text>
             </Button>

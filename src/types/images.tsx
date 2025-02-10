@@ -18,6 +18,7 @@ export type Images = {
   startGame: number;
   vietnam: number;
   google: number;
+  logoclb: number
   game: {
     edit: number;
     soundOn: number;

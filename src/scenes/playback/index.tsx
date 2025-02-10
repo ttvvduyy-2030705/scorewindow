@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useEffect, useMemo, useState} from 'react';
 import {ScrollView} from 'react-native';
 import Video from 'react-native-video';
 
@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import Loading from 'components/Loading';
 import Image from 'components/Image';
-
+import RNFS from 'react-native-fs';
 import images from 'assets';
 import i18n from 'i18n';
 import {goBack} from 'utils/navigation';
@@ -18,12 +18,16 @@ import {
   WEBCAM_SELECTED_VIDEO_TRACK,
 } from 'constants/webcam';
 
-import PlayBackWebcamViewModel, {Props} from './PlayBackViewModel';
+import PlayBackWebcamViewModel, {PlayBackWebcamViewModelProps} from './PlayBackViewModel';
 import {DURATION_LIST} from './constants';
 import styles from './styles';
+import Slider from '@react-native-community/slider';
 
-const PlayBackWebcam = (props: Props) => {
+const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
   const viewModel = PlayBackWebcamViewModel(props);
+
+  const [playbackRate, setPlaybackRate] = useState(1.0); // Default speed is 1.0 (normal)
+
 
   const WEBCAM_LOADER = useMemo(() => {
     return (
@@ -36,6 +40,7 @@ const PlayBackWebcam = (props: Props) => {
       </View>
     );
   }, []);
+
 
   const FILE_LIST = useMemo(() => {
     return DURATION_LIST.map((item, index) => {
@@ -70,11 +75,20 @@ const PlayBackWebcam = (props: Props) => {
               </Text>
             </View>
           </View>
-
           <View flex={'1'}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {FILE_LIST}
             </ScrollView>
+            <Text style={styles.label}>{i18n.t('txtTocDoXem')}: {playbackRate.toFixed(2)}x</Text>
+
+            <Slider
+            style={styles.slider}
+            minimumValue={0.25} // Slowest: 0.25x
+            maximumValue={2.0}  // Fastest: 2x
+            step={0.25}
+            value={playbackRate}
+            onValueChange={(value) => setPlaybackRate(value)}
+          />
           </View>
 
           <Button style={styles.buttonBack} onPress={goBack}>
@@ -90,17 +104,22 @@ const PlayBackWebcam = (props: Props) => {
             <View style={styles.webcam}>{WEBCAM_LOADER}</View>
           ) : viewModel.webcamUrl ? (
             <>
-              <Video
-                id={'webcam-billiards-playback'}
-                ref={viewModel.videoRef}
-                style={styles.webcam}
-                controls
-                source={{uri: viewModel.webcamUrl}}
-                selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
-                bufferConfig={WEBCAM_BUFFER_CONFIG}
-                onError={viewModel.onWebcamError}
-                renderLoader={WEBCAM_LOADER}
-              />
+
+      <Video
+        id={'webcam-billiards-playback'}
+        ref={viewModel.videoRef}
+        style={styles.webcam}
+        controls
+        source={{uri: viewModel.webcamUrl}}
+        selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
+        onError={viewModel.onWebcamError}
+        renderLoader={WEBCAM_LOADER}
+        rate={playbackRate} // Slow motion effect
+        paused={!viewModel.isPlaying}
+        onLoad={viewModel.handleLoad}
+        onProgress={viewModel.handleProgress}
+        />  
+             
               <Button
                 style={styles.buttonShare}
                 onPress={viewModel.onShareVideo}>

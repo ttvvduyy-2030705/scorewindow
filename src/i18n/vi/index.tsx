@@ -81,9 +81,10 @@ const vi = {
   txtReconnect: 'Kết nối lại',
   txtMinuteOrder: '{{minute}} phút',
   txtFullGame: 'Toàn trận',
-
+  txtTocDoXem: 'Tốc độ xem',
   month: 'tháng',
   year: 'năm',
+
 };
 
 export default vi;

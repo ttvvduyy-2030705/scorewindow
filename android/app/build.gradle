@@ -84,6 +84,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+        missingDimensionStrategy 'react-native-camera', 'general' // Or 'mlkit' if you need ML Kit
+
     }
     signingConfigs {
         debug {
@@ -93,12 +95,10 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
-            }
+            storeFile file('./billiards.keystore')
+            storePassword '24082024'
+            keyAlias 'billiards'
+            keyPassword '24082024'
         }
     }
     buildTypes {
@@ -122,9 +122,16 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    //implementation 'com.facebook.react:react-native:+'
+    // implementation 'com.google.mlkit:face-detection:16.1.5'  // ✅ Ensure it's the correct version
+    // implementation 'com.google.android:camerax-core:1.2.2'
+    // implementation 'com.google.android:camerax-camera2:1.2.2'
+    // implementation 'com.google.android:camerax-lifecycle:1.2.2'
+    //implementation project(path: ':react-native-camera', configuration: 'mlkit')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
+
     } else {
         implementation jscFlavor
     }

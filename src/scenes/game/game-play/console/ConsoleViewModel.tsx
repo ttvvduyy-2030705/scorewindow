@@ -1,10 +1,11 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import colors from 'configuration/colors';
 import {keys} from 'configuration/keys';
 import {BALLS_10, BALLS_15, BALLS_9} from 'constants/balls';
 import {RootState} from 'data/redux/reducers';
 import i18n from 'i18n';
-import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {ReactNode, Ref, RefObject, useCallback, useEffect, useMemo, useState} from 'react';
+import { Camera } from 'react-native-vision-camera';
 import {useSelector} from 'react-redux';
 import {BallType, PoolBallType} from 'types/ball';
 import {Player, PlayerSettings} from 'types/player';
@@ -12,7 +13,7 @@ import {GameSettings, GameSettingsMode} from 'types/settings';
 import {formatTotalTime} from 'utils/date';
 import {isPool10Game, isPool15Game, isPool15OnlyGame} from 'utils/game';
 
-export interface Props {
+export interface ConsoleViewModelProps {
   gameSettings: GameSettings;
   playerSettings: PlayerSettings;
   currentMode: GameSettingsMode;
@@ -44,17 +45,24 @@ export interface Props {
   onPoolScore: (ball: PoolBallType) => void;
   onSelectWinner: () => void;
   onClearWinner: () => void;
-  renderMatchInfo: () => ReactNode;
+ // renderMatchInfo: () => ReactNode;
   renderLastPlayer: () => ReactNode;
-  onStart: () => void;
+  onStart: () => void; 
   onPause: () => void;
   onStop: () => void;
   onReset: () => void;
   onResetTurn: () => void;
   updateWebcamFolderName: (name: string) => void;
+  cameraRef : RefObject<Camera>;
+  //isPreview: boolean;
+  // videoUri?: string;
+  // setVideoUri: (name: string) => void;
+  //pauseVideoRecording: () => void;
+  //resumeVideoRecording: () => void;
+  //stopVideoRecording: () => void;
 }
 
-const ConsoleViewModel = (props: Props) => {
+const ConsoleViewModel = (props: ConsoleViewModelProps) => {
   const {gameSettings} = useSelector((state: RootState) => state.game);
 
   const [remoteEnabled, setRemoteEnabled] = useState(false);
@@ -205,6 +213,7 @@ const ConsoleViewModel = (props: Props) => {
 
   const onWarmUp = useCallback(() => {
     props.onWarmUp();
+    
   }, [props]);
 
   const onRestart = useCallback(() => {
@@ -223,6 +232,7 @@ const ConsoleViewModel = (props: Props) => {
 
   const onStart = useCallback(() => {
     props.onStart();
+
   }, [props]);
 
   const onPause = useCallback(() => {
@@ -285,6 +295,9 @@ const ConsoleViewModel = (props: Props) => {
     onStart,
     onPause,
     onStop,
+    props.isPaused,
+    props.isStarted,
+    //props.videoUri
   ]);
 };
 

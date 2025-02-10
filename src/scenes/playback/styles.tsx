@@ -53,6 +53,10 @@ const styles = StyleSheet.create({
     width: responsiveDimension(32),
     height: responsiveDimension(32),
   },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  video: { width: '90%', height: 300 },
+  label: { marginTop: 10, fontSize: 16 },
+  slider: { width: 150, marginTop: 10 },
 });
 
 export default styles;

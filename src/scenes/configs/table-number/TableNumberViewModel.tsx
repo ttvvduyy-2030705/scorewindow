@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {keys} from 'configuration/keys';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 

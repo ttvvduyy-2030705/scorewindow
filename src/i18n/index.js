@@ -1,6 +1,6 @@
 import * as RNLocalize from 'react-native-localize';
 import Tts from 'react-native-tts';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {I18n} from 'i18n-js';
 import Numeral from 'numeral';
 import 'numeral/locales';
@@ -14,8 +14,11 @@ export const LANGUAGES = ['vi', 'en'];
 const systemLocale = RNLocalize.getLocales()[0];
 
 export const loadLanguage = async () => {
-  const currentLanguage = await AsyncStorage.getItem('language');
 
+
+  const currentLanguage = await AsyncStorage.getItem('language');
+  console.log("lang " + currentLanguage);
+  
   const language = currentLanguage
     ? currentLanguage
     : ['vi', 'en'].includes(systemLocale.languageCode)

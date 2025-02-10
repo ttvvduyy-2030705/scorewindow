@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {captureRef} from 'react-native-view-shot';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFS from 'react-native-fs';
 
 import {
@@ -44,26 +44,26 @@ const LiveStreamImagesViewModel = (props: Props) => {
         return;
       }
 
-      captureRef(ref, {
-        format: 'png',
-        quality: 0.01,
-        width: 256,
-        height: 128,
-      })
-        .then(
-          async uri => {
-            const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${imagePath}`;
-            const _path = uri.slice(7);
+      // captureRef(ref, {
+      //   format: 'png',
+      //   quality: 0.01,
+      //   width: 256,
+      //   height: 128,
+      // })
+      //   .then(
+      //     async uri => {
+      //       const matchImagePath = `${RNFS.DownloadDirectoryPath}/${WEBCAM_BASE_CAMERA_FOLDER}/${imagePath}`;
+      //       const _path = uri.slice(7);
 
-            RNFS.copyFile(_path, matchImagePath);
-          },
-          error => console.error('Oops, match info failed', error),
-        )
-        .catch(e => {
-          if (__DEV__) {
-            console.log('Capture match info error', e);
-          }
-        });
+      //       RNFS.copyFile(_path, matchImagePath);
+      //     },
+      //     error => console.error('Oops, match info failed', error),
+      //   )
+      //   .catch(e => {
+      //     if (__DEV__) {
+      //       console.log('Capture match info error', e);
+      //     }
+      //   });
     },
     [props.playerSettings],
   );

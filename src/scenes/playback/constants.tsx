@@ -2,6 +2,10 @@ import i18n from 'i18n';
 
 const DURATION_LIST = [
   {
+    title: () => i18n.t('txtMinuteOrder', {minute: 0}),
+    value: 0,
+  },
+  {
     title: () => i18n.t('txtMinuteOrder', {minute: 5}),
     value: 5,
   },

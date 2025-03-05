@@ -828,6 +828,10 @@ const GamePlayViewModel = () => {
 
   const stopVideoRecording = async () => {
     console.log('Stopping recording...');
+
+    if(!isRecording)
+      return;
+    
     try {
       if(cameraRef.current){
         await cameraRef.current?.stopRecording();

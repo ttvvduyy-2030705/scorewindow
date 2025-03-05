@@ -54,15 +54,15 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
   ])
 
   return (
-    <GestureDetector  gesture={viewModel.gestureComposed}>
+    <GestureDetector   gesture={viewModel.gestureComposed}>
       <RNAnimated.View style={[styles.container, viewModel.animatedStyles]}>
-        <PinchGestureHandler onGestureEvent={handlePinchGesture}>
             { device ? ( <Camera
             ref={props.cameraRef}
             style={styles.webcam}
             device={device!}
             isActive={true}
             video={true}
+            audio={true}
             format={format}
             zoom={zoom}
             videoStabilizationMode="standard"
@@ -83,7 +83,6 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
                 resizeMode="stretch">
                 </ImageBackground>
             ) }
-          </PinchGestureHandler>
      </RNAnimated.View>
     </GestureDetector>
   );

@@ -10,17 +10,14 @@ import Image from 'components/Image';
 import images from 'assets';
 import i18n from 'i18n';
 import {goBack} from 'utils/navigation';
-import RNFS from "react-native-fs";
 
 const { HttpServer } = NativeModules;
 
 import {
-  WEBCAM_BUFFER_CONFIG,
   WEBCAM_SELECTED_VIDEO_TRACK,
 } from 'constants/webcam';
 
 import PlayBackWebcamViewModel, {PlayBackWebcamViewModelProps} from './PlayBackViewModel';
-import {DURATION_LIST} from './constants';
 import styles from './styles';
 import Slider from '@react-native-community/slider';
 import VideoListItem from './videoListItem';
@@ -36,16 +33,20 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
   const [ip, setIp] = useState("");
   const [fileUrl, setFileUrl] = useState<string>();
 
-
   useEffect(() => {
     NetworkInfo.getIPAddress().then(ipAddress => {
-      console.log("IP Address:", ipAddress);
-
       if(ipAddress){
         setIp(ipAddress);
       }
     });
   }, []);
+
+  useEffect(() => {
+   if(viewModel.videoFiles.length > 0)
+   {
+    startServer(viewModel.videoFiles[0].path);
+   }
+  }, [viewModel.videoFiles]);
 
   const startServer = async (filePath: string) => {
     try {
@@ -71,17 +72,6 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
     }
   };
 
-  // useEffect( () => {
-  //   if(viewModel.videoFiles.length > 0)
-  //   {
-  //     console.log()
-  //      startServer();
-
-  //   }else{
-  //     stopServer();
-  //   }
-  // }, [viewModel.currentIndex]);
-
   const WEBCAM_LOADER = useMemo(() => {
     return (
       <View
@@ -94,33 +84,9 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
     );
   }, []);
 
- 
-  // const FILE_LIST = useMemo(() => {
-  //   return DURATION_LIST.map((item, index) => {
-  //     return (
-  //       <Button
-  //         key={index}
-  //         style={[
-  //           styles.button,
-  //           index === viewModel.selectedDurationIndex
-  //             ? styles.buttonSelected
-  //             : {},
-  //         ]}
-  //         onPress={viewModel.onSelectMinuteForWebcam.bind(
-  //           PlayBackWebcam,
-  //           index,
-  //           item.value,
-  //         )}>
-  //         <Text>{item.title()}</Text>
-  //       </Button>
-  //     );
-  //   });
-  // }, [viewModel.selectedDurationIndex, viewModel.onSelectMinuteForWebcam]);
-
   const onPress = async (index: number, path: string) => {
     viewModel.setCurrentIndex(index);
     await startServer(path)
-
   };
 
   return (
@@ -142,23 +108,20 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
                 time={item.mtime?.toLocaleTimeString()}
                 path={item.path}
                 onPress={() => onPress(index, item.path)}
-                index={index} 
+                index={index}
+                currentIndex={viewModel.currentIndex}
                 />
             ))}
           </ScrollView>
 
-          {/* <ScrollView showsVerticalScrollIndicator={false}>
-              {FILE_LIST}
-            </ScrollView> */}
+          {fileUrl ? <QRCode  value={fileUrl} size={100} /> : <Text>Starting server...</Text>}
 
-            {fileUrl ? <QRCode value={fileUrl} size={200} /> : <Text>Starting server...</Text>}
-
-            <Text style={styles.label}>{i18n.t('txtTocDoXem')}: {playbackRate.toFixed(2)}x</Text>
+          <Text style={styles.label}>{i18n.t('txtTocDoXem')}: {playbackRate.toFixed(2)}x</Text>
 
           <Slider
               style={styles.slider}
-              minimumValue={0.25} // Slowest: 0.25x
-              maximumValue={2.0}  // Fastest: 2x
+              minimumValue={0.25}
+              maximumValue={2.0}
               step={0.25}
               value={playbackRate}
               onValueChange={(value: React.SetStateAction<number>) => setPlaybackRate(value)}
@@ -178,29 +141,21 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
             <View style={styles.webcam}>{WEBCAM_LOADER}</View>
           ) : viewModel.videoFiles ? (
             <>
-             
               <Video
                 id={'webcam-billiards-playback'}
                 ref={viewModel.videoRef}
                 style={styles.webcam}
                 controls={true}
-                source={{ uri: viewModel.videoFiles.length > 0 ?  viewModel.videoFiles[viewModel.currentIndex].path : "null"}}
+                source={{ uri: viewModel.videoFiles.length > 0 ?  viewModel.videoFiles[viewModel.currentIndex].path : ""}}
                 selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
                 onError={viewModel.onWebcamError}
                 renderLoader={WEBCAM_LOADER}
-                rate={playbackRate} // Slow motion effect
-                //paused={false}
+                rate={playbackRate}
                 onLoad={viewModel.handleLoad}
                 onProgress={viewModel.handleProgress}
                 onEnd={viewModel.handleNext}   
                 controlsStyles={{hideNext:true, hidePrevious: true, hideForward:true, hideRewind:true}}
-                //onControlsVisibilityChange={}
               /> 
-            {/* <Button
-              style={styles.buttonShare}
-              onPress={viewModel.onShareVideo}>
-              <Image source={images.share} style={styles.iconShare} />
-            </Button> */}
             </>
             ) : (
               <View style={styles.webcam} />

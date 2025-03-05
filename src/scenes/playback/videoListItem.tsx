@@ -8,11 +8,12 @@ export interface VideoListItemProps {
     time?: string;
     path: string;
     onPress: ((index: number) => void); 
+    currentIndex: number
   }
   
 const VideoListItem = (props: VideoListItemProps ) => {
   return (
-    <TouchableOpacity style={[styles.itemContainer, props.index == props.index ? styles.selectITem :  styles.unselectItem]} onPress={() => {
+    <TouchableOpacity style={[styles.itemContainer, props.index == props.currentIndex ? styles.selectITem :  styles.unselectItem]} onPress={() => {
       props.onPress(props.index)
     }}>
       <View style={styles.details}>

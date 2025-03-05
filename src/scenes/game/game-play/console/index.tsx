@@ -123,6 +123,7 @@ const GameConsole = (props: ConsoleViewModelProps) => {
               onStart={viewModel.onStart}
               onPause={viewModel.onPause}
               onStop={viewModel.onStop}
+              isCameraReady={props.isCameraReady}
             />
 
             {isCaromGame(props.gameSettings.category) &&

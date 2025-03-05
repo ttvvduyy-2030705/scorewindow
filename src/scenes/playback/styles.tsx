@@ -27,6 +27,8 @@ const styles = StyleSheet.create({
   },
   webcamContainer: {
     backgroundColor: colors.black,
+    height:'100%',
+    width:'100%'
   },
   webcam: {
     width: '100%',
@@ -61,16 +63,17 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    //padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    marginLeft: 50
+    width: '100%',
+    marginTop:5,
+    justifyContent: 'space-between'
   },
   selectITem: {
-   borderColor: colors.deepGray
+   width:'100%',
+   backgroundColor: colors.yellow
   },
   unselectItem: {
-    borderColor: colors.white
+    borderColor: colors.gray
    },
   thumbnail: {
     width: 120,
@@ -78,7 +81,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   details: {
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection:'row'
   },
   duration: {
     fontSize: 16,

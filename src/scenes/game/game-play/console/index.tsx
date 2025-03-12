@@ -149,13 +149,6 @@ const GameConsole = (props: ConsoleViewModelProps) => {
                 cameraRef={props.cameraRef}
                 isPaused={props.isPaused}
                 isStarted={props.isStarted}
-                
-                //isPreview={props.isPreview}
-                //pauseVideoRecording={props.pauseVideoRecording}
-                // videoUri={props.videoUri}
-                // setVideoUri={props.setVideoUri}
-                //resumeVideoRecording={props.resumeVideoRecording}
-                //stopVideoRecording={props.stopVideoRecording}
               />
             ) : (
               <View />

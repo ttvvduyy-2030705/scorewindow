@@ -5,6 +5,7 @@ import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 import {getFiles} from 'services/ffmpeg/local';
 import i18n from 'i18n';
+import { setLogLevel } from 'realm';
 
 export interface PlayBackWebcamViewModelProps {
   webcamFolderName: string;
@@ -60,7 +61,9 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
     }
   };
 
-  useEffect(() => {
+  const loadFiles = () => {
+    setIsLoading(true);
+
     const folder = `${RNFS.DownloadDirectoryPath}/${props.webcamFolderName}`;
     RNFS.exists(folder).then(
      async isExist => {
@@ -84,6 +87,10 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
         }
       },
     );
+  };
+
+  useEffect(() => {
+   loadFiles();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -136,7 +143,8 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
       videoFiles,
       currentIndex,
       setCurrentIndex,
-      videoDurations
+      videoDurations,
+      loadFiles
     };
   }, [
     videoRef,
@@ -153,7 +161,8 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
     videoFiles,
     currentIndex,
     setCurrentIndex,
-    videoDurations
+    videoDurations,
+    loadFiles
   ]);
 };
 

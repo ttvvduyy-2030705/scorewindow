@@ -108,7 +108,6 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
     return filePath.split('/').pop(); 
   };
   
-  const filePath = "/storage/emulated/0/DCIM/Camera/video.mp4";
   useEffect(() => {
     const eventEmitter = new NativeEventEmitter(NativeModules.VideoTrim);
     const subscription = eventEmitter.addListener('VideoTrim', async (event) => {
@@ -135,9 +134,7 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
 
           var files  = await listFiles();
           for (let index = 0; index < files.length; index++) {
-            
               try {
-              
                 const fileName =  getFileName(files[index]);
 
                 await RNFS.moveFile(files[index], folder+ "/"+ fileName);
@@ -149,8 +146,9 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
                 console.error('Error saving video:', error);
               }
           }
-          console.log(files);
-          
+
+          viewModel.loadFiles();
+
           break;
         }
         case 'onCancelTrimming': {
@@ -193,18 +191,25 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
             </View>
           </View>
           <View flex={'1'} style={{alignItems: 'center'}}>
-            <ScrollView showsVerticalScrollIndicator={false} style={{height: 300}}>
-            {viewModel.videoFiles.map((item, index) => (
-              <VideoListItem
-                key={index}
-                time={item.mtime?.toLocaleTimeString()}
-                path={item.path}
-                onPress={() => onPress(index, item.path)}
-                index={index}
-                currentIndex={viewModel.currentIndex}
-                />
-            ))}
-          </ScrollView>
+
+            { viewModel.videoFiles.length > 0 ? (
+              <ScrollView showsVerticalScrollIndicator={false} style={{height: 300}}>
+              {viewModel.videoFiles.map((item, index) => (
+                <VideoListItem
+                  key={index}
+                  time={item.mtime?.toLocaleTimeString()}
+                  path={item.path}
+                  onPress={() => onPress(index, item.path)}
+                  index={index}
+                  currentIndex={viewModel.currentIndex}
+                  />
+              ))}
+            </ScrollView>
+            ) : (
+
+              <Text lineHeight={15}>No video!</Text>
+
+            )}
 
           {fileUrl ? <QRCode  value={fileUrl} size={100} /> : <Text>Starting server...</Text>}
 
@@ -231,7 +236,7 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
         <View flex={'1'} style={styles.webcamContainer}>
           {viewModel.isLoading ? (
             <View style={styles.webcam}>{WEBCAM_LOADER}</View>
-          ) : viewModel.videoFiles ? (
+          ) : viewModel.videoFiles.length > 0 ? (
             <>
               <Video
                 id={'webcam-billiards-playback'}
@@ -249,7 +254,7 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
                 controlsStyles={{hideNext:true, hidePrevious: true, hideForward:true, hideRewind:true}}
               /> 
 
-            {viewModel.videoFiles.length ?  (<Button
+            {viewModel.videoFiles.length > 0 ?  (<Button
                 style={styles.buttonShare}
                 onPress={ () => {
                   showEditor(viewModel.videoFiles[viewModel.currentIndex].path, {
@@ -269,12 +274,7 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
                 <Image source={images.share} style={styles.iconShare} />
               </Button>) : <View></View>
               
-            }
-          
-               
-            
-
-
+            }       
             </>
             ) : (
               <View style={styles.webcam} />

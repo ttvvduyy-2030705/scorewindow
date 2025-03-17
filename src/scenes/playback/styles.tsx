@@ -34,6 +34,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: colors.black,
+    marginLeft: 0.5,
+  },
+  videoResize: {
+    width: 300, // Default width of the video
+    height: 200, // Default height of the video
+    backgroundColor: 'black', // Optional: for better visibility
   },
   fullWidth: {
     width: '100%',
@@ -88,6 +94,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color:  colors.black
+  },
+  videoContainer: {
+    flex: 1,
+    //justifyContent: "center",
+    //alignItems: "center",
   },
 });
 

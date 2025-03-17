@@ -72,7 +72,7 @@ const mergeVideoFiles = async (folderPath: string) : Promise<string | undefined>
 try {
      const fullPath = `${RNFS.DownloadDirectoryPath}/${folderPath}`;
      const files = await RNFS.readDir(fullPath) as ReadDirItem[];
-      const videoFiles = files.filter((file) => file.name.endsWith('.mp4'));
+      const videoFiles = files.filter((file) => file.name.endsWith('.mov'));
   
       if (videoFiles.length < 2) {
         throw new Error('At least two video files are required for merging.');
@@ -90,7 +90,7 @@ try {
       const now = Date.now().toString();
   
       // Output file path
-      const outputPath = `${fullPath}/${now}.mp4`;
+      const outputPath = `${fullPath}/${now}.mov`;
   
     //   // Run FFmpeg command to merge videos
     const command = `-f concat -safe 0 -i ${fileListPath} -c copy ${outputPath}`;
@@ -142,7 +142,7 @@ const getFiles = async (folderPath: string) : Promise<RNFS.ReadDirItem[] | undef
   try {
        const fullPath = `${RNFS.DownloadDirectoryPath}/${folderPath}`;
        const files = await RNFS.readDir(fullPath) as ReadDirItem[];
-       const videoFiles = files.filter((file) => file.name.endsWith('.mp4'))
+       const videoFiles = files.filter((file) => file.name.endsWith('.mov'))
        .sort((a, b) => (b.mtime?.getTime() || 0) - (a.mtime?.getTime() || 0)); // Newest first
 
       return videoFiles;

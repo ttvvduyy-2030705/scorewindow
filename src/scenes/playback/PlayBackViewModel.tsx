@@ -69,6 +69,7 @@ const PlayBackWebcamViewModel = (props: PlayBackWebcamViewModelProps) => {
      async isExist => {
         if (!isExist) {
 
+          setIsLoading(false)
           console.log("File is not Exit " + folder);
 
           return;

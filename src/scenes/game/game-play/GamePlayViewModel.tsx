@@ -815,7 +815,7 @@ const GamePlayViewModel = () => {
       cameraRef.current?.startRecording({
        // flash: 'on',
         path: `${RNFS.DownloadDirectoryPath}/${webcamFolderName}`,
-        fileType: 'mp4',
+        fileType: 'mov',
         videoCodec:'h265',
         onRecordingFinished: async (video) => {
           console.log('Recording finished:', video);

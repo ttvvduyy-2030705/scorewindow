@@ -20,7 +20,9 @@ const images: Images = {
   startGame: require('./images/start-game.png'),
   vietnam: require('./images/vietnam.png'),
   google: require('./images/google.png'),
-  logoclb: require('./images/dragon_clb.jpg'),
+  logoclb: require('./images/logo.png'),
+  videoEditor: require('./images/video-editor.png'),
+
   game: {
     edit: require('./images/game/edit.png'),
     soundOn: require('./images/game/sound-on.png'),

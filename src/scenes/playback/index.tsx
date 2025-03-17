@@ -1,6 +1,5 @@
-import React, {memo, useEffect, useMemo, useState} from 'react';
-import {Alert, NativeEventEmitter, NativeModules, ScrollView} from 'react-native';
-import Video from 'react-native-video';
+import React, {memo, useEffect, useMemo, useRef, useState} from 'react';
+import {Alert, Animated, Dimensions, NativeEventEmitter, NativeModules, Pressable, ScrollView} from 'react-native';
 import Container from 'components/Container';
 import View from 'components/View';
 import Button from 'components/Button';
@@ -26,6 +25,10 @@ import Slider from '@react-native-community/slider';
 import VideoListItem from './videoListItem';
 import QRCode from 'react-native-qrcode-svg';
 import { NetworkInfo } from 'react-native-network-info';
+import { Gesture, GestureDetector, PinchGestureHandler } from 'react-native-gesture-handler';
+import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { Video } from 'react-native-video';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 
 
 const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
@@ -94,20 +97,40 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
     await startServer(path)
   };
 
-  const saveTrimmedVideo = async (trimmedVideoPath: string) => {
-    const destinationPath = `${RNFS.DocumentDirectoryPath}/trimmed-video.mp4`;
-  
-    try {
-      await RNFS.moveFile(trimmedVideoPath, destinationPath);
-      console.log('Video saved to:', destinationPath);
-    } catch (error) {
-      console.error('Error saving video:', error);
-    }
-  };
   const getFileName = (filePath: string) => {
     return filePath.split('/').pop(); 
   };
   
+    const scale = useSharedValue(1); // Default scale
+    const doubleTapZoom = 2; // Zoom level for double-tap
+    const maxZoom = 128; // Max pinch zoom level
+    const minZoom = 1; // Minimum zoom level
+  
+    // Pinch Gesture for Smooth Zooming
+    const pinchGesture = Gesture.Pinch()
+    .onUpdate((event) => {
+      scale.value = Math.max(minZoom, Math.min(event.scale, maxZoom)); // Clamp zoom level
+
+      console.log("pinch" , scale.value)
+    })
+    .onEnd(() => {
+      if (scale.value < minZoom) {
+        scale.value = withSpring(minZoom); // Reset to default zoom if too small
+      }
+    });
+    // Double Tap Gesture for Quick Zoom In/Out
+    const doubleTapGesture = Gesture.Tap()
+      .numberOfTaps(2)
+      .onEnd(() => {
+        scale.value = scale.value === 1 ? withSpring(doubleTapZoom) : withSpring(1);
+      });
+
+    // Apply Animated Zoom Effect
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+    }));
+
+
   useEffect(() => {
     const eventEmitter = new NativeEventEmitter(NativeModules.VideoTrim);
     const subscription = eventEmitter.addListener('VideoTrim', async (event) => {
@@ -179,6 +202,19 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
     };
   }, []);
 
+  // get screen width and height
+let { width, height } = Dimensions.get('window');
+
+//video width assume your video dimension is 16:9
+ const  getVideoWidth = () => {
+  return Math.floor(width);
+}
+
+//video height, assume your video dimension is 16:9
+const  getVideoHeight = () =>  {
+  return Math.floor((9 * Math.floor(width)) / 16);
+}
+
   return (
     <Container>
       <View direction={'row'}>
@@ -211,7 +247,7 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
 
             )}
 
-          {fileUrl ? <QRCode  value={fileUrl} size={100} /> : <Text>Starting server...</Text>}
+          {fileUrl ? <QRCode  value={fileUrl} size={100} /> : ""}
 
           <Text style={styles.label}>{i18n.t('txtTocDoXem')}: {playbackRate.toFixed(2)}x</Text>
 
@@ -238,48 +274,73 @@ const PlayBackWebcam = (props: PlayBackWebcamViewModelProps) => {
             <View style={styles.webcam}>{WEBCAM_LOADER}</View>
           ) : viewModel.videoFiles.length > 0 ? (
             <>
-              <Video
-                id={'webcam-billiards-playback'}
-                ref={viewModel.videoRef}
-                style={styles.webcam}
-                controls={true}
-                source={{ uri: viewModel.videoFiles.length > 0 ?  viewModel.videoFiles[viewModel.currentIndex].path : ""}}
-                selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
-                onError={viewModel.onWebcamError}
-                renderLoader={WEBCAM_LOADER}
-                rate={playbackRate}
-                onLoad={viewModel.handleLoad}
-                onProgress={viewModel.handleProgress}
-                onEnd={viewModel.handleNext}   
-                controlsStyles={{hideNext:true, hidePrevious: true, hideForward:true, hideRewind:true}}
-              /> 
+           <GestureDetector gesture={pinchGesture}>
+              <Animated.View style={[styles.webcam, animatedStyle]}>
 
-            {viewModel.videoFiles.length > 0 ?  (<Button
-                style={styles.buttonShare}
-                onPress={ () => {
-                  showEditor(viewModel.videoFiles[viewModel.currentIndex].path, {
-                    //maxDuration: viewModel.videoDurations,
-                    type:'video',
-                    trimmingText: "Đang cắt video...",
-                    cancelTrimmingDialogMessage: "Dừng cắt video",
-                    cancelTrimmingButtonText: "Huỷ",
-                    saveDialogConfirmText: "Lưu",
-                    saveDialogTitle:"Bạn có muốn lưu video mới cắt?",
-                    saveButtonText: "Lưu",
-                    saveDialogMessage: "Lưu",
-                    cancelDialogConfirmText: "Huỷ",
-                    openDocumentsOnFinish: false
-                  })
-                }}>
-                <Image source={images.share} style={styles.iconShare} />
-              </Button>) : <View></View>
-              
-            }       
+          <ReactNativeZoomableView
+          maxZoom={40}
+          minZoom={1}
+          zoomStep={0.5}
+          initialZoom={1}
+          bindToBorders={true}
+          doubleTapZoomToCenter={true}
+          disablePanOnInitialZoom={true}
+          panBoundaryPadding={0}
+          movementSensibility={3}
+          contentHeight={getVideoHeight()}
+          contentWidth={getVideoWidth()}
+        >
+          <Video  
+            resizeMode="contain" // Ensure it scales correctly
+            id={'webcam-billiards-playback'}
+            ref={viewModel.videoRef}
+            style={[styles.webcam]}
+            controls={true}
+            source={{ uri: viewModel.videoFiles.length > 0 ?  viewModel.videoFiles[viewModel.currentIndex].path : ""}}
+            selectedVideoTrack={WEBCAM_SELECTED_VIDEO_TRACK}
+            onError={viewModel.onWebcamError}
+            renderLoader={WEBCAM_LOADER}
+            rate={playbackRate}
+            onLoad={viewModel.handleLoad}
+            onProgress={viewModel.handleProgress}
+            onEnd={viewModel.handleNext}   
+            controlsStyles={{hideNext:true, hidePrevious: true, hideForward:true, hideRewind:true, hideDuration:false, hideSettingButton: false, hidePosition: false}}
+          />
+                  </ReactNativeZoomableView>
+              </Animated.View>
+            </GestureDetector>
             </>
             ) : (
               <View style={styles.webcam} />
             )}
         </View>
+
+        {viewModel.videoFiles.length > 0 ?  (<Button
+                style={styles.buttonShare}
+                onPress={ () => {
+                  showEditor(viewModel.videoFiles[viewModel.currentIndex].path, {
+                    //maxDuration: viewModel.videoDurations,
+                    type:'video',
+                    outputExt: "mov",
+                    trimmingText: "Đang cắt video...",
+                    cancelTrimmingDialogMessage: "Dừng cắt video",
+                    cancelTrimmingButtonText: "Huỷ cắt video",
+                    saveDialogConfirmText: "Lưu",
+                    saveDialogTitle:"Bạn có muốn lưu video mới cắt?",
+                    saveButtonText: "Lưu",
+                    saveDialogMessage: "Lưu",
+                    cancelDialogConfirmText: "Huỷ",
+                    openDocumentsOnFinish: false,
+                    cancelButtonText : "Đóng",
+                    cancelTrimmingDialogCancelText: "Bạn có có muốn huỷ cắt video",
+                    cancelDialogCancelText: "Đóng",
+                    cancelDialogMessage: "Bạn có có muốn huỷ cắt video"
+                  })
+                }}>
+                <Image source={images.videoEditor} style={styles.iconShare} />
+              </Button>) : <View></View>
+              
+            } 
       </View>
     </Container>
   );

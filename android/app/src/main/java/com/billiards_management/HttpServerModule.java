@@ -72,8 +72,8 @@ public class HttpServerModule extends ReactContextBaseJavaModule {
         
         // Determine MIME type
         String mimeType = "application/octet-stream"; // Default for unknown files
-        if (filePath.endsWith(".mp4")) {
-            mimeType = "video/mp4";
+        if (filePath.endsWith(".mov")) {
+            mimeType = "video/mov";
         } else if (filePath.endsWith(".mov")) {
             mimeType = "video/quicktime";
         }

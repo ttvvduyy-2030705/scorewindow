@@ -1,7 +1,7 @@
 import React, {memo, useMemo, forwardRef, useState, useEffect, RefObject, useRef} from 'react';
 import {Orientation, Video, VideoRef} from 'react-native-video';
 import {Gesture, GestureDetector, GestureHandlerRootView} from 'react-native-gesture-handler';
-import RNAnimated, { runOnJS, runOnUI } from 'react-native-reanimated';
+import RNAnimated, { runOnJS, runOnUI, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import Loading from 'components/Loading';
 import View from 'components/View';
 import VideoViewModel, {Props} from './VideoViewModel';
@@ -13,7 +13,7 @@ import { PinchGestureHandler } from 'react-native-gesture-handler';
 import {  ImageBackground, ToastAndroid } from 'react-native';
 import images from 'assets';
 import { Camera, Frame, useCameraDevice, useCameraFormat, useFrameProcessor, VisionCameraProxy } from 'react-native-vision-camera';
-import { Worklets }from 'react-native-worklets-core';
+import { useSharedValue, Worklets }from 'react-native-worklets-core';
 
 const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
   const showToast = () => {
@@ -25,15 +25,36 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
 
  // console.log("device" + JSON.stringify(device));
 
-  const [zoom, setZoom] = useState(0); // Initial zoom level
-  const maxZoom = device?.maxZoom ?? 1;
+  const scale = useSharedValue(1); // Default scale
+  const doubleTapZoom = 2; // Zoom level for double-tap
+  const maxZoom = 128; // Max pinch zoom level
+  const minZoom = 0; // Minimum zoom level
 
-  const handlePinchGesture = (event: any) => {
-    if (device) {
-      const newZoom = Math.min(Math.max(zoom + (event.nativeEvent.scale - 1) * 0.05, 0), maxZoom); // Adjust zoom
-      setZoom(newZoom);
+  // Pinch Gesture for Smooth Zooming
+  const pinchGesture = Gesture.Pinch()
+  .onUpdate((event) => {
+    scale.value = Math.max(minZoom, Math.min(event.scale, maxZoom)); // Clamp zoom level
+
+    console.log("pinch" , scale.value)
+  })
+  .onEnd(() => {
+    if (scale.value < minZoom) {
+      scale.value = withSpring(minZoom); // Reset to default zoom if too small
     }
-  };
+  });
+
+  // Double Tap Gesture for Quick Zoom In/Out
+  const doubleTapGesture = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(() => {
+      scale.value = scale.value === 1 ? withSpring(doubleTapZoom) : withSpring(1);
+    });
+
+  // Apply Animated Zoom Effect
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
 
   const processFrame = (frame: any) => {
     // Here, you can apply AI processing, filters, etc.g
@@ -54,17 +75,17 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
   ])
 
   return (
-    <GestureDetector   gesture={viewModel.gestureComposed}>
-      <RNAnimated.View style={[styles.container, viewModel.animatedStyles]}>
-        <PinchGestureHandler onGestureEvent={handlePinchGesture}>
+    <GestureDetector gesture={pinchGesture}>
+      <RNAnimated.View style={[styles.container, viewModel.animatedStyles]} >
             { device ? ( <Camera
             ref={props.cameraRef}
             style={styles.webcam}
             device={device!}
             isActive={true}
             video={true}
+            audio={true}
             format={format}
-            zoom={zoom}
+            zoom={scale.value}
             videoStabilizationMode="standard"
             enableZoomGesture={true}
             //enableFpsGraph={true}
@@ -83,7 +104,6 @@ const AplusVideo = (props: Props, ref: React.LegacyRef<VideoRef>) => {
                 resizeMode="stretch">
                 </ImageBackground>
             ) }
-          </PinchGestureHandler>
      </RNAnimated.View>
     </GestureDetector>
   );

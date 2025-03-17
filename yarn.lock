@@ -2090,6 +2090,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openspacelabs/react-native-zoomable-view@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "@openspacelabs/react-native-zoomable-view@npm:2.3.1"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.54.0"
+  checksum: 2ac48d469c31b8c38aea5646544e591cbcfa1c5cd6c148cd876e77f9b95024af913ea48e1ff5c23e4f15dc846f4b27223fa93f4a9e86b7821b79de8243dc276f
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -4178,6 +4190,7 @@ __metadata:
     "@babel/plugin-transform-private-methods": ^7.24.7
     "@babel/preset-env": ^7.26.9
     "@babel/runtime": ^7.20.0
+    "@openspacelabs/react-native-zoomable-view": ^2.3.1
     "@react-native-async-storage/async-storage": 2.1.2
     "@react-native-community/cli": ^17.0.0
     "@react-native-community/slider": ^4.5.5
@@ -4215,7 +4228,7 @@ __metadata:
     react-native-device-info: ^13.0.0
     react-native-file-access: latest
     react-native-fs: ^2.20.0
-    react-native-gesture-handler: latest
+    react-native-gesture-handler: ^2.24.0
     react-native-get-random-values: ^1.11.0
     react-native-image-picker: ^7.1.2
     react-native-linear-gradient: ^2.8.3
@@ -9552,7 +9565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.0, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.7.2, prop-types@npm:^15.8.0, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -9774,7 +9787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:latest":
+"react-native-gesture-handler@npm:^2.24.0":
   version: 2.24.0
   resolution: "react-native-gesture-handler@npm:2.24.0"
   dependencies:

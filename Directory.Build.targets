@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <Target Name="AplusPrintWindowsBuildArch" BeforeTargets="PrepareForBuild">
-    <Message Importance="High" Text="[Aplus Windows] MSBuild project=$(MSBuildProjectName); Platform=$(Platform); PlatformTarget=$(PlatformTarget); ProcessorArchitecture=$(ProcessorArchitecture)" />
+  <Target Name="AplusWindowsBuildDiagnostics" BeforeTargets="PrepareForBuild" Condition="'$(MSBuildProjectExtension)' == '.vcxproj'">
+    <Message Importance="High" Text="[Aplus Windows] Project=$(MSBuildProjectName); Configuration=$(Configuration); Platform=$(Platform); PlatformTarget=$(PlatformTarget); PlatformToolset=$(PlatformToolset); PreferredToolArchitecture=$(PreferredToolArchitecture); IntDir=$(IntDir); OutDir=$(OutDir)" />
   </Target>
 </Project>

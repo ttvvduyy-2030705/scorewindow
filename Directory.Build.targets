@@ -1,0 +1,5 @@
+<Project>
+  <Target Name="AplusPrintWindowsBuildArch" BeforeTargets="PrepareForBuild">
+    <Message Importance="High" Text="[Aplus Windows] MSBuild project=$(MSBuildProjectName); Platform=$(Platform); PlatformTarget=$(PlatformTarget); ProcessorArchitecture=$(ProcessorArchitecture)" />
+  </Target>
+</Project>

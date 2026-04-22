@@ -1,0 +1,3 @@
+import React,{memo}from'react';import Container from'components/Container';import View from'components/View';import Text from'components/Text';import colors from'configuration/colors';
+const Playback=()=> <Container><View flex={'1'} alignItems={'center'} justify={'center'} padding={'20'}><Text color={colors.white} fontSize={24} textAlign={'center'}>Replay Windows chưa hỗ trợ</Text><View marginTop={'10'}><Text color={colors.gray} fontSize={16} textAlign={'center'}>Recording/replay native Android đã được fallback để không crash khi chạy Windows.</Text></View></View></Container>;
+export default memo(Playback);

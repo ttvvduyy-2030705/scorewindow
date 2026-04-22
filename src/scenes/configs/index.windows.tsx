@@ -1,0 +1,3 @@
+import React,{memo}from'react';import Container from'components/Container';import View from'components/View';import Text from'components/Text';import LanguageConfig from'./language';import TableNumber from'./table-number';import colors from'configuration/colors';
+const Configs=()=> <Container><View flex={'1'} padding={'20'}><View marginBottom={'20'}><Text color={colors.white} fontSize={24} fontWeight={'bold'}>Cấu hình Windows</Text></View><LanguageConfig/><View marginVertical={'10'}/><TableNumber/><View marginTop={'20'}><Text color={colors.gray} fontSize={16}>Camera, livestream, Bluetooth và thumbnail picker đang tạm fallback trên Windows để build không crash.</Text></View></View></Container>;
+export default memo(Configs);

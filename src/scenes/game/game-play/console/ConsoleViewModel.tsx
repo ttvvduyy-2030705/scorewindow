@@ -5,7 +5,7 @@ import {BALLS_10, BALLS_15, BALLS_9} from 'constants/balls';
 import {RootState} from 'data/redux/reducers';
 import i18n from 'i18n';
 import {ReactNode, Ref, RefObject, useCallback, useEffect, useMemo, useState} from 'react';
-import { Camera } from 'react-native-vision-camera';
+import type {Camera} from 'react-native-vision-camera';
 import {useSelector} from 'react-redux';
 import {BallType, PoolBallType} from 'types/ball';
 import {Player, PlayerSettings} from 'types/player';

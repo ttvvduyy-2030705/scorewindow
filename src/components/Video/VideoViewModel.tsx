@@ -10,7 +10,7 @@ import {
   OnVideoTracksData,
   ReactVideoSourceProperties,
 } from 'react-native-video';
-import { Camera } from 'react-native-vision-camera';
+import type {Camera} from 'react-native-vision-camera';
 
 export interface Props {
   gestureDisabled?: boolean;

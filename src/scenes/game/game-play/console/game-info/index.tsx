@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import {isCaromGame, isPoolGame} from 'utils/game';
 import styles from './styles';
 import Webcam from '../webcam';
-import {Camera} from 'react-native-vision-camera';
+import type {Camera} from 'react-native-vision-camera';
 
 interface Props {
   isStarted: boolean;

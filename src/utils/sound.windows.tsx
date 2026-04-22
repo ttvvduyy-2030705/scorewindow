@@ -1,0 +1,1 @@
+const Sound={playTimeout:()=>{},beep:()=>{},stop:()=>{}};export default Sound;

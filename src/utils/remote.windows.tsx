@@ -1,0 +1,1 @@
+class RemoteControlFallback{static instance=new RemoteControlFallback();registerKeyEvents=()=>{};removeAllListeners=()=>{}}export default RemoteControlFallback;

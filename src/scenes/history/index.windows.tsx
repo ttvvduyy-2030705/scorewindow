@@ -1,0 +1,3 @@
+import React,{memo}from'react';import Container from'components/Container';import View from'components/View';import Text from'components/Text';import colors from'configuration/colors';
+const History=()=> <Container><View flex={'1'} alignItems={'center'} justify={'center'} padding={'20'}><Text color={colors.white} fontSize={24} textAlign={'center'}>Lịch sử trận đấu Windows đang tạm tắt</Text><View marginTop={'10'}><Text color={colors.gray} fontSize={16} textAlign={'center'}>Bản Windows ưu tiên chạy giao diện và gameplay trước, không dùng Realm/recording native.</Text></View></View></Container>;
+export default memo(History);

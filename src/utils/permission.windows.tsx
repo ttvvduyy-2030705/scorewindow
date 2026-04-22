@@ -1,0 +1,1 @@
+const requestReadWriteStorage=async()=>false;export{requestReadWriteStorage};

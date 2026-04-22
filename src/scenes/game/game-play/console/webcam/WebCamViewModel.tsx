@@ -44,7 +44,7 @@ import {
 } from 'types/webcam';
 import {CAMERA_PLAYBACK_DURATION} from './constants';
 import { PlayBackWebcamViewModelProps } from 'scenes/playback/PlayBackViewModel';
-import { Camera } from 'react-native-vision-camera';
+import type {Camera} from 'react-native-vision-camera';
 
 export interface Props {
   innerControls?: boolean;

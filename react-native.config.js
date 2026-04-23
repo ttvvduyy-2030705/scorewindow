@@ -1,17 +1,30 @@
-const windowsDisabledPackages = [
-  '@react-native-google-signin/google-signin',
-  '@realm/react',
-  'realm',
-  'react-native-ble-plx',
-  'react-native-vision-camera',
-  'react-native-webrtc',
-  'react-native-worklets-core',
-  'react-native-reanimated',
-];
-
 module.exports = {
-  assets: ['./src/assets/fonts'],
-  dependencies: Object.fromEntries(
-    windowsDisabledPackages.map(name => [name, {platforms: {windows: null}}]),
-  ),
+  assets: ['./assets/fonts/'],
+  dependencies: {
+    '@react-native-async-storage/async-storage': {
+      platforms: {
+        windows: null,
+      },
+    },
+    '@react-native-community/netinfo': {
+      platforms: {
+        windows: null,
+      },
+    },
+    'react-native-device-info': {
+      platforms: {
+        windows: null,
+      },
+    },
+    'react-native-screens': {
+      platforms: {
+        windows: null,
+      },
+    },
+    'react-native-tts': {
+      platforms: {
+        windows: null,
+      },
+    },
+  },
 };

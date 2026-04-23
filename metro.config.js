@@ -1,10 +1,21 @@
+if (!Array.prototype.toReversed) {
+  Object.defineProperty(Array.prototype, 'toReversed', {
+    value: function () {
+      return Array.from(this).reverse();
+    },
+    writable: true,
+    configurable: true,
+  });
+}
+
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const fs = require('fs');
 const path = require('path');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
 
 function normalizePathForRegex(value) {
-  return value.replace(/[/\\]/g, '/').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return value
+    .replace(/[/\\]/g, '/')
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 const blockList = [
@@ -19,12 +30,12 @@ try {
   blockList.push(new RegExp(`${normalizePathForRegex(rnwPath)}/build/.*`));
   blockList.push(new RegExp(`${normalizePathForRegex(rnwPath)}/target/.*`));
 } catch (_error) {
-  // react-native-windows is installed by npm install. Keep Metro usable before install.
+  // ignore before install
 }
 
 const config = {
   resolver: {
-    blockList: exclusionList(blockList),
+    blockList,
   },
   transformer: {
     getTransformOptions: async () => ({

@@ -1,84 +1,32 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {View, Text} from 'react-native';
 
-type BoundaryState = {
-  errorText: string | null;
-};
-
-class ErrorBoundary extends React.Component<
-  {children: React.ReactNode},
-  BoundaryState
-> {
-  constructor(props: {children: React.ReactNode}) {
-    super(props);
-    this.state = {errorText: null};
-  }
-
-  componentDidCatch(error: unknown) {
-    const text =
-      error instanceof Error
-        ? `${error.name}: ${error.message}\n\n${error.stack ?? ''}`
-        : String(error);
-
-    console.error('WINDOWS_RENDER_ERROR', error);
-    this.setState({errorText: text});
-  }
-
-  render() {
-    if (this.state.errorText) {
-      return (
-        <ScrollView
-          style={{flex: 1, backgroundColor: '#111'}}
-          contentContainerStyle={{padding: 24}}>
-          <Text style={{color: '#fff', fontSize: 28, fontWeight: '700'}}>
-            WINDOWS RENDER ERROR
-          </Text>
-          <Text
-            selectable
-            style={{color: '#ff6b6b', fontSize: 14, marginTop: 16}}>
-            {this.state.errorText}
-          </Text>
-        </ScrollView>
-      );
-    }
-
-    return this.props.children;
-  }
-}
+const RealApp = require('./App').default;
 
 export default function App() {
-  try {
-    const RealApp = require('./App').default;
-
-    return (
-      <ErrorBoundary>
-        <RealApp />
-      </ErrorBoundary>
-    );
-  } catch (error) {
-    const text =
-      error instanceof Error
-        ? `${error.name}: ${error.message}\n\n${error.stack ?? ''}`
-        : String(error);
-
-    console.error('WINDOWS_LOAD_ERROR', error);
-
-    return (
-      <ScrollView
-        style={{flex: 1, backgroundColor: '#111'}}
-        contentContainerStyle={{padding: 24}}>
-        <Text style={{color: '#fff', fontSize: 28, fontWeight: '700'}}>
-          WINDOWS LOAD ERROR
+  return (
+    <View style={{flex: 1, backgroundColor: '#111'}}>
+      <RealApp />
+      <View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          top: 12,
+          left: 12,
+          right: 12,
+          zIndex: 999999,
+          backgroundColor: 'rgba(180,0,0,0.92)',
+          paddingHorizontal: 12,
+          paddingVertical: 10,
+          borderRadius: 8,
+        }}>
+        <Text style={{color: '#fff', fontSize: 16, fontWeight: '700'}}>
+          WINDOWS WRAPPER ACTIVE
         </Text>
-        <Text selectable style={{color: '#00ff88', fontSize: 16, marginTop: 8}}>
-          App.windows.tsx loaded successfully
+        <Text style={{color: '#fff', fontSize: 13, marginTop: 4}}>
+          App.windows.tsx đang chạy, màn trắng là từ App.tsx bên trong
         </Text>
-        <Text
-          selectable
-          style={{color: '#ff6b6b', fontSize: 14, marginTop: 16}}>
-          {text}
-        </Text>
-      </ScrollView>
-    );
-  }
+      </View>
+    </View>
+  );
 }

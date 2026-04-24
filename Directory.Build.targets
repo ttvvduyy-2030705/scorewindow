@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project>
-  <Target Name="AplusWindowsBuildDiagnostics" BeforeTargets="PrepareForBuild" Condition="'$(MSBuildProjectExtension)' == '.vcxproj'">
-    <Message Importance="High" Text="[Aplus Windows] Project=$(MSBuildProjectName); Configuration=$(Configuration); Platform=$(Platform); PlatformTarget=$(PlatformTarget); PlatformToolset=$(PlatformToolset); PreferredToolArchitecture=$(PreferredToolArchitecture); IntDir=$(IntDir); OutDir=$(OutDir)" />
-  </Target>
-</Project>

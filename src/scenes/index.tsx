@@ -1,24 +1,32 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import {StyleSheet} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+
 import Text from 'components/Text';
-import {withWrapper} from 'components/HOC';
-import colors from 'configuration/colors';
-import {sceneKeys, scenes} from './screens';
-import i18n from 'i18n';
 import Button from 'components/Button';
 import Image from 'components/Image';
+
+import {withWrapper} from 'components/HOC';
+
+import colors from 'configuration/colors';
+
+import i18n from 'i18n';
 import images from 'assets';
+
 import {goBack} from 'utils/navigation';
-import {Platform, StyleSheet} from 'react-native';
-import {getHeaderHeight, getStatusBarHeight} from 'configuration';
+
+import {screens} from './screens';
+import {configureSystemUI} from 'theme/systemUI';
+import {LIVESTREAM_AUTH_BASE_URL} from 'config/livestreamAuth';
+import {SubscriptionProvider} from 'features/subscription';
 
 const Stack = createNativeStackNavigator();
 
 const screenOptions: NativeStackNavigationOptions = {
-  // animation: Platform.OS === 'ios' ? 'default' : 'fade',
   headerTitleAlign: 'center',
   headerTintColor: colors.white,
   headerBackTitle: '',
@@ -26,7 +34,6 @@ const screenOptions: NativeStackNavigationOptions = {
 };
 
 const noHeader: NativeStackNavigationOptions = {
-  // animation: Platform.OS === 'ios' ? 'default' : 'fade',
   headerShown: false,
 };
 
@@ -34,10 +41,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginLeft: -15,
     padding: 10,
-    height:
-      Platform.OS === 'android'
-        ? '100%'
-        : getHeaderHeight() - getStatusBarHeight() - 4,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -47,61 +51,169 @@ const styles = StyleSheet.create({
   },
 });
 
-const _renderBackButton = () => {
+const renderBackButton = () => {
   return (
     <Button onPress={goBack} style={styles.backButton}>
-      <Image
-        source={images.back}
-        style={styles.backIcon}
-        resizeMode={'contain'}
-      />
+      <Image source={images.icBack} style={styles.backIcon} />
     </Button>
   );
 };
 
-//Create array of screens
-const Scenes = sceneKeys.map((name, index) => {
-  const Scene = withWrapper(name, scenes[name]);
-  let _options: NativeStackNavigationOptions = {
-    headerTitle: () => (
-      <Text fontWeight={'bold'} letterSpacing={1.2}>
-        {i18n.t(name)}
-      </Text>
-    ),
-    headerLeft: _renderBackButton,
-  };
-
-  switch (name) {
-    case 'home':
-    case 'gamePlay':
-    case 'playback':
-      _options = noHeader;
-      break;
+const buildOptions = (
+  name: string,
+  hideHeader?: boolean,
+): NativeStackNavigationOptions => {
+  if (hideHeader) {
+    return noHeader;
   }
 
-  return (
-    <Stack.Screen
-      key={index}
-      name={name}
-      component={Scene}
-      options={_options}
-    />
-  );
-});
+  return {
+    ...screenOptions,
+    headerTitle: () => <Text>{i18n.t(name)}</Text>,
+    headerLeft: renderBackButton,
+  };
+};
 
-//Create navigator for screens
+const buildCustomTitleOptions = (
+  title: string,
+  hideHeader?: boolean,
+): NativeStackNavigationOptions => {
+  if (hideHeader) {
+    return noHeader;
+  }
+
+  return {
+    ...screenOptions,
+    headerTitle: () => <Text>{title}</Text>,
+    headerLeft: renderBackButton,
+  };
+};
+
+const getWrappedHome = () => withWrapper(screens.home, require('./home').default);
+const getWrappedLivePlatform = () =>
+  withWrapper(screens.livePlatform, require('./live-platform').default);
+const getWrappedLivePlatformSetup = () =>
+  withWrapper(
+    screens.livePlatformSetup,
+    require('./live-platform-setup/youtube').default,
+  );
+const getWrappedLivePlatformSetupFacebook = () =>
+  withWrapper(
+    screens.livePlatformSetupFacebook,
+    require('./live-platform-setup/facebook').default,
+  );
+const getWrappedLivePlatformSetupYoutube = () =>
+  withWrapper(
+    screens.livePlatformSetupYoutube,
+    require('./live-platform-setup/youtube').default,
+  );
+const getWrappedLivePlatformSetupTiktok = () =>
+  withWrapper(
+    screens.livePlatformSetupTiktok,
+    require('./live-platform-setup/tiktok').default,
+  );
+const getWrappedGameSettings = () =>
+  withWrapper(screens.gameSettings, require('./game/settings').default);
+const getWrappedGamePlay = () =>
+  withWrapper(screens.gamePlay, require('./game/game-play').default);
+const getWrappedHistory = () =>
+  withWrapper(screens.history, require('./history').default);
+const getWrappedPlayback = () =>
+  withWrapper(screens.playback, require('./playback').default);
+const getWrappedConfigs = () =>
+  withWrapper(screens.configs, require('./configs').default);
+
+const LIVE_FIX_BUILD = '20260419-0226-route-props-create-flow';
+
 const StackScreens = () => {
+  useEffect(() => {
+    const buildInfoLines = [
+      '[Build Info] app started',
+      '[Build Info] live-fix-build=' + LIVE_FIX_BUILD,
+      '[Build Info] apiBaseUrl=' + LIVESTREAM_AUTH_BASE_URL,
+      '[Build Info] package=' + DeviceInfo.getBundleId(),
+      '[Build Info] versionName=' + DeviceInfo.getVersion(),
+      '[Build Info] versionCode=' + DeviceInfo.getBuildNumber(),
+    ];
+
+    buildInfoLines.forEach(line => {
+      console.log(line);
+      console.warn(line);
+    });
+
+    configureSystemUI({animated: false});
+  }, []);
+
   return (
-    <Stack.Navigator
-      initialRouteName={'home'}
-      screenOptions={{
-        ...screenOptions,
-        headerStyle: {
-          backgroundColor: colors.primary,
-        },
-      }}>
-      {Scenes}
-    </Stack.Navigator>
+    <SubscriptionProvider>
+      <Stack.Navigator initialRouteName={screens.home}>
+      <Stack.Screen
+        name={screens.home}
+        getComponent={getWrappedHome}
+        options={buildOptions(screens.home, true)}
+      />
+
+      <Stack.Screen
+        name={screens.livePlatform}
+        getComponent={getWrappedLivePlatform}
+        options={buildCustomTitleOptions('Chọn nền tảng livestream', true)}
+      />
+
+      <Stack.Screen
+        name={screens.livePlatformSetup}
+        getComponent={getWrappedLivePlatformSetup}
+        options={buildCustomTitleOptions('Thiết lập livestream', true)}
+      />
+
+      <Stack.Screen
+        name={screens.livePlatformSetupFacebook}
+        getComponent={getWrappedLivePlatformSetupFacebook}
+        options={buildCustomTitleOptions('Thiết lập livestream', true)}
+      />
+
+      <Stack.Screen
+        name={screens.livePlatformSetupYoutube}
+        getComponent={getWrappedLivePlatformSetupYoutube}
+        options={buildCustomTitleOptions('Thiết lập livestream', true)}
+      />
+
+      <Stack.Screen
+        name={screens.livePlatformSetupTiktok}
+        getComponent={getWrappedLivePlatformSetupTiktok}
+        options={buildCustomTitleOptions('Thiết lập livestream', true)}
+      />
+
+      <Stack.Screen
+        name={screens.gameSettings}
+        getComponent={getWrappedGameSettings}
+        options={buildOptions(screens.gameSettings, true)}
+      />
+
+      <Stack.Screen
+        name={screens.gamePlay}
+        getComponent={getWrappedGamePlay}
+        options={buildOptions(screens.gamePlay, true)}
+      />
+
+      <Stack.Screen
+        name={screens.history}
+        getComponent={getWrappedHistory}
+        options={buildOptions(screens.history, true)}
+      />
+
+      <Stack.Screen
+        name={screens.playback}
+        getComponent={getWrappedPlayback}
+        options={buildOptions(screens.playback, true)}
+      />
+
+      <Stack.Screen
+        name={screens.configs}
+        getComponent={getWrappedConfigs}
+        options={buildOptions(screens.configs, true)}
+      />
+      </Stack.Navigator>
+    </SubscriptionProvider>
   );
 };
 

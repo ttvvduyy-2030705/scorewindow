@@ -5,13 +5,13 @@ import {BALLS_10, BALLS_15, BALLS_9} from 'constants/balls';
 import {RootState} from 'data/redux/reducers';
 import i18n from 'i18n';
 import {ReactNode, Ref, RefObject, useCallback, useEffect, useMemo, useState} from 'react';
-import type {Camera} from 'react-native-vision-camera';
+import { Camera } from 'react-native-vision-camera';
 import {useSelector} from 'react-redux';
 import {BallType, PoolBallType} from 'types/ball';
 import {Player, PlayerSettings} from 'types/player';
 import {GameSettings, GameSettingsMode} from 'types/settings';
 import {formatTotalTime} from 'utils/date';
-import {isPool10Game, isPool15Game, isPool15OnlyGame} from 'utils/game';
+import {isPool10Game, isPool15FreeGame, isPool15OnlyGame} from 'utils/game';
 
 export interface ConsoleViewModelProps {
   gameSettings: GameSettings;
@@ -42,7 +42,15 @@ export interface ConsoleViewModelProps {
   onDecreaseTotalTurns: () => void;
   onToggleSound: () => void;
   onToggleProMode: () => void;
+  onPool15OnlyScore?: (playerIndex: number) => void;
   onPoolScore: (ball: PoolBallType) => void;
+  pool8Trackers?: {sequence: BallType[]; activeIndex: number}[];
+  pool8SetWinnerIndex?: number | null;
+  onSwapPool8Groups?: () => void;
+  pool8FreeHole10Scores?: number[];
+  pool8FreeSetWinnerIndex?: number | null;
+  onIncrementPool8FreeHole10?: (playerIndex: number) => void;
+  onDecrementPool8FreeHole10?: (playerIndex: number) => void;
   onSelectWinner: () => void;
   onClearWinner: () => void;
  // renderMatchInfo: () => ReactNode;
@@ -56,6 +64,8 @@ export interface ConsoleViewModelProps {
   cameraRef : RefObject<Camera>;
   isCameraReady: boolean;
   setIsCameraReady: ((isReady: boolean) => void);
+  youtubeLivePreviewActive?: boolean;
+  cameraFullscreen?: boolean;
   //isPreview: boolean;
   // videoUri?: string;
   // setVideoUri: (name: string) => void;
@@ -72,7 +82,7 @@ const ConsoleViewModel = (props: ConsoleViewModelProps) => {
 
   //Pool 15-only
   const [balls, setBalls] = useState(
-    isPool15Game(gameSettings?.category)
+    isPool15FreeGame(gameSettings?.category)
       ? BALLS_15
       : isPool10Game(gameSettings?.category)
       ? BALLS_10
@@ -120,9 +130,11 @@ const ConsoleViewModel = (props: ConsoleViewModelProps) => {
   }, [props]);
 
   const onPressGiveMoreTime = useCallback(() => {
-    if (props.isPaused) {
-      return;
-    }
+    console.log('[Extension] console press', {
+      isPaused: props.isPaused,
+      isStarted: props.isStarted,
+      countdownTime: props.countdownTime,
+    });
 
     props.onPressGiveMoreTime();
   }, [props]);
@@ -222,7 +234,7 @@ const ConsoleViewModel = (props: ConsoleViewModelProps) => {
     setPool15OnlyPointLeft(0);
     setPool15OnlyPointRight(0);
     setBalls(
-      isPool15Game(gameSettings?.category)
+      isPool15FreeGame(gameSettings?.category)
         ? BALLS_15
         : isPool10Game(gameSettings?.category)
         ? BALLS_10

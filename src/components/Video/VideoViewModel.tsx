@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react';
 import {Ref, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {Gesture} from 'react-native-gesture-handler';
 import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
@@ -10,7 +11,7 @@ import {
   OnVideoTracksData,
   ReactVideoSourceProperties,
 } from 'react-native-video';
-import type {Camera} from 'react-native-vision-camera';
+import { Camera } from 'react-native-vision-camera';
 
 export interface Props {
   gestureDisabled?: boolean;
@@ -40,6 +41,11 @@ export interface Props {
   videoUri?:  string;
   webcamType : string;
   setIsCameraReady: ((isReady: boolean) => void);
+  overlayContent?: ReactNode;
+  cameraScaleMode?: 'contain' | 'cover';
+  androidPreviewViewTypeOverride?: 'surface-view' | 'texture-view' | 'default';
+  suppressCameraFallbackOverlay?: boolean;
+  ignoreNavigationFocusLoss?: boolean;
 }
 
 const VideoViewModel = (props: Props) => {

@@ -1,60 +1,121 @@
-import React, {memo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
+import {Pressable, ScrollView} from 'react-native';
+
+import images from 'assets';
+import Image from 'components/Image';
 import Container from 'components/Container';
 import View from 'components/View';
-import Button from 'components/Button';
 import Text from 'components/Text';
 import i18n from 'i18n';
-import LanguageConfig from './language';
-import WebcamConfig from './webcam';
-import ConfigsViewModel from './ConfigsViewModel';
 import {WebcamType} from 'types/webcam';
-import Livestream from './livestream';
-import styles from './styles';
-import Thumbnails from './thumbnails';
-import TableNumber from './table-number';
-import BluetoothConfig from './buetooth'
 
-const Configs = () => {
+import ConfigsViewModel from './ConfigsViewModel';
+import LanguageConfig from './language';
+import Livestream from './livestream';
+import TableNumber from './table-number';
+import Thumbnails from './thumbnails';
+import WebcamConfig from './webcam';
+import createStyles from './styles';
+import useAdaptiveLayout from 'scenes/game/useAdaptiveLayout';
+import useScreenSystemUI from 'theme/systemUI';
+
+const getFallbackTitle = () => {
+  const translated = i18n.t('configs' as never);
+  if (translated && translated !== 'configs') {
+    return translated as string;
+  }
+
+  return 'Cấu hình';
+};
+
+const Configs = (props: any) => {
+  useScreenSystemUI({variant: 'fullscreen', barStyle: 'light-content'});
   const viewModel = ConfigsViewModel();
+  const adaptive = useAdaptiveLayout();
+  const styles = useMemo(() => createStyles(adaptive), [adaptive.styleKey]);
+
+  const title = useMemo(() => getFallbackTitle(), []);
+  const isStacked = !adaptive.isLandscape || adaptive.width < 1180;
+
+  const onBack = useCallback(() => {
+    if (typeof props?.goBack === 'function') {
+      props.goBack();
+      return;
+    }
+
+    if (typeof props?.navigation?.goBack === 'function') {
+      props.navigation.goBack();
+    }
+  }, [props]);
 
   return (
-    <Container>
-      <View flex={'1'} padding={'20'}>
-        <View flex={'1'} direction={'row'}>
-          <View flex={'1'} marginBottom={'20'} marginRight={'20'}>
+    <Container style={styles.screen}>
+
+      <View style={styles.headerGlow}>
+        <Pressable
+          onPress={onBack}
+          style={styles.headerBackButton}
+          android_ripple={{color: 'rgba(255,255,255,0.08)', borderless: false}}>
+          <View style={styles.headerBackFrame}>
+            <View style={styles.headerBackInner}>
+  <Image
+    source={require('../../assets/images/logo-back.png')}
+    resizeMode="contain"
+    style={{width: adaptive.s(18), height: adaptive.s(18), marginRight: adaptive.s(8)}}
+  />
+  <Image
+    source={images.logoSmall || images.logo}
+    resizeMode="contain"
+    style={styles.headerBackLogoImage}
+  />
+</View>
+          </View>
+        </Pressable>
+
+        <View pointerEvents="none" style={styles.headerTitleWrap}>
+          <Text color={'#FFFFFF'} style={styles.headerTitle}>{title}</Text>
+        </View>
+      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}>
+        <View style={[styles.contentRow, isStacked && styles.contentColumn]}>
+          <View style={[styles.leftColumn, isStacked && styles.stackedColumn]}>
             <LanguageConfig />
-            {/* <BluetoothConfig /> */}
-            <View marginVertical={'10'} />
+            <View style={styles.columnSpacer} />
             <TableNumber />
           </View>
-          <View flex={'1'} direction={'row'} style={styles.fullHeight}>
-            <View flex={'1'} style={styles.webcamContainer}>
-              <View direction={'row'} alignItems={'center'}>
-                <Button
-                  style={[
-                    styles.flex,
-                    viewModel.currentWebcamType === WebcamType.webcam
-                      ? styles.selectedButton
-                      : styles.button,
-                  ]}
-                  onPress={viewModel.onSelectWebcam}>
-                  <View paddingVertical={'10'} alignItems={'center'}>
-                    <Text>{i18n.t('webcam')}</Text>
-                  </View>
-                </Button>
-                <Button
-                  style={[
-                    styles.flex,
-                    viewModel.currentWebcamType === WebcamType.camera
-                      ? styles.selectedButton
-                      : styles.button,
-                  ]}
-                  onPress={viewModel.onSelectCamera}>
-                  <View paddingVertical={'10'} alignItems={'center'}>
-                    <Text>{i18n.t('camera')}</Text>
-                  </View>
-                </Button>
-              </View>
+
+          <View style={[styles.centerColumn, styles.panelShell, isStacked && styles.stackedColumn]}>
+            <View style={styles.tabRow}>
+              <Pressable
+                onPress={viewModel.onSelectWebcam}
+                style={[
+                  styles.tabButton,
+                  viewModel.currentWebcamType === WebcamType.webcam
+                    ? styles.tabButtonActive
+                    : styles.tabButtonIdle,
+                ]}>
+                <Text color={'#FFFFFF'} style={styles.tabLabel}>{i18n.t('webcam')}</Text>
+              </Pressable>
+
+              <View style={{width: 8}} />
+
+              <Pressable
+                onPress={viewModel.onSelectCamera}
+                style={[
+                  styles.tabButton,
+                  viewModel.currentWebcamType === WebcamType.camera
+                    ? styles.tabButtonActive
+                    : styles.tabButtonIdle,
+                ]}>
+                <Text color={'#FFFFFF'} style={styles.tabLabel}>{i18n.t('camera')}</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.livePanelBody}>
               {viewModel.currentWebcamType === WebcamType.webcam ? (
                 <WebcamConfig />
               ) : (
@@ -63,11 +124,11 @@ const Configs = () => {
             </View>
           </View>
 
-          <View flex={'1'} marginLeft={'20'}>
+          <View style={[styles.rightColumn, isStacked && styles.stackedColumn]}>
             <Thumbnails />
           </View>
         </View>
-      </View>
+      </ScrollView>
     </Container>
   );
 };

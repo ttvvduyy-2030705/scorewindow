@@ -1,73 +1,37 @@
 import React, {memo} from 'react';
-import View from 'components/View';
-import Text from 'components/Text';
-import i18n from 'i18n';
-import styles from './styles';
-import PickerList from './picker-list';
+import {Switch} from 'react-native';
 import {keys} from 'configuration/keys';
-import Switch from 'components/Switch';
+import Text from 'components/Text';
+import View from 'components/View';
+import images from 'assets';
+import i18n from 'i18n';
+import PickerList from './picker-list';
 import ThumbnailsViewModel from './ThumbnailsViewModel';
+import styles from './styles';
+import {useAplusPro} from 'features/subscription';
 
 const Thumbnails = () => {
   const viewModel = ThumbnailsViewModel();
-
+  const {isAplusProActive} = useAplusPro();
+  const premiumLocked = !isAplusProActive;
   return (
-    <View direction={'row'}>
-      <View flex={'1'} style={styles.container}>
-        <View margin={'20'}>
-          <Text fontWeight={'bold'}>{i18n.t('sponsorLogos')}</Text>
-        </View>
-
-        <View direction={'row'}>
-          <View flex={'1'} marginHorizontal={'20'}>
-            <View marginBottom={'10'}>
-              <Text>{i18n.t('txtTopLeft')}</Text>
-            </View>
-            <PickerList saveKey={keys.THUMBNAILS_TOP_LEFT} />
-          </View>
-          <View flex={'1'}>
-            <View marginBottom={'10'}>
-              <Text>{i18n.t('txtTopRight')}</Text>
-            </View>
-            <PickerList saveKey={keys.THUMBNAILS_TOP_RIGHT} />
-          </View>
-        </View>
-
-        <View direction={'row'} marginVertical={'20'}>
-          <View flex={'1'} marginHorizontal={'20'}>
-            <View marginBottom={'10'}>
-              <Text>{i18n.t('txtBottomLeft')}</Text>
-            </View>
-            <PickerList saveKey={keys.THUMBNAILS_BOTTOM_LEFT} />
-          </View>
-          <View flex={'1'}>
-            <View marginBottom={'10'}>
-              <Text>{i18n.t('txtBottomRight')}</Text>
-            </View>
-            <PickerList saveKey={keys.THUMBNAILS_BOTTOM_RIGHT} />
-          </View>
-        </View>
-
-        <View
-          direction={'row'}
-          alignItems={'center'}
-          marginLeft={'20'}
-          marginBottom={'20'}>
-          <View>
-            <Text>{i18n.t('showOnLiveStream')}</Text>
-          </View>
-          {typeof viewModel.showOnLiveStream === 'boolean' ? (
-            <Switch
-              defaultValue={viewModel.showOnLiveStream}
-              onChange={viewModel.onToggleShowOnLiveStream}
-            />
-          ) : (
-            <View />
-          )}
-        </View>
+    <View style={styles.container}>
+      <Text color={'#FFFFFF'} style={styles.title}>{i18n.t('sponsorLogos')}</Text>
+      <View style={styles.row}>
+        <View style={styles.slotColumn}><Text color={'#A8A8A8'} style={styles.slotTitle}>{i18n.t('txtTopLeft')}</Text><PickerList saveKey={keys.THUMBNAILS_TOP_LEFT} fixedImageSource={images.logoFilled} locked premiumLocked={premiumLocked} /></View>
+        <View style={styles.rowGap} />
+        <View style={styles.slotColumn}><Text color={'#A8A8A8'} style={styles.slotTitle}>{i18n.t('txtTopRight')}</Text><PickerList saveKey={keys.THUMBNAILS_TOP_RIGHT} premiumLocked={premiumLocked} /></View>
+      </View>
+      <View style={[styles.row,{marginTop:16}]}>
+        <View style={styles.slotColumn}><Text color={'#A8A8A8'} style={styles.slotTitle}>{i18n.t('txtBottomLeft')}</Text><PickerList saveKey={keys.THUMBNAILS_BOTTOM_LEFT} premiumLocked={premiumLocked} /></View>
+        <View style={styles.rowGap} />
+        <View style={styles.slotColumn}><Text color={'#A8A8A8'} style={styles.slotTitle}>{i18n.t('txtBottomRight')}</Text><PickerList saveKey={keys.THUMBNAILS_BOTTOM_RIGHT} premiumLocked={premiumLocked} /></View>
+      </View>
+      <View style={styles.toggleRow}>
+        <Text color={'#FFFFFF'} style={styles.toggleLabel}>{i18n.t('showOnLiveStream')}</Text>
+        {typeof viewModel.showOnLiveStream === 'boolean' ? <Switch value={viewModel.showOnLiveStream} onValueChange={viewModel.onToggleShowOnLiveStream} trackColor={{false:'#2A2A2A', true:'#C91D24'}} thumbColor={viewModel.showOnLiveStream ? '#FFFFFF' : '#BDBDBD'} ios_backgroundColor="#2A2A2A" /> : <View />}
       </View>
     </View>
   );
 };
-
 export default memo(Thumbnails);

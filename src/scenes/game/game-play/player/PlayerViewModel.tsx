@@ -1,9 +1,10 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import { RemoteControlKeys } from 'types/bluetooth';
+import {RemoteControlKeys} from 'types/bluetooth';
 import {Player} from 'types/player';
 import {GameSettings} from 'types/settings';
 import {isPoolGame} from 'utils/game';
 import RemoteControl from 'utils/remote';
+import {useAplusPro} from 'features/subscription';
 
 export interface Props {
   index: number;
@@ -29,55 +30,149 @@ export interface Props {
   ) => void;
   onViolate: (playerIndex: number, reset?: boolean) => void;
   onEndTurn: (isPrevious?: boolean) => void;
+  onPressGiveMoreTime?: () => void;
 }
 
+const formatAverage = (value?: number) => {
+  const numeric = Number(value ?? 0);
+  return Number.isFinite(numeric) ? numeric.toFixed(2) : '0.00';
+};
+
 const PlayerViewModel = (props: Props) => {
+  const logRemoteFlow = useCallback((stage: string, payload?: Record<string, any>) => {
+    try {
+      if (payload) {
+        console.log(`REMOTE_FLOW: ${stage}`, JSON.stringify(payload));
+        return;
+      }
+
+      console.log(`REMOTE_FLOW: ${stage}`);
+    } catch {
+      console.log(`REMOTE_FLOW: ${stage}`, payload);
+    }
+  }, []);
+  const {requireAplusPro} = useAplusPro();
   const [nameEditable, setNameEditable] = useState(false);
-  const [highestRate, setHighestRate] = useState(0);
-  const [averagePoint, setAveragePoint] = useState<string>('0');
-  const [totalPointInTurn, setTotalPointInTurn] = useState(0);
-
-  const onToggleEditName = useCallback(() => {
-    setNameEditable(!nameEditable);
-  }, [nameEditable]);
-
-  const onChangeName = useCallback(
-    (value: string) => {
-      props.onEditPlayerName(props.index, value);
-    },
-    [props],
+  const [draftName, setDraftName] = useState(props.player.name || '');
+  const [totalPointInTurn, setTotalPointInTurn] = useState(
+    Number(props.player.proMode?.currentPoint || 0),
   );
 
+  const highestRate = Number(props.player.proMode?.highestRate || 0);
+  const averagePoint = formatAverage(Number(props.player.proMode?.average || 0));
+
   useEffect(() => {
-    if(props.isOnTurn){
-      RemoteControl.instance.registerKeyEvents(
-        RemoteControlKeys.UP,
-        onIncreasePoint,
-      );
-      RemoteControl.instance.registerKeyEvents(
-        RemoteControlKeys.DOWN,
-        onDecreasePoint
-      );
-      RemoteControl.instance.registerKeyEvents(
-        RemoteControlKeys.LEFT,
-        onEndTurn.bind(PlayerViewModel, undefined),
-      );
-      RemoteControl.instance.registerKeyEvents(
-        RemoteControlKeys.RIGHT,
-        onEndTurn,
-      );
+    setTotalPointInTurn(Number(props.player.proMode?.currentPoint || 0));
+  }, [props.player.proMode?.currentPoint]);
+
+  useEffect(() => {
+    if (!nameEditable) {
+      setDraftName(props.player.name || '');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.player.name, nameEditable]);
+
+  const onChangeDraftName = useCallback((value: string) => {
+    setDraftName(value);
+  }, []);
+
+  const onCommitName = useCallback(() => {
+    const originalName = props.player.name || '';
+    const trimmedName = String(draftName || '').trim();
+    const nextName = trimmedName || originalName;
+
+    if (nextName !== originalName) {
+      props.onEditPlayerName(props.index, nextName);
+    }
+
+    setDraftName(nextName);
+    setNameEditable(false);
+  }, [draftName, props]);
+
+  const onToggleEditName = useCallback(() => {
+    if (nameEditable) {
+      onCommitName();
+      return;
+    }
+
+    requireAplusPro('rename_player', () => {
+      setDraftName(props.player.name || '');
+      setNameEditable(true);
+    });
+  }, [nameEditable, onCommitName, props.player.name, requireAplusPro]);
+
+  useEffect(() => {
+    logRemoteFlow('PlayerViewModel remote effect', {
+      playerIndex: props.index,
+      playerName: props.player?.name,
+      isOnTurn: props.isOnTurn,
+      isStarted: props.isStarted,
+      isPaused: props.isPaused,
+      totalTurns: props.totalTurns,
+    });
+
+    if (props.isOnTurn) {
+      RemoteControl.instance.registerKeyEvents(RemoteControlKeys.UP, () => {
+        logRemoteFlow('PlayerViewModel callback UP', {
+          playerIndex: props.index,
+          playerName: props.player?.name,
+          isOnTurn: props.isOnTurn,
+          isStarted: props.isStarted,
+          isPaused: props.isPaused,
+        });
+        onIncreasePoint();
+      });
+      RemoteControl.instance.registerKeyEvents(RemoteControlKeys.DOWN, () => {
+        logRemoteFlow('PlayerViewModel callback DOWN', {
+          playerIndex: props.index,
+          playerName: props.player?.name,
+          isOnTurn: props.isOnTurn,
+          isStarted: props.isStarted,
+          isPaused: props.isPaused,
+        });
+        onDecreasePoint();
+      });
+      RemoteControl.instance.registerKeyEvents(RemoteControlKeys.LEFT, () => {
+        logRemoteFlow('PlayerViewModel callback LEFT', {
+          playerIndex: props.index,
+          playerName: props.player?.name,
+          isOnTurn: props.isOnTurn,
+          isStarted: props.isStarted,
+          isPaused: props.isPaused,
+        });
+        onEndTurn(undefined);
+      });
+      RemoteControl.instance.registerKeyEvents(RemoteControlKeys.RIGHT, () => {
+        logRemoteFlow('PlayerViewModel callback RIGHT', {
+          playerIndex: props.index,
+          playerName: props.player?.name,
+          isOnTurn: props.isOnTurn,
+          isStarted: props.isStarted,
+          isPaused: props.isPaused,
+        });
+        onEndTurn();
+      });
+    }
   }, [
-    props.isStarted,
-    props.isPaused,
-    props.totalTurns,
+    logRemoteFlow,
     props.gameSettings,
+    props.index,
+    props.isOnTurn,
+    props.isPaused,
+    props.isStarted,
     props.player,
+    props.totalTurns,
   ]);
 
-
   const onIncreasePoint = useCallback(() => {
+    logRemoteFlow('PlayerViewModel onIncreasePoint entered', {
+      playerIndex: props.index,
+      playerName: props.player?.name,
+      isOnTurn: props.isOnTurn,
+      isStarted: props.isStarted,
+      isPaused: props.isPaused,
+      category: props.gameSettings?.category,
+      mode: props.gameSettings?.mode?.mode,
+    });
     if (
       (!isPoolGame(props.gameSettings.category) &&
         !props.isOnTurn &&
@@ -85,14 +180,32 @@ const PlayerViewModel = (props: Props) => {
       !props.isStarted ||
       props.isPaused
     ) {
+      logRemoteFlow('PlayerViewModel onIncreasePoint blocked', {
+        playerIndex: props.index,
+        isOnTurn: props.isOnTurn,
+        isStarted: props.isStarted,
+        isPaused: props.isPaused,
+        category: props.gameSettings?.category,
+        mode: props.gameSettings?.mode?.mode,
+      });
       return;
     }
 
+    logRemoteFlow('PlayerViewModel onIncreasePoint apply', {playerIndex: props.index});
     setTotalPointInTurn(prev => prev + 1);
     props.onChangePlayerPoint(1, props.index, 0);
   }, [props]);
 
   const onDecreasePoint = useCallback(() => {
+    logRemoteFlow('PlayerViewModel onDecreasePoint entered', {
+      playerIndex: props.index,
+      playerName: props.player?.name,
+      isOnTurn: props.isOnTurn,
+      isStarted: props.isStarted,
+      isPaused: props.isPaused,
+      category: props.gameSettings?.category,
+      mode: props.gameSettings?.mode?.mode,
+    });
     if (
       (!isPoolGame(props.gameSettings.category) &&
         !props.isOnTurn &&
@@ -100,9 +213,18 @@ const PlayerViewModel = (props: Props) => {
       !props.isStarted ||
       props.isPaused
     ) {
+      logRemoteFlow('PlayerViewModel onDecreasePoint blocked', {
+        playerIndex: props.index,
+        isOnTurn: props.isOnTurn,
+        isStarted: props.isStarted,
+        isPaused: props.isPaused,
+        category: props.gameSettings?.category,
+        mode: props.gameSettings?.mode?.mode,
+      });
       return;
     }
 
+    logRemoteFlow('PlayerViewModel onDecreasePoint apply', {playerIndex: props.index});
     setTotalPointInTurn(prev => prev - 1);
     props.onChangePlayerPoint(-1, props.index, 0);
   }, [props]);
@@ -132,20 +254,26 @@ const PlayerViewModel = (props: Props) => {
 
   const onEndTurn = useCallback(
     (isPrevious?: boolean) => {
-      if (totalPointInTurn > highestRate) {
-        setHighestRate(totalPointInTurn);
-      }
-
-      setAveragePoint((props.player.totalPoint / props.totalTurns).toFixed(2));
+      logRemoteFlow('PlayerViewModel onEndTurn entered', {
+        playerIndex: props.index,
+        playerName: props.player?.name,
+        isPrevious,
+        isOnTurn: props.isOnTurn,
+        isStarted: props.isStarted,
+        isPaused: props.isPaused,
+      });
       setTotalPointInTurn(0);
-
       props.onEndTurn(isPrevious);
     },
-    [props, highestRate, totalPointInTurn],
+    [props],
   );
 
   const showProMode = useMemo(() => {
-    return props.proModeEnabled && !isPoolGame(props.gameSettings?.category);
+    return (
+      props.proModeEnabled &&
+      !isPoolGame(props.gameSettings?.category) &&
+      Number(props.totalPlayers || 2) <= 2
+    );
   }, [props]);
 
   return useMemo(() => {
@@ -155,8 +283,10 @@ const PlayerViewModel = (props: Props) => {
       averagePoint,
       totalPointInTurn,
       nameEditable,
+      draftName,
       onToggleEditName,
-      onChangeName,
+      onChangeDraftName,
+      onCommitName,
       onIncreasePoint,
       onDecreasePoint,
       onPressPointStep,
@@ -170,8 +300,10 @@ const PlayerViewModel = (props: Props) => {
     averagePoint,
     totalPointInTurn,
     nameEditable,
+    draftName,
     onToggleEditName,
-    onChangeName,
+    onChangeDraftName,
+    onCommitName,
     onIncreasePoint,
     onDecreasePoint,
     onPressPointStep,

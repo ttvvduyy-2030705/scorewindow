@@ -1,22 +1,28 @@
 import {StyleSheet} from 'react-native';
-import colors from 'configuration/colors';
-import {responsiveDimension} from 'utils/helper';
 
 const styles = StyleSheet.create({
-  inputWrapper: {},
-  input: {
-    fontWeight: 'bold',
-    backgroundColor: colors.transparent,
-    borderBottomWidth: 0.5,
-    color: colors.lightBlack,
-    marginHorizontal: 0,
+  inputWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  editIcon: {
-    width: responsiveDimension(24),
-    height: responsiveDimension(24),
+  input: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    borderBottomWidth: 1.2,
   },
   buttonEdit: {
-    padding: 10,
+    width: 34,
+    height: 34,
+    marginLeft: 10,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#15161B',
+  },
+  editIcon: {
+    width: 18,
+    height: 18,
+    tintColor: '#FFFFFF',
   },
 });
 

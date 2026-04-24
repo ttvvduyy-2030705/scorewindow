@@ -1,104 +1,145 @@
-import React, {lazy, memo, Suspense, useCallback} from 'react';
-import Image from 'components/Image';
-import View from 'components/View';
+import React, {memo, useCallback, useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Image, StyleSheet, View} from 'react-native';
+import {shouldShowMatchOverlay} from 'utils/matchOverlay';
 
-import {isPoolGame} from 'utils/game';
+export interface Props {
+  currentPlayerIndex: number;
+  countdownTime?: number;
+  gameSettings?: any;
+  playerSettings?: any;
+}
 
-import LiveStreamImagesViewModel, {Props} from './LiveStreamImagesViewModel';
-const PoolBoard = lazy(() => import('./pool-board'));
-import styles from './styles';
+const STORAGE_KEYS = {
+  THUMBNAILS_TOP_LEFT: 'ThumbnailsTopLeft',
+  THUMBNAILS_TOP_RIGHT: 'ThumbnailsTopRight',
+  THUMBNAILS_BOTTOM_LEFT: 'ThumbnailsBottomLeft',
+  THUMBNAILS_BOTTOM_RIGHT: 'ThumbnailsBottomRight',
+};
 
-const LiveStreamImages = (props: Props) => {
-  const viewModel = LiveStreamImagesViewModel(props);
+const safeParse = (value?: string | null) => {
+  if (!value) {
+    return [];
+  }
 
-  const renderImages = useCallback((imageList: string[]) => {
-    if (imageList.length === 0) {
-      return <View style={styles.emptyView} />;
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(Boolean);
     }
 
-    return (
-      <View direction={'row'}>
-        {imageList.map((image, index) => {
-          return (
-            <Image
-              key={index}
-              source={{uri: image}}
-              style={styles.image}
-              resizeMode={'contain'}
-            />
-          );
-        })}
-      </View>
-    );
+    if (typeof parsed === 'string' && parsed.length > 0) {
+      return [parsed];
+    }
+
+    return [];
+  } catch (error) {
+    console.log('[LiveStreamImages] parse error:', error);
+    return [];
+  }
+};
+
+const LiveStreamImages = (props: Props) => {
+  const [topLeftImages, setTopLeftImages] = useState<string[]>([]);
+  const [topRightImages, setTopRightImages] = useState<string[]>([]);
+  const [bottomLeftImages, setBottomLeftImages] = useState<string[]>([]);
+  const [bottomRightImages, setBottomRightImages] = useState<string[]>([]);
+
+  const loadImages = useCallback(async () => {
+    try {
+      const result = await AsyncStorage.multiGet([
+        STORAGE_KEYS.THUMBNAILS_TOP_LEFT,
+        STORAGE_KEYS.THUMBNAILS_TOP_RIGHT,
+        STORAGE_KEYS.THUMBNAILS_BOTTOM_LEFT,
+        STORAGE_KEYS.THUMBNAILS_BOTTOM_RIGHT,
+      ]);
+
+      setTopLeftImages(safeParse(result[0]?.[1]).slice(0, 1));
+      setTopRightImages(safeParse(result[1]?.[1]).slice(0, 1));
+      setBottomLeftImages(safeParse(result[2]?.[1]).slice(0, 1));
+      setBottomRightImages(safeParse(result[3]?.[1]).slice(0, 1));
+    } catch (error) {
+      console.log('[LiveStreamImages] load storage error:', error);
+    }
   }, []);
 
-  const renderTopLeftImages = useCallback(() => {
-    return (
-      <View
-        ref={viewModel.topLeftRef}
-        collapsable={false}
-        style={styles.absolute}>
-        {renderImages(viewModel.topLeftImages)}
-      </View>
-    );
-  }, [viewModel.topLeftRef, viewModel.topLeftImages, renderImages]);
+  useEffect(() => {
+    loadImages();
+    const interval = setInterval(loadImages, 1000);
 
-  const renderTopRightImages = useCallback(() => {
-    return (
-      <View
-        ref={viewModel.topRightRef}
-        collapsable={false}
-        style={styles.absolute}>
-        {renderImages(viewModel.topRightImages)}
-      </View>
-    );
-  }, [viewModel.topRightRef, viewModel.topRightImages, renderImages]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [loadImages]);
 
-  const renderBottomLeftImages = useCallback(() => {
-    return (
-      <View
-        ref={viewModel.bottomLeftRef}
-        collapsable={false}
-        style={styles.absolute}>
-        {renderImages(viewModel.bottomLeftImages)}
-      </View>
-    );
-  }, [viewModel.bottomLeftRef, viewModel.bottomLeftImages, renderImages]);
-
-  const renderBottomRightImages = useCallback(() => {
-    return (
-      <View
-        ref={viewModel.bottomRightRef}
-        collapsable={false}
-        style={styles.absolute}>
-        {renderImages(viewModel.bottomRightImages)}
-      </View>
-    );
-  }, [viewModel.bottomRightRef, viewModel.bottomRightImages, renderImages]);
-
-  if (!props.playerSettings || props.playerSettings.playingPlayers.length > 2) {
-    return <View />;
+  if (!shouldShowMatchOverlay(props.gameSettings, props.playerSettings)) {
+    return null;
   }
+
+  const renderImageList = (imageList: string[]) => {
+    if (!imageList || imageList.length === 0) {
+      return null;
+    }
+
+    return imageList.map((image, index) => (
+      <Image
+        key={`${index}`}
+        source={{uri: image}}
+        style={styles.image}
+        resizeMode="contain"
+      />
+    ));
+  };
 
   return (
     <>
-      {isPoolGame(props.gameSettings?.category) ? (
-        <Suspense>
-          <PoolBoard
-            currentPlayerIndex={props.currentPlayerIndex}
-            gameSettings={props.gameSettings}
-            playerSettings={props.playerSettings}
-          />
-        </Suspense>
-      ) : (
-        <View />
-      )}
-      {renderTopLeftImages()}
-      {renderTopRightImages()}
-      {renderBottomLeftImages()}
-      {renderBottomRightImages()}
+      <View pointerEvents="none" style={[styles.slot, styles.topLeft]}>
+        {renderImageList(topLeftImages)}
+      </View>
+
+      <View pointerEvents="none" style={[styles.slot, styles.topRight]}>
+        {renderImageList(topRightImages)}
+      </View>
+
+      <View pointerEvents="none" style={[styles.slot, styles.bottomLeft]}>
+        {renderImageList(bottomLeftImages)}
+      </View>
+
+      <View pointerEvents="none" style={[styles.slot, styles.bottomRight]}>
+        {renderImageList(bottomRightImages)}
+      </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  slot: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+    zIndex: 9999,
+    elevation: 9999,
+  },
+  topLeft: {
+    top: 8,
+    left: 8,
+  },
+  topRight: {
+    top: 8,
+    right: 8,
+  },
+  bottomLeft: {
+    bottom: 8,
+    left: 8,
+  },
+  bottomRight: {
+    bottom: 8,
+    right: 8,
+  },
+  image: {
+    width: 120,
+    height: 70,
+  },
+});
 
 export default memo(LiveStreamImages);

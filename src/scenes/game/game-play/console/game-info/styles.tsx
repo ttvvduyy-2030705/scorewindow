@@ -1,12 +1,12 @@
 import colors from 'configuration/colors';
 import {StyleSheet} from 'react-native';
-import {responsiveDimension} from 'utils/helper';
+import {scale as responsiveScale} from 'utils/responsive';
 
 const styles = StyleSheet.create({
   button: {
     flex: 1,
     borderRadius: 0,
-    paddingVertical: responsiveDimension(10),
+    paddingVertical: responsiveScale(10),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -19,19 +19,37 @@ const styles = StyleSheet.create({
     backgroundColor: colors.yellow,
   },
   textPointMarginBottom: {
-    marginTop: responsiveDimension(-24),
+    marginTop: responsiveScale(-24),
   },
   textPointNoMarginBottom: {
-    marginTop: responsiveDimension(-16),
+    marginTop: responsiveScale(-16),
   },
   pointWrapper: {
     height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pointLabel: {
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    lineHeight: 20,
+  },
+  pointColon: {
+    marginHorizontal: 4,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    lineHeight: 20,
   },
   valueWrapper: {
-    width: '30%',
+    minWidth: '18%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   valueText: {
-    position: 'absolute',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    lineHeight: 32,
   },
   buttonTurns: {
     backgroundColor: colors.gray2,

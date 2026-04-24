@@ -5,21 +5,26 @@ export enum DiscoverableDevices {
 }
 
 export enum RemoteControlKeys {
-  PLAY_OR_PAUSE = '85',
-  LIGHT = '82',
-  PAGE_UP = '92',
-  PAGE_DOWN = '93',
-  VOL_UP = '24',
-  VOL_DOWN = '25',
-  DEL = '67',
-  MUTE = '164',
+  START = '29',
+  WARM_UP = '30',
+  STOP = '31',
+  BREAK = '32',
+  EXTENSION = '24',
+  TIMER = '25',
+  NEW_GAME = '66',
   UP = '19',
-  LEFT = '22',
   DOWN = '20',
-  RIGHT = '21',
-  OK = '4'
+  LEFT = '21',
+  RIGHT = '22',
 }
 
 export type RemoteControlKeysNative = {
-  keyCode: RemoteControlKeys;
+  keyCode: RemoteControlKeys | string | number;
+  action?: string | number;
+  keyAction?: string | number;
+  repeatCount?: number;
+  scanCode?: string | number;
+  key?: string;
+  resolvedKey?: string;
+  code?: string;
 };

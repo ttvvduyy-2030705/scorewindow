@@ -1,7 +1,10 @@
 import {useCallback, useContext, useMemo} from 'react';
 import {LanguageContext} from 'context/language';
+
 import i18n from 'i18n';
+
 import {screens} from 'scenes/screens';
+
 import {Navigation} from 'types/navigation';
 
 export interface Props extends Navigation {}
@@ -10,7 +13,7 @@ const HomeViewModel = (props: Props) => {
   const {language} = useContext(LanguageContext);
 
   const onStartNewGame = useCallback(() => {
-    props.navigate(screens.gameSettings);
+    props.navigate(screens.livePlatform);
   }, [props]);
 
   const onPressHistory = useCallback(() => {

@@ -11,34 +11,51 @@ const PickerList = (props: Props) => {
 
   const IMAGES = useMemo(() => {
     return viewModel.images.map((image, index) => {
+      const imageSource = viewModel.locked
+        ? viewModel.fixedImageSource || {uri: image}
+        : {uri: image};
+
       return (
-        <View key={index}>
-          <View
+        <View key={`${image}-${index}`} marginHorizontal={'10'} marginVertical={'10'}>
+          <Button
             style={styles.item}
-            marginHorizontal={'10'}
-            marginVertical={'10'}>
-            <Image source={{uri: image}} style={styles.image} />
-            <Button
-              style={styles.closeButton}
-              onPress={viewModel.onDeleteImage.bind(PickerList, index)}>
-              <Image
-                source={images.close}
-                style={styles.closeImage}
-                resizeMode={'contain'}
-              />
-            </Button>
-          </View>
+            onPress={viewModel.locked ? viewModel.onLockedPress : () => {}}>
+            <>
+              <Image source={imageSource as any} style={styles.image} resizeMode={'contain'} />
+              <Button
+                disable={viewModel.locked && !viewModel.premiumBlocked}
+                style={[styles.closeButton, viewModel.locked && {opacity: 0.45}]}
+                onPress={viewModel.onDeleteImage.bind(PickerList, index)}>
+                <Image
+                  source={images.close}
+                  style={styles.closeImage}
+                  resizeMode={'contain'}
+                />
+              </Button>
+            </>
+          </Button>
         </View>
       );
     });
-  }, [viewModel.images, viewModel.onDeleteImage]);
+  }, [
+    viewModel.images,
+    viewModel.onDeleteImage,
+    viewModel.onLockedPress,
+    viewModel.locked,
+    viewModel.premiumBlocked,
+    viewModel.fixedImageSource,
+  ]);
 
   return (
     <View style={styles.container} direction={'row'} alignItems={'center'}>
       {IMAGES}
-      <Button style={styles.addButton} onPress={viewModel.onPickImage}>
-        <Image source={images.plus} style={styles.addImage} />
-      </Button>
+      {!viewModel.locked || viewModel.premiumBlocked ? (
+        <Button
+          style={[styles.addButton, viewModel.locked && {opacity: 0.55}]}
+          onPress={viewModel.locked ? viewModel.onLockedPress : viewModel.onPickImage}>
+          <Image source={images.plus} style={styles.addImage} />
+        </Button>
+      ) : null}
     </View>
   );
 };

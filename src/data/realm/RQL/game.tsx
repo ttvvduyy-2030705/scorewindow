@@ -1,9 +1,108 @@
 import Realm, {BSON} from 'realm';
 import {GameSchema} from '../models/game';
 import {GameExtraTimeTurns, GameSettings} from 'types/settings';
+import {PlayerSettings} from 'types/player';
 import {useQuery} from '@realm/react';
 
+
+const toSafeInteger = (value: unknown, fallback = 0): number => {
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return fallback;
+  }
+
+  return Math.round(numericValue);
+};
+
+const sanitizePlayerSettingsForRealm = (
+  playerSettings?: PlayerSettings,
+): PlayerSettings | undefined => {
+  if (!playerSettings) {
+    return playerSettings;
+  }
+
+  return {
+    ...playerSettings,
+    goal: playerSettings.goal
+      ? {
+          ...playerSettings.goal,
+          goal: toSafeInteger(playerSettings.goal.goal, 0),
+          pointSteps: Array.isArray(playerSettings.goal.pointSteps)
+            ? playerSettings.goal.pointSteps.map(step => toSafeInteger(step, 0) as any)
+            : [],
+        }
+      : playerSettings.goal,
+    playingPlayers: Array.isArray(playerSettings.playingPlayers)
+      ? playerSettings.playingPlayers.map(player => ({
+          ...player,
+          totalPoint: toSafeInteger(player.totalPoint, 0),
+          violate:
+            player.violate == null
+              ? player.violate
+              : toSafeInteger(player.violate, 0),
+          scoredBalls: Array.isArray(player.scoredBalls)
+            ? player.scoredBalls.map(ball => ({
+                ...ball,
+                number:
+                  (ball as any)?.number == null
+                    ? (ball as any)?.number
+                    : String((ball as any).number) as any,
+              }))
+            : player.scoredBalls,
+          proMode: player.proMode
+            ? {
+                ...player.proMode,
+                highestRate:
+                  player.proMode.highestRate == null
+                    ? player.proMode.highestRate
+                    : toSafeInteger(player.proMode.highestRate, 0),
+                average:
+                  player.proMode.average == null
+                    ? player.proMode.average
+                    : toSafeInteger(player.proMode.average, 0),
+                currentPoint:
+                  player.proMode.currentPoint == null
+                    ? player.proMode.currentPoint
+                    : toSafeInteger(player.proMode.currentPoint, 0),
+                extraTimeTurns:
+                  player.proMode.extraTimeTurns == null
+                    ? player.proMode.extraTimeTurns
+                    : toSafeInteger(player.proMode.extraTimeTurns, 0) as any,
+              }
+            : player.proMode,
+        }))
+      : [],
+  };
+};
+
+const sanitizeGameSettingsForRealm = (gameSettings: GameSettings): GameSettings => {
+  return {
+    ...gameSettings,
+    totalTime: toSafeInteger(gameSettings.totalTime, 0),
+    mode: {
+      ...gameSettings.mode,
+      countdownTime:
+        gameSettings.mode?.countdownTime == null
+          ? gameSettings.mode?.countdownTime
+          : toSafeInteger(gameSettings.mode.countdownTime, 0),
+      warmUpTime:
+        gameSettings.mode?.warmUpTime == null
+          ? gameSettings.mode?.warmUpTime
+          : toSafeInteger(gameSettings.mode.warmUpTime, 0),
+      extraTimeTurns:
+        gameSettings.mode?.extraTimeTurns == null
+          ? gameSettings.mode?.extraTimeTurns
+          : (toSafeInteger(gameSettings.mode.extraTimeTurns, 0).toString() as GameExtraTimeTurns),
+    },
+    players: sanitizePlayerSettingsForRealm(gameSettings.players) as PlayerSettings,
+  };
+};
+
+
 const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
+  const sanitizedGameSettings = sanitizeGameSettingsForRealm(gameSettings);
+
   realm.write(() => {
     const now = new Date();
     const id = new BSON.ObjectId();
@@ -12,15 +111,15 @@ const CreateGame = (realm: Realm, gameSettings: GameSettings) => {
       id,
       createdAt: now,
       updatedAt: now,
-      totalTime: gameSettings.totalTime || 0,
-      category: gameSettings.category,
+      totalTime: sanitizedGameSettings.totalTime || 0,
+      category: sanitizedGameSettings.category,
       mode: {
-        ...gameSettings.mode,
+        ...sanitizedGameSettings.mode,
         extraTimeTurns:
-          gameSettings.mode.extraTimeTurns?.toString() as GameExtraTimeTurns,
+          sanitizedGameSettings.mode.extraTimeTurns?.toString() as GameExtraTimeTurns,
       },
-      players: gameSettings.players,
-      webcamFolderName: gameSettings.webcamFolderName,
+      players: sanitizedGameSettings.players,
+      webcamFolderName: sanitizedGameSettings.webcamFolderName,
     });
   });
 };
@@ -67,13 +166,14 @@ const UpdateGame = (
   gameSettings: GameSettings,
 ) => {
   const toUpdate = realm.objects(GameSchema).filtered('id == $0', id);
+  const sanitizedGameSettings = sanitizeGameSettingsForRealm(gameSettings);
 
   const now = new Date();
   realm.write(() => {
     toUpdate[0].updatedAt = now;
-    toUpdate[0].category = gameSettings.category;
-    toUpdate[0].mode = gameSettings.mode;
-    toUpdate[0].players = gameSettings.players;
+    toUpdate[0].category = sanitizedGameSettings.category;
+    toUpdate[0].mode = sanitizedGameSettings.mode;
+    toUpdate[0].players = sanitizedGameSettings.players;
   });
 };
 

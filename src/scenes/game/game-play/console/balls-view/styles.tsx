@@ -1,7 +1,6 @@
-import {dims} from 'configuration';
 import colors from 'configuration/colors';
 import {StyleSheet} from 'react-native';
-import {responsiveDimension} from 'utils/helper';
+import {scale as responsiveScale} from 'utils/responsive';
 
 const styles = StyleSheet.create({
   ballsWrapper: {
@@ -22,20 +21,20 @@ const styles = StyleSheet.create({
   },
   doubleArrowWrapper: {},
   doubleArrowLeft: {
-    width: dims.screenWidth * 0.02,
-    height: dims.screenWidth * 0.02,
+    width: responsiveScale(26),
+    height: responsiveScale(26),
     marginLeft: 10,
   },
   doubleArrowRight: {
-    width: dims.screenWidth * 0.02,
-    height: dims.screenWidth * 0.02,
+    width: responsiveScale(26),
+    height: responsiveScale(26),
     marginRight: 10,
     transform: [{rotate: '180deg'}],
   },
   button: {
     flex: 1,
     borderRadius: 0,
-    paddingVertical: responsiveDimension(20),
+    paddingVertical: responsiveScale(20),
     alignItems: 'center',
     justifyContent: 'center',
   },

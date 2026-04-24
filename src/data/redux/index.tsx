@@ -5,33 +5,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 
-// Persist configuration
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['game'], // State slices to exclude from persistence
+  blacklist: ['game'],
 };
 
-// Persisted reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer as any);
-
-// Create saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
-// Configure the store
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false, // Disable checks for redux-persist's non-serializable values
-    }).concat(sagaMiddleware), // Add saga middleware
-  devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in development
+      serializableCheck: false,
+      immutableCheck: false,
+    }).concat(sagaMiddleware),
+  devTools: false,
 });
 
-// Run the saga
 sagaMiddleware.run(rootSaga);
 
-// Create persistor
 const persistor = persistStore(store);
 
 export { persistor };

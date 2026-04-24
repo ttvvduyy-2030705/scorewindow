@@ -1,7 +1,7 @@
 import {Images} from 'types/images';
 
 const images: Images = {
-  back: require('./images/back.png'),
+  back: require('./images/logo-back.png'),
   close: require('./images/close.png'),
   default: require('./images/default.png'),
   delete: require('./images/delete.png'),

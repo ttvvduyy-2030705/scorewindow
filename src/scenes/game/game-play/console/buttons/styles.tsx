@@ -1,31 +1,28 @@
 import {StyleSheet} from 'react-native';
+
 import colors from 'configuration/colors';
-import {responsiveDimension} from 'utils/helper';
+import {scale as responsiveScale} from 'utils/responsive';
 
 const styles = StyleSheet.create({
   button: {
     flex: 1,
-    borderWidth: 0.5,
-    borderRadius: 10,
-    paddingVertical: responsiveDimension(10),
-    borderColor: colors.gray,
+    borderRadius: 18,
+    paddingVertical: responsiveScale(11),
+    borderColor: colors.transparent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pauseButton: {
-    backgroundColor: colors.lightYellow,
-    borderWidth: 0,
-    borderRadius: 20,
+    backgroundColor: '#e0a100',
+    borderRadius: 18,
   },
   breakGameButton: {
-    backgroundColor: colors.lightPrimary2,
-    borderWidth: 0,
-    borderRadius: 20,
+    backgroundColor: '#16c113',
+    borderRadius: 18,
   },
   stopButton: {
-    backgroundColor: colors.lightRed,
-    borderWidth: 0,
-    borderRadius: 20,
+    backgroundColor: '#ff2b2b',
+    borderRadius: 18,
   },
 });
 

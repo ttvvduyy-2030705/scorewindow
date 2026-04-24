@@ -8,11 +8,11 @@ import {useDispatch} from 'react-redux';
 import {screens} from 'scenes/screens';
 import {GameSettings} from 'types/settings';
 import {navigate} from 'utils/navigation';
+import {resolveReplayFolder} from 'services/replay/localReplay';
 
 const HistoryViewModel = () => {
   const realm = useRealm();
   const games = ReadGames();
-
   const dispatch = useDispatch();
 
   const buildCategoryTitle = useCallback((game: GameSettings) => {
@@ -23,9 +23,16 @@ const HistoryViewModel = () => {
     return i18n.t(`${game?.mode?.mode}`).toUpperCase();
   }, []);
 
-  const onReWatchGame = useCallback((webcamFolderName?: string) => {
+  const onReWatchGame = useCallback(async (webcamFolderName?: string) => {
     if (!webcamFolderName) {
       Alert.alert(i18n.t('txtError'), i18n.t('msgEmptyWebcamUrl'));
+      return;
+    }
+
+    const folder = await resolveReplayFolder(webcamFolderName);
+
+    if (!folder) {
+      Alert.alert(i18n.t('txtError'), i18n.t('msgWebcamVideoNotExist'));
       return;
     }
 

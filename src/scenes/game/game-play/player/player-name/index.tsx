@@ -1,14 +1,12 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect, useMemo, useRef} from 'react';
+import {TextInput as RNTextInput} from 'react-native';
 import View from 'components/View';
 import colors from 'configuration/colors';
-import TextInput from 'components/TextInput';
 import Button from 'components/Button';
 import Image from 'components/Image';
 import images from 'assets';
-import {responsiveDimension} from 'utils/helper';
-
+import {scale as responsiveScale} from 'utils/responsive';
 import {Player} from 'types/player';
-
 import styles from './styles';
 
 interface Props {
@@ -20,42 +18,89 @@ interface Props {
 }
 
 const PlayerName = (props: Props) => {
-  const isPairPlay = props.totalPlayers && props.totalPlayers > 2;
+  const inputRef = useRef<RNTextInput>(null);
+  const isMultiPlayerLayout = (props.totalPlayers ?? 0) > 2;
+
+  useEffect(() => {
+    if (!inputRef.current) {
+      return;
+    }
+
+    if (props.nameEditable) {
+      const timeout = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+
+      return () => clearTimeout(timeout);
+    }
+
+    inputRef.current.blur();
+  }, [props.nameEditable]);
+
+  const metrics = useMemo(() => {
+    if (isMultiPlayerLayout) {
+      return {
+        containerHeight: responsiveScale(56),
+        inputHeight: responsiveScale(36),
+        fontSize: responsiveScale(24),
+        lineHeight: responsiveScale(28),
+        horizontalPadding: responsiveScale(14),
+      };
+    }
+
+    return {
+      containerHeight: responsiveScale(72),
+      inputHeight: responsiveScale(46),
+      fontSize: responsiveScale(34),
+      lineHeight: responsiveScale(40),
+      horizontalPadding: responsiveScale(16),
+    };
+  }, [isMultiPlayerLayout]);
+
+  const inputStyle = useMemo(
+    () => [
+      styles.input,
+      {
+        color: colors.white,
+        fontWeight: '700',
+        borderBottomColor: props.nameEditable ? '#FF4040' : colors.transparent,
+        height: metrics.inputHeight,
+        fontSize: metrics.fontSize,
+        lineHeight: metrics.lineHeight,
+      },
+    ],
+    [metrics.fontSize, metrics.inputHeight, metrics.lineHeight, props.nameEditable],
+  );
 
   return (
     <View
       style={{
-        height: isPairPlay ? responsiveDimension(40) : responsiveDimension(72),
+        height: metrics.containerHeight,
+        paddingHorizontal: metrics.horizontalPadding,
       }}
       direction={'row'}
       alignItems={'center'}
-      marginTop={'10'}
-      marginBottom={'5'}
-      paddingHorizontal={'15'}>
-      <View flex={'1'}>
-        <TextInput
-          inputStyle={[
-            styles.input,
-            {
-              borderBottomColor: props.nameEditable
-                ? colors.black
-                : colors.transparent,
-            },
-            isPairPlay
-              ? {
-                  fontSize: responsiveDimension(72),
-                  height: responsiveDimension(80),
-                }
-              : {
-                  fontSize: responsiveDimension(60),
-                  height: responsiveDimension(72),
-                },
-          ]}
-          value={props.player.name}
-          onChange={props.onChangeName}
-          disabled={!props.nameEditable}
+      marginTop={'4'}
+      marginBottom={'4'}>
+      <View style={styles.inputWrapper}>
+        <RNTextInput
+          ref={inputRef}
+          style={inputStyle}
+          value={props.player.name ?? ''}
+          onChangeText={props.onChangeName}
+          editable={props.nameEditable}
+          autoCorrect={false}
+          autoCapitalize="words"
+          selectTextOnFocus={props.nameEditable}
+          underlineColorAndroid="transparent"
+          selectionColor={'#FF4040'}
+          placeholderTextColor={'#8E9099'}
+          multiline={false}
+          numberOfLines={1}
+          textAlignVertical="center"
         />
       </View>
+
       <Button style={styles.buttonEdit} onPress={props.onToggleEditName}>
         <Image source={images.game.edit} style={styles.editIcon} />
       </Button>

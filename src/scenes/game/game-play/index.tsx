@@ -1,201 +1,387 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useEffect, useMemo, useState} from 'react';
+import {StyleSheet} from 'react-native';
+
 import Container from 'components/Container';
 import View from 'components/View';
 import Text from 'components/Text';
 import Button from 'components/Button';
-import Countdown from 'components/Countdown';
 import colors from 'configuration/colors';
 import i18n from 'i18n';
 
 import GamePlayViewModel from './GamePlayViewModel';
 import GamePlayer from './player';
 import GameConsole from './console';
-import LivestreamImages from './livestream-images';
-import styles, {COUNTDOWN_WIDTH} from './styles';
+import createStyles from './styles';
+import TopMatchHeader from './TopMatchHeader';
+import {RemoteControlModule} from 'services/native-modules';
+import PoolShotClock from './PoolShotClock';
+import {
+  getCameraFullscreen,
+  setCameraFullscreen,
+  subscribeCameraFullscreen,
+} from './cameraFullscreenStore';
+import {
+  isCaromGame,
+  isPool15FreeGame,
+  isPool15Game,
+  isPool15OnlyGame,
+  isPoolGame,
+} from 'utils/game';
+import useAdaptiveLayout, {AdaptiveLayout} from '../useAdaptiveLayout';
+import useDesignSystem from 'theme/useDesignSystem';
+import useScreenSystemUI, {configureSystemUI} from 'theme/systemUI';
+import {createGameplayLayoutRules} from './layoutRules';
+
+const buildTitle = (category?: string, mode?: string) => {
+  return `${i18n.t(category || '').toUpperCase()} - ${i18n
+    .t(mode || '')
+    .toUpperCase()}`;
+};
+
+
+const formatHeaderTime = (totalTime?: number) => {
+  const safeTotalTime = Number(totalTime || 0);
+  const hours = Math.floor(safeTotalTime / 3600);
+  const minutes = Math.floor((safeTotalTime % 3600) / 60);
+  const seconds = Math.floor(safeTotalTime % 60);
+
+  const pad = (value: number) => (value < 10 ? `0${value}` : `${value}`);
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+};
+
+const createLocalStyles = (a: AdaptiveLayout, design: any, rules: any) =>
+  StyleSheet.create({
+    splitColumn: {
+      flex: 1,
+      gap: rules.panelGap,
+    },
+    splitColumnCompact: {
+      gap: design.spacing.xs,
+    },
+    splitSlot: {
+      flex: 1,
+      minHeight: 0,
+    },
+    topBottomBoard: {
+      flex: 1,
+      gap: rules.panelGap,
+    },
+    topBottomBoardCompact: {
+      gap: design.spacing.xs,
+    },
+    topBottomRowTop: {
+      flex: 1.12,
+      gap: rules.panelGap,
+    },
+    topBottomRowBottom: {
+      flex: 0.88,
+      gap: rules.panelGap,
+    },
+    topBottomRowCompact: {
+      gap: design.spacing.xs,
+    },
+    lightScreen: {
+      backgroundColor: '#000000',
+    },
+    centerCompactCell: {
+      flex: 1.02,
+      minHeight: 0,
+    },
+    sideCompactCell: {
+      flex: 1,
+      minHeight: 0,
+    },
+    tabletPlayerSlot: {
+      flex: 0.92,
+      minWidth: 0,
+    },
+    tabletConsoleSlot: {
+      flex: 1.12,
+      minWidth: 0,
+    },
+    multiPlayerSideColumn: {
+      flex: 1.06,
+      minWidth: 0,
+    },
+    multiPlayerConsoleSlot: {
+      flex: 0.96,
+      minWidth: 0,
+    },
+    compactMainArea: {
+      paddingHorizontal: a.s(6),
+      paddingVertical: a.s(6),
+      gap: design.spacing.xs,
+    },
+    hiddenFullscreenSlot: {
+      display: 'none',
+    },
+    fullscreenConsoleSlot: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      minWidth: 0,
+      minHeight: 0,
+      alignSelf: 'stretch',
+      alignItems: 'stretch',
+      justifyContent: 'flex-start',
+      zIndex: 260,
+      elevation: 260,
+    },
+    fullscreenMainArea: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+      minWidth: 0,
+      minHeight: 0,
+      alignSelf: 'stretch',
+      alignItems: 'stretch',
+      justifyContent: 'flex-start',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      gap: 0,
+      position: 'relative',
+      overflow: 'hidden',
+    },
+    fullscreenFill: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+      minWidth: 0,
+      minHeight: 0,
+      alignSelf: 'stretch',
+      alignItems: 'stretch',
+      justifyContent: 'flex-start',
+      backgroundColor: '#000000',
+      overflow: 'hidden',
+    },
+    pool8SetOverlayBackdrop: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 180,
+      elevation: 30,
+      backgroundColor: 'rgba(0, 0, 0, 0.72)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: a.s(20),
+      paddingVertical: a.s(20),
+    },
+    pool8SetOverlayCard: {
+      width: '100%',
+      maxWidth: a.s(620),
+      minWidth: a.s(320),
+      borderRadius: a.s(28),
+      borderWidth: 1.2,
+      borderColor: 'rgba(255, 49, 49, 0.72)',
+      backgroundColor: 'rgba(12, 13, 18, 0.98)',
+      paddingHorizontal: a.s(32),
+      paddingVertical: a.s(28),
+      gap: design.spacing.lg,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#FF2D2D',
+      shadowOpacity: 0.24,
+      shadowRadius: a.s(18),
+      shadowOffset: {width: 0, height: 0},
+      elevation: 14,
+    },
+    pool8SetOverlayTitle: {
+      textAlign: 'center',
+      color: '#FFFFFF',
+      fontSize: a.fs(44, 0.82, 1.04),
+      lineHeight: a.fs(52, 0.82, 1.04),
+      fontWeight: '700',
+    },
+    pool8SetOverlayButton: {
+      alignSelf: 'center',
+      minWidth: a.s(240),
+      backgroundColor: '#E2A20A',
+      borderColor: '#F1BE4C',
+      borderRadius: a.s(18),
+    },
+    pool8SetOverlayButtonText: {
+      color: '#FFFFFF',
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+  });
 
 const GamePlay = () => {
   const viewModel = GamePlayViewModel();
-
-  const renderPlayers = useCallback(
-    (topIndex: number, bottomIndex?: number) => {
-      return (
-        <View flex={'1'} marginTop={'20'}>
-          <GamePlayer
-            index={topIndex}
-            isOnTurn={viewModel.currentPlayerIndex === topIndex}
-            isOnPoolBreak={viewModel.poolBreakPlayerIndex === topIndex}
-            isStarted={viewModel.isStarted}
-            isPaused={viewModel.isPaused}
-            soundEnabled={viewModel.soundEnabled}
-            proModeEnabled={viewModel.proModeEnabled}
-            totalTurns={viewModel.totalTurns}
-            gameSettings={viewModel.gameSettings!}
-            totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
-            player={viewModel.playerSettings!.playingPlayers[topIndex]}
-            onSwitchPoolBreakPlayerIndex={
-              viewModel.onSwitchPoolBreakPlayerIndex
-            }
-            onEditPlayerName={viewModel.onEditPlayerName}
-            onChangePlayerPoint={viewModel.onChangePlayerPoint}
-            onViolate={viewModel.onViolate}
-            onEndTurn={viewModel.onEndTurn}
-          />
-          {bottomIndex ? (
-            <View flex={'1'}>
-              <View marginTop={'20'} />
-              <GamePlayer
-                index={bottomIndex}
-                isOnTurn={viewModel.currentPlayerIndex === bottomIndex}
-                isOnPoolBreak={viewModel.poolBreakPlayerIndex === bottomIndex}
-                isStarted={viewModel.isStarted}
-                isPaused={viewModel.isPaused}
-                soundEnabled={viewModel.soundEnabled}
-                proModeEnabled={viewModel.proModeEnabled}
-                totalTurns={viewModel.totalTurns}
-                gameSettings={viewModel.gameSettings!}
-                totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
-                player={viewModel.playerSettings!.playingPlayers[bottomIndex]}
-                onSwitchPoolBreakPlayerIndex={
-                  viewModel.onSwitchPoolBreakPlayerIndex
-                }
-                onEditPlayerName={viewModel.onEditPlayerName}
-                onChangePlayerPoint={viewModel.onChangePlayerPoint}
-                onViolate={viewModel.onViolate}
-                onEndTurn={viewModel.onEndTurn}
-              />
-            </View>
-          ) : (
-            <View />
-          )}
-        </View>
-      );
-    },
-    [
-      viewModel.currentPlayerIndex,
-      viewModel.poolBreakPlayerIndex,
-      viewModel.isStarted,
-      viewModel.isPaused,
-      viewModel.soundEnabled,
-      viewModel.proModeEnabled,
-      viewModel.totalTurns,
-      viewModel.gameSettings,
-      viewModel.playerSettings,
-      viewModel.onSwitchPoolBreakPlayerIndex,
-      viewModel.onChangePlayerPoint,
-      viewModel.onEditPlayerName,
-      viewModel.onViolate,
-      viewModel.onEndTurn,
-    ],
+  useScreenSystemUI({variant: 'fullscreen', barStyle: 'light-content'});
+  const {adaptive, design} = useDesignSystem();
+  const layoutRules = useMemo(() => createGameplayLayoutRules(adaptive, design), [adaptive.styleKey]);
+  const styles = useMemo(() => createStyles(adaptive, design, layoutRules), [adaptive.styleKey]);
+  const localStyles = useMemo(
+    () => createLocalStyles(adaptive, design, layoutRules),
+    [adaptive.styleKey],
   );
+  const [isCameraFullscreen, setIsCameraFullscreen] = useState(
+    getCameraFullscreen(),
+  );
+  const [remoteEnabled, setRemoteEnabled] = useState(false);
 
-  const renderLastPlayer = useCallback(() => {
-    if (!viewModel.playerSettings?.playingPlayers[4]) {
-      return <View flex={'1'} />;
+  useEffect(() => {
+    console.log(`REMOTE_FLOW: GamePlay screen remoteEnabled changed`, JSON.stringify({remoteEnabled}));
+    RemoteControlModule.setRemoteControlEnabled(remoteEnabled);
+  }, [remoteEnabled]);
+
+  useEffect(() => {
+    return subscribeCameraFullscreen(setIsCameraFullscreen);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log('REMOTE_FLOW: GamePlay screen cleanup disable remote');
+      setCameraFullscreen(false);
+      RemoteControlModule.setRemoteControlEnabled(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isCameraFullscreen) {
+      return;
     }
 
-    return (
-      <GamePlayer
-        index={4}
-        isOnTurn={viewModel.currentPlayerIndex === 4}
-        isOnPoolBreak={viewModel.poolBreakPlayerIndex === 4}
-        isStarted={viewModel.isStarted}
-        isPaused={viewModel.isPaused}
-        soundEnabled={viewModel.soundEnabled}
-        proModeEnabled={viewModel.proModeEnabled}
-        totalTurns={viewModel.totalTurns}
-        gameSettings={viewModel.gameSettings!}
-        totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
-        player={viewModel.playerSettings!.playingPlayers[4]}
-        onSwitchPoolBreakPlayerIndex={viewModel.onSwitchPoolBreakPlayerIndex}
-        onEditPlayerName={viewModel.onEditPlayerName}
-        onChangePlayerPoint={viewModel.onChangePlayerPoint}
-        onViolate={viewModel.onViolate}
-        onEndTurn={viewModel.onEndTurn}
-      />
+    configureSystemUI({barStyle: 'light-content', backgroundColor: 'transparent', animated: false});
+    const timers = [80, 220, 480].map(delay =>
+      setTimeout(() => {
+        configureSystemUI({barStyle: 'light-content', backgroundColor: 'transparent', animated: false});
+      }, delay),
     );
-  }, [
-    viewModel.currentPlayerIndex,
-    viewModel.poolBreakPlayerIndex,
-    viewModel.isStarted,
-    viewModel.isPaused,
-    viewModel.soundEnabled,
-    viewModel.proModeEnabled,
-    viewModel.totalTurns,
-    viewModel.gameSettings,
-    viewModel.playerSettings,
-    viewModel.onSwitchPoolBreakPlayerIndex,
-    viewModel.onChangePlayerPoint,
-    viewModel.onEditPlayerName,
-    viewModel.onViolate,
-    viewModel.onEndTurn,
-  ]);
 
-  const renderCountDownTime = useCallback(() => {
-    if (!viewModel.gameSettings?.mode?.countdownTime) {
-      return <View />;
+    return () => {
+      timers.forEach(clearTimeout);
+    };
+  }, [isCameraFullscreen]);
+
+  const isLargeDisplay = adaptive.layoutPreset === 'tv';
+  const isWideTabletTwoPlayer =
+    adaptive.isLandscape && adaptive.layoutPreset === 'wideTablet';
+  const isCompactLandscape =
+    adaptive.isLandscape &&
+    (adaptive.height <= 720 || adaptive.aspectRatio >= 1.65 || adaptive.widthClass === 'compact');
+  const useCompactTwoPlayerLayout =
+    isCompactLandscape || adaptive.shortSide < 430 || adaptive.height <= 700;
+  const useTightTwoPlayerLayout =
+    useCompactTwoPlayerLayout || isWideTabletTwoPlayer;
+
+  const category = viewModel.gameSettings?.category;
+  const players = (viewModel.playerSettings?.playingPlayers || []).slice(0, 4);
+  const configuredPlayerCount = Math.min(
+    4,
+    Number(viewModel.gameSettings?.players?.playerNumber || players.length || 2),
+  );
+  const totalPlayers = Math.min(4, Math.max(players.length, configuredPlayerCount, 2));
+
+  const isPoolArenaLayout = useMemo(() => {
+    return (
+      isPoolGame(category) &&
+      !isPool15FreeGame(category) &&
+      totalPlayers === 2
+    );
+  }, [category, totalPlayers]);
+
+  const useDarkPoolBackground = useMemo(() => {
+    return (
+      isPoolArenaLayout ||
+      isPool15FreeGame(category)
+    );
+  }, [category, isPoolArenaLayout]);
+
+  const isCaromMode = useMemo(() => isCaromGame(category), [category]);
+  const useThreePlayerLayout = totalPlayers === 3;
+  const useFourPlayerLayout = totalPlayers === 4;
+  const useFivePlayerCaromLayout = false;
+  const useMultiPlayerLayout =
+    !isCameraFullscreen &&
+    (useThreePlayerLayout || useFourPlayerLayout);
+  const useCompactResponsiveLayout =
+    useMultiPlayerLayout || (!isCameraFullscreen && useCompactTwoPlayerLayout);
+
+  const responsivePlayerSlotStyle = isCameraFullscreen
+    ? localStyles.hiddenFullscreenSlot
+    : !isCameraFullscreen && useTightTwoPlayerLayout && !useMultiPlayerLayout
+      ? localStyles.tabletPlayerSlot
+      : undefined;
+
+  const responsiveConsoleSlotStyle = isCameraFullscreen
+    ? localStyles.fullscreenConsoleSlot
+    : !isCameraFullscreen && useTightTwoPlayerLayout && !useMultiPlayerLayout
+      ? localStyles.tabletConsoleSlot
+      : undefined;
+
+  const compactMainAreaStyle = isCameraFullscreen
+    ? localStyles.fullscreenMainArea
+    : !isCameraFullscreen && useTightTwoPlayerLayout
+      ? localStyles.compactMainArea
+      : undefined;
+
+  const displayProModeEnabled =
+    viewModel.proModeEnabled && !(isCaromMode && totalPlayers > 2);
+
+  const pool8SetWinnerPlayer =
+    isPool15OnlyGame(category) && viewModel.pool8SetWinnerIndex != null
+      ? players[viewModel.pool8SetWinnerIndex]
+      : undefined;
+
+  const pool8FreeSetWinnerPlayer =
+    isPool15FreeGame(category) && viewModel.pool8FreeSetWinnerIndex != null
+      ? players[viewModel.pool8FreeSetWinnerIndex]
+      : undefined;
+
+  const showPool8SetOverlay =
+    !viewModel.winner &&
+    !viewModel.youtubeLiveOverlay?.visible &&
+    !isCameraFullscreen &&
+    Boolean(pool8SetWinnerPlayer || pool8FreeSetWinnerPlayer);
+
+  const setWinnerOverlayPlayer = pool8SetWinnerPlayer || pool8FreeSetWinnerPlayer;
+
+  const effectivePlayerSettings = useMemo(() => {
+    if (!viewModel.playerSettings) {
+      return viewModel.playerSettings;
     }
 
-    return (
-      <Button style={styles.countdown} onPress={viewModel.onToggleCountDown}>
-        <Countdown
-          originalCountdownTime={viewModel.gameSettings.mode?.countdownTime}
-          currentCountdownTime={viewModel.countdownTime}
-          countdownWidth={COUNTDOWN_WIDTH}
-        />
-      </Button>
+    return {
+      ...viewModel.playerSettings,
+      playerNumber: totalPlayers as any,
+      playingPlayers: players,
+    };
+  }, [players, totalPlayers, viewModel.playerSettings]);
+
+  const title = useMemo(() => {
+    return buildTitle(
+      viewModel.gameSettings?.category,
+      viewModel.gameSettings?.mode?.mode,
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    viewModel.matchCountdownRef,
-    viewModel.gameSettings,
-    viewModel.countdownTime,
-  ]);
+  }, [viewModel.gameSettings?.category, viewModel.gameSettings?.mode?.mode]);
 
-  // const renderCameraMatchInfo = useCallback(() => {
-  //   return (
-  //     <LivestreamImages
-  //       countdownTime={viewModel.countdownTime}
-  //       gameSettings={viewModel.gameSettings}
-  //       playerSettings={viewModel.playerSettings}
-  //       currentPlayerIndex={viewModel.currentPlayerIndex}
-  //     />
-  //   );
-  // }, [
-  //   viewModel.countdownTime,
-  //   viewModel.gameSettings,
-  //   viewModel.playerSettings,
-  //   viewModel.currentPlayerIndex,
-  // ]);
+  const headerTimeText = useMemo(() => {
+    return formatHeaderTime(viewModel.totalTime);
+  }, [viewModel.totalTime]);
 
-  const WARM_UP_VIEW = useMemo(() => {
-    if (!viewModel.warmUpCountdownTime) {
-      return <View />;
-    }
+  const usePoolHeaderClock = useMemo(() => {
+    return isPoolGame(category) && !isPool15FreeGame(category);
+  }, [category]);
 
-    return (
-      <View style={styles.warmUpContainer}>
-        <Text color={colors.white} fontSize={64}>
-          {viewModel.gameBreakEnabled ? i18n.t('gameBreak') : i18n.t('warmUp')}
-        </Text>
-        <View marginVertical={'15'}>
-          <Text color={colors.white} fontSize={256} lineHeight={264}>
-            {viewModel.getWarmUpTimeString()}
-          </Text>
-        </View>
-        <Button style={styles.buttonEndWarmUp} onPress={viewModel.onEndWarmUp}>
-          <Text color={colors.white} fontSize={32}>
-            {i18n.t('stop')}
-          </Text>
-        </Button>
-      </View>
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    viewModel.gameBreakEnabled,
-    viewModel.warmUpCountdownTime,
-    viewModel.getWarmUpTimeString,
-    viewModel.onEndWarmUp,
-  ]);
+  const warmTitleSize = adaptive.fs(isLargeDisplay ? 64 : 52, 0.8, 1.06);
+  const warmTimerSize = adaptive.fs(isLargeDisplay ? 256 : 190, 0.74, 1.05);
+  const warmTimerLineHeight = Math.round(warmTimerSize * 1.03);
+  const warmButtonTextSize = adaptive.fs(isLargeDisplay ? 32 : 24, 0.82, 1.04);
+
+  const pauseOverlayButtonStyle = {
+    minWidth: isLargeDisplay ? adaptive.s(360) : adaptive.s(230),
+    alignItems: 'center' as const,
+    paddingHorizontal: adaptive.s(isLargeDisplay ? 36 : 22),
+    paddingVertical: adaptive.s(isLargeDisplay ? 15 : 10),
+  };
 
   if (
     !viewModel.gameSettings ||
@@ -203,102 +389,416 @@ const GamePlay = () => {
     !viewModel.playerSettings
   ) {
     return (
-      <Container isLoading={true}>
+      <Container variant="fullscreen" isLoading={true}>
         <View />
       </Container>
     );
   }
 
-  return (
-    <Container>
-      <View flex={'1'} direction={'row'}>
-        {renderPlayers(
-          0,
-          viewModel.playerSettings.playingPlayers[2] ? 2 : undefined,
-        )}
-        <GameConsole
-          winner={viewModel.winner}
-          gameSettings={viewModel.gameSettings}
-          playerSettings={viewModel.playerSettings}
-          currentMode={viewModel.gameSettings.mode}
-          warmUpCount={viewModel.warmUpCount}
-          totalPlayers={viewModel.playerSettings?.playingPlayers?.length}
-          totalTime={viewModel.totalTime}
-          totalTurns={viewModel.totalTurns}
-          goal={viewModel.gameSettings?.players?.goal?.goal}
-          countdownTime={viewModel.countdownTime}
-          currentPlayerIndex={viewModel.currentPlayerIndex}
-          isStarted={viewModel.isStarted}
-          isPaused={viewModel.isPaused}
-          isMatchPaused={viewModel.isMatchPaused}
-          soundEnabled={viewModel.soundEnabled}
-          poolBreakEnabled={viewModel.poolBreakEnabled}
-          proModeEnabled={viewModel.proModeEnabled}
-          webcamFolderName={viewModel.webcamFolderName}
-          onGameBreak={viewModel.onGameBreak}
-          onPoolBreak={viewModel.onPoolBreak}
-          onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
-          onWarmUp={viewModel.onWarmUp}
-          onSwitchTurn={viewModel.onSwitchTurn}
-          onSwapPlayers={viewModel.onSwapPlayers}
-          onIncreaseTotalTurns={viewModel.onIncreaseTotalTurns}
-          onDecreaseTotalTurns={viewModel.onDecreaseTotalTurns}
-          onToggleSound={viewModel.onToggleSound}
-          onToggleProMode={viewModel.onToggleProMode}
-          onPoolScore={viewModel.onPoolScore}
-          renderLastPlayer={renderLastPlayer}
-          //renderMatchInfo={renderCameraMatchInfo}
-          onSelectWinner={viewModel.onSelectWinner}
-          onClearWinner={viewModel.onClearWinner}
-          onStart={viewModel.onStart}
-          onPause={viewModel.onPause}
-          onStop={viewModel.onStop}
-          onReset={viewModel.onReset}
-          onResetTurn={viewModel.onResetTurn}
-          updateWebcamFolderName={viewModel.updateWebcamFolderName}
-          cameraRef={viewModel.cameraRef}
-          isCameraReady={viewModel.isCameraReady}
-          setIsCameraReady={viewModel.setIsCameraReady}
-           />
-        {renderPlayers(
-          1,
-          viewModel.playerSettings.playingPlayers[3] ? 3 : undefined,
-        )}
-      </View>
-      {viewModel.gameSettings?.mode?.mode !== 'fast' &&
-      viewModel.gameSettings?.mode?.countdownTime ? (
-        <View
-          ref={viewModel.matchCountdownRef}
-          collapsable={false}
-          style={styles.countdownContainer}
-          direction={'row'}
-          alignItems={'center'}
-          marginRight={'20'}>
-          <View flex={'1'} alignItems={'end'}>
-            <View
-              style={styles.overlayWrapper}
-              marginVertical={'15'}
-              paddingHorizontal={'15'}
-              paddingVertical={'5'}
-              marginRight={'5'}>
-              <Text fontSize={48}>{viewModel.countdownTime}</Text>
-            </View>
-            {viewModel.countdownTime >
-            viewModel.gameSettings?.mode?.countdownTime ? (
-              <View style={styles.extraWrapper} paddingHorizontal={'10'}>
-                <Text fontSize={12}>{'Extension'}</Text>
-              </View>
-            ) : (
-              <View />
-            )}
-          </View>
-          <View style={styles.countdownWrapper}>{renderCountDownTime()}</View>
-        </View>
-      ) : (
-        <View />
-      )}
+  const showPauseOverlay =
+    viewModel.isPaused &&
+    !viewModel.warmUpCountdownTime &&
+    !isCameraFullscreen &&
+    !viewModel.winner &&
+    !showPool8SetOverlay &&
+    !viewModel.youtubeLiveOverlay?.visible;
 
-      {WARM_UP_VIEW}
+  const renderPlayer = (playerIndex: number) => {
+    const player = players[playerIndex];
+    if (!player) {
+      return <View style={localStyles.splitSlot} />;
+    }
+
+    return (
+      <GamePlayer
+        layout={'poolArena'}
+        compact={useCompactResponsiveLayout}
+        index={playerIndex}
+        isOnTurn={viewModel.currentPlayerIndex === playerIndex}
+        isOnPoolBreak={viewModel.poolBreakPlayerIndex === playerIndex}
+        isStarted={viewModel.isStarted}
+        isPaused={viewModel.isPaused}
+        soundEnabled={viewModel.soundEnabled}
+        proModeEnabled={displayProModeEnabled}
+        totalTurns={viewModel.totalTurns}
+        gameSettings={viewModel.gameSettings}
+        totalPlayers={totalPlayers}
+        player={player}
+        onSwitchPoolBreakPlayerIndex={viewModel.onSwitchPoolBreakPlayerIndex}
+        onEditPlayerName={viewModel.onEditPlayerName}
+        onChangePlayerPoint={viewModel.onChangePlayerPoint}
+        onViolate={viewModel.onViolate}
+        onEndTurn={viewModel.onEndTurn}
+        onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
+        showPool8Tracker={isPool15OnlyGame(category) && viewModel.isStarted && !viewModel.poolBreakEnabled}
+        pool8Tracker={viewModel.pool8Trackers?.[playerIndex]}
+        onPressPool8Ball={viewModel.onPressPool8Ball}
+      />
+    );
+  };
+
+  const renderConsole = () => {
+    return (
+      <GameConsole
+        winner={viewModel.winner}
+        gameSettings={viewModel.gameSettings}
+        playerSettings={effectivePlayerSettings}
+        currentMode={viewModel.gameSettings.mode}
+        warmUpCount={viewModel.warmUpCount}
+        totalPlayers={totalPlayers}
+        totalTime={viewModel.totalTime}
+        totalTurns={viewModel.totalTurns}
+        goal={viewModel.gameSettings?.players?.goal?.goal}
+        countdownTime={viewModel.countdownTime}
+        currentPlayerIndex={viewModel.currentPlayerIndex}
+        isStarted={viewModel.isStarted}
+        isPaused={viewModel.isPaused}
+        isMatchPaused={viewModel.isMatchPaused}
+        soundEnabled={viewModel.soundEnabled}
+        poolBreakEnabled={viewModel.poolBreakEnabled}
+        proModeEnabled={displayProModeEnabled}
+        webcamFolderName={viewModel.webcamFolderName}
+        onGameBreak={viewModel.onGameBreak}
+        onPoolBreak={viewModel.onPoolBreak}
+        onPressGiveMoreTime={viewModel.onPressGiveMoreTime}
+        onWarmUp={viewModel.onWarmUp}
+        onSwitchTurn={viewModel.onSwitchTurn}
+        onSwapPlayers={viewModel.onSwapPlayers}
+        onIncreaseTotalTurns={viewModel.onIncreaseTotalTurns}
+        onDecreaseTotalTurns={viewModel.onDecreaseTotalTurns}
+        onToggleSound={viewModel.onToggleSound}
+        onToggleProMode={viewModel.onToggleProMode}
+        onPool15OnlyScore={viewModel.onPool15OnlyScore}
+        onPoolScore={viewModel.onPoolScore}
+        pool8Trackers={viewModel.pool8Trackers}
+        pool8SetWinnerIndex={viewModel.pool8SetWinnerIndex}
+        onSwapPool8Groups={viewModel.onSwapPool8Groups}
+        pool8FreeHole10Scores={viewModel.pool8FreeHole10Scores}
+        pool8FreeSetWinnerIndex={viewModel.pool8FreeSetWinnerIndex}
+        onIncrementPool8FreeHole10={viewModel.onIncrementPool8FreeHole10}
+        onDecrementPool8FreeHole10={viewModel.onDecrementPool8FreeHole10}
+        renderLastPlayer={() => <View />}
+        onSelectWinner={viewModel.onSelectWinner}
+        onClearWinner={viewModel.onClearWinner}
+        onStart={viewModel.onStart}
+        onPause={viewModel.onPause}
+        onStop={viewModel.onStop}
+        onReset={viewModel.onReset}
+        onResetTurn={viewModel.onResetTurn}
+        updateWebcamFolderName={viewModel.updateWebcamFolderName}
+        cameraRef={viewModel.cameraRef}
+        isCameraReady={viewModel.isCameraReady}
+        setIsCameraReady={viewModel.setIsCameraReady}
+        youtubeLivePreviewActive={viewModel.youtubeLivePreviewActive}
+        cameraFullscreen={isCameraFullscreen}
+      />
+    );
+  };
+
+  const renderMainBoard = () => {
+    if (useFivePlayerCaromLayout) {
+      return (
+        <View
+          flex={'1'}
+          style={[
+            styles.poolArenaBoard,
+            styles.mainArea,
+            localStyles.topBottomBoard,
+            useCompactResponsiveLayout && localStyles.topBottomBoardCompact,
+            compactMainAreaStyle,
+          ]}>
+          <View
+            direction={'row'}
+            style={[
+              localStyles.topBottomRowTop,
+              useCompactResponsiveLayout && localStyles.topBottomRowCompact,
+            ]}>
+            <View
+              style={[localStyles.sideCompactCell, responsivePlayerSlotStyle]}>
+              {renderPlayer(0)}
+            </View>
+            <View
+              style={[
+                localStyles.centerCompactCell,
+                responsiveConsoleSlotStyle,
+              ]}>
+              {renderConsole()}
+            </View>
+            <View
+              style={[localStyles.sideCompactCell, responsivePlayerSlotStyle]}>
+              {renderPlayer(1)}
+            </View>
+          </View>
+
+          <View
+            direction={'row'}
+            style={[
+              localStyles.topBottomRowBottom,
+              useCompactResponsiveLayout && localStyles.topBottomRowCompact,
+            ]}>
+            <View
+              style={[localStyles.sideCompactCell, responsivePlayerSlotStyle]}>
+              {renderPlayer(2)}
+            </View>
+            <View
+              style={[localStyles.centerCompactCell, responsivePlayerSlotStyle]}>
+              {renderPlayer(4)}
+            </View>
+            <View
+              style={[localStyles.sideCompactCell, responsivePlayerSlotStyle]}>
+              {renderPlayer(3)}
+            </View>
+          </View>
+        </View>
+      );
+    }
+
+    if (useThreePlayerLayout) {
+      return (
+        <View
+          flex={'1'}
+          direction={'row'}
+          style={[styles.poolArenaBoard, styles.mainArea, compactMainAreaStyle]}>
+          <View
+            style={[
+              styles.poolArenaPlayerColumn,
+              localStyles.multiPlayerSideColumn,
+              responsivePlayerSlotStyle,
+            ]}>
+            {renderPlayer(0)}
+          </View>
+
+          <View
+            style={[
+              styles.poolArenaConsoleWrapper,
+              localStyles.multiPlayerConsoleSlot,
+              responsiveConsoleSlotStyle,
+            ]}>
+            {renderConsole()}
+          </View>
+
+          <View
+            style={[
+              localStyles.splitColumn,
+              localStyles.multiPlayerSideColumn,
+              useCompactResponsiveLayout && localStyles.splitColumnCompact,
+              responsivePlayerSlotStyle,
+            ]}>
+            <View style={localStyles.splitSlot}>{renderPlayer(1)}</View>
+            <View style={localStyles.splitSlot}>{renderPlayer(2)}</View>
+          </View>
+        </View>
+      );
+    }
+
+    if (useFourPlayerLayout) {
+      return (
+        <View
+          flex={'1'}
+          direction={'row'}
+          style={[styles.poolArenaBoard, styles.mainArea, compactMainAreaStyle]}>
+          <View
+            style={[
+              localStyles.splitColumn,
+              localStyles.multiPlayerSideColumn,
+              useCompactResponsiveLayout && localStyles.splitColumnCompact,
+              responsivePlayerSlotStyle,
+            ]}>
+            <View style={localStyles.splitSlot}>{renderPlayer(0)}</View>
+            <View style={localStyles.splitSlot}>{renderPlayer(2)}</View>
+          </View>
+
+          <View
+            style={[
+              styles.poolArenaConsoleWrapper,
+              localStyles.multiPlayerConsoleSlot,
+              responsiveConsoleSlotStyle,
+            ]}>
+            {renderConsole()}
+          </View>
+
+          <View
+            style={[
+              localStyles.splitColumn,
+              localStyles.multiPlayerSideColumn,
+              useCompactResponsiveLayout && localStyles.splitColumnCompact,
+              responsivePlayerSlotStyle,
+            ]}>
+            <View style={localStyles.splitSlot}>{renderPlayer(1)}</View>
+            <View style={localStyles.splitSlot}>{renderPlayer(3)}</View>
+          </View>
+        </View>
+      );
+    }
+
+
+    return (
+      <View
+        flex={'1'}
+        direction={'row'}
+        style={[styles.poolArenaBoard, styles.mainArea, compactMainAreaStyle]}>
+        <View style={[styles.poolArenaPlayerColumn, responsivePlayerSlotStyle]}>
+          {renderPlayer(0)}
+        </View>
+        <View
+          style={[styles.poolArenaConsoleWrapper, responsiveConsoleSlotStyle]}>
+          {renderConsole()}
+        </View>
+        <View style={[styles.poolArenaPlayerColumn, responsivePlayerSlotStyle]}>
+          {renderPlayer(1)}
+        </View>
+      </View>
+    );
+  };
+
+  const WARM_UP_VIEW = !viewModel.warmUpCountdownTime || isCameraFullscreen ? (
+    <View />
+  ) : (
+    <View style={styles.warmUpContainer}>
+      <Text color={colors.white} fontSize={warmTitleSize}>
+        {viewModel.gameBreakEnabled ? i18n.t('gameBreak') : i18n.t('warmUp')}
+      </Text>
+
+      <View marginVertical={isLargeDisplay ? '15' : '8'}>
+        <Text
+          color={colors.white}
+          fontSize={warmTimerSize}
+          lineHeight={warmTimerLineHeight}>
+          {viewModel.getWarmUpTimeString()}
+        </Text>
+      </View>
+
+      <Button
+        style={[
+          styles.buttonEndWarmUp,
+          {
+            paddingHorizontal: adaptive.s(isLargeDisplay ? 36 : 22),
+            paddingVertical: adaptive.s(isLargeDisplay ? 15 : 10),
+            marginTop: adaptive.s(isLargeDisplay ? 30 : 18),
+          },
+        ]}
+        onPress={viewModel.onEndWarmUp}>
+        <Text color={colors.white} fontSize={warmButtonTextSize}>
+          {viewModel.gameBreakEnabled
+            ? 'Kết thúc giải lao'
+            : 'Kết thúc khởi động'}
+        </Text>
+      </Button>
+    </View>
+  );
+
+  return (
+    <Container variant="fullscreen" safeAreaDisabled={isCameraFullscreen}>
+      <View
+        style={[
+          isCameraFullscreen ? styles.fullscreenScreen : useDarkPoolBackground ? styles.poolArenaScreen : undefined,
+          isCameraFullscreen ? localStyles.fullscreenFill : undefined,
+          !isCameraFullscreen && isCaromMode ? localStyles.lightScreen : undefined,
+        ]}
+        flex={'1'}>
+        {!isCameraFullscreen ? (
+          <TopMatchHeader
+            title={title}
+            soundEnabled={viewModel.soundEnabled}
+            onToggleSound={viewModel.onToggleSound}
+            remoteEnabled={remoteEnabled}
+            onToggleRemote={setRemoteEnabled}
+            proModeEnabled={displayProModeEnabled}
+            onToggleProMode={viewModel.onToggleProMode}
+            gameSettings={viewModel.gameSettings}
+            totalPlayers={totalPlayers}
+            centerTimeText={headerTimeText}
+            compactTitleLeft={true}
+          />
+        ) : null}
+
+        <View flex={'1'} style={isCameraFullscreen ? localStyles.fullscreenFill : undefined}>
+          {renderMainBoard()}
+        </View>
+
+        {!isCameraFullscreen &&
+        (isPoolGame(category) || isCaromGame(category)) &&
+        viewModel.gameSettings?.mode?.mode !== 'fast' &&
+        viewModel.gameSettings?.mode?.countdownTime ? (
+          <View
+            ref={viewModel.matchCountdownRef}
+            collapsable={false}
+            style={styles.countdownContainer}>
+            <PoolShotClock
+              originalCountdownTime={
+                viewModel.gameSettings?.mode?.countdownTime || 40
+              }
+              currentCountdownTime={viewModel.countdownTime || 0}
+              onPress={viewModel.onToggleCountDown}
+            />
+          </View>
+        ) : null}
+
+
+        {showPool8SetOverlay && setWinnerOverlayPlayer ? (
+          <View style={localStyles.pool8SetOverlayBackdrop}>
+            <View style={localStyles.pool8SetOverlayCard}>
+              <Text
+                style={localStyles.pool8SetOverlayTitle}
+                color={colors.white}
+                allowFontScaling={false}
+                maxFontSizeMultiplier={1}>
+                {`${setWinnerOverlayPlayer.name} ${'thắng set này'}`}
+              </Text>
+
+              <Button
+                style={[pauseOverlayButtonStyle, localStyles.pool8SetOverlayButton]}
+                onPress={viewModel.onReset}>
+                <Text
+                  style={[{fontSize: warmButtonTextSize}, localStyles.pool8SetOverlayButtonText]}
+                  color={colors.white}
+                  allowFontScaling={false}
+                  maxFontSizeMultiplier={1}>
+                  {'Ván mới'}
+                </Text>
+              </Button>
+            </View>
+          </View>
+        ) : null}
+
+        {showPauseOverlay ? (
+          <View style={styles.warmUpContainer}>
+            <Text color={colors.white} fontSize={warmTitleSize}>
+              {i18n.t('pause')}
+            </Text>
+
+            <Button
+              style={[
+                styles.buttonEndWarmUp,
+                pauseOverlayButtonStyle,
+                {
+                  marginTop: adaptive.s(isLargeDisplay ? 30 : 18),
+                },
+              ]}
+              onPress={viewModel.onPause}>
+              <Text color={colors.white} fontSize={warmButtonTextSize}>
+                Tiếp tục
+              </Text>
+            </Button>
+
+            <Button
+              style={[
+                styles.buttonEndWarmUp,
+                pauseOverlayButtonStyle,
+                {
+                  marginTop: adaptive.s(isLargeDisplay ? 18 : 12),
+                },
+              ]}
+              onPress={viewModel.onReplay}>
+              <Text color={colors.white} fontSize={warmButtonTextSize}>
+                {i18n.t('reWatch')}
+              </Text>
+            </Button>
+          </View>
+        ) : null}
+
+        {WARM_UP_VIEW}
+      </View>
     </Container>
   );
 };

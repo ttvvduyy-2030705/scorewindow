@@ -1,13 +1,9 @@
 import React, {memo, useCallback} from 'react';
-// import {KeyboardTypeOptions} from 'react-native';
-import View from 'components/View';
-import Text from 'components/Text';
-// import TextInput from 'components/TextInput';
 import Button from 'components/Button';
+import Text from 'components/Text';
+import View from 'components/View';
 import i18n from 'i18n';
-
 import {Bitrate, Fps, OutputType, Resolution} from 'types/webcam';
-
 import Google from './google';
 import LiveStreamViewModel, {Props} from './LiveStreamViewModel';
 import styles from './styles';
@@ -15,274 +11,47 @@ import styles from './styles';
 const LiveStream = (props: Props) => {
   const viewModel = LiveStreamViewModel(props);
 
-  const renderOutput = useCallback(() => {
-    return (
-      <View
-        direction={'row'}
-        alignItems={'center'}
-        marginHorizontal={'10'}
-        marginVertical={'15'}>
-        <View marginRight={'10'}>
-          <Text fontSize={12}>{i18n.t('txtChooseOutputType')}</Text>
-        </View>
-        <View
-          flex={'1'}
-          direction={'row'}
-          alignItems={'center'}
-          justify={'end'}>
-          <Button
-            style={
-              viewModel.liveStreamData.outputType === OutputType.local
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectOutputTypeLocal.bind(
-              LiveStream,
-              'local',
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{i18n.t('local')}</Text>
-            </View>
-          </Button>
-          <View marginHorizontal={'10'} />
-          <Button
-            style={
-              viewModel.liveStreamData.outputType === OutputType.livestream
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectOutputTypeLocal.bind(
-              LiveStream,
-              'livestream',
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{i18n.t('livestream')}</Text>
-            </View>
-          </Button>
-        </View>
-      </View>
-    );
-  }, [viewModel.liveStreamData.outputType, viewModel.onSelectOutputTypeLocal]);
+  const renderChoice = useCallback((label: string, selected: boolean, onPress: () => void) => (
+    <Button style={[styles.choiceButton, selected && styles.choiceButtonActive]} onPress={onPress}>
+      <View style={styles.choiceButtonInner}><Text color={'#FFFFFF'} style={styles.choiceText}>{label}</Text></View>
+    </Button>
+  ), []);
 
-  const renderResolution = useCallback(() => {
-    return (
-      <View
-        direction={'row'}
-        alignItems={'center'}
-        marginHorizontal={'10'}
-        marginVertical={'15'}>
-        <View marginRight={'10'}>
-          <Text fontSize={12}>{i18n.t('resolution')}</Text>
-        </View>
-        <View
-          flex={'1'}
-          direction={'row'}
-          alignItems={'center'}
-          justify={'end'}>
-          <Button
-            style={
-              viewModel.liveStreamData.resolution === Resolution.HD
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectResolution.bind(
-              LiveStream,
-              Resolution.HD.toString(),
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'720p'}</Text>
-            </View>
-          </Button>
-          <View marginHorizontal={'10'} />
-          <Button
-            style={
-              viewModel.liveStreamData.resolution === Resolution.FullHD
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectResolution.bind(
-              LiveStream,
-              Resolution.FullHD.toString(),
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'1080p'}</Text>
-            </View>
-          </Button>
-          <View marginHorizontal={'10'} />
-          <Button
-            style={
-              viewModel.liveStreamData.resolution === Resolution.QHD
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectResolution.bind(
-              LiveStream,
-              Resolution.QHD.toString(),
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'1440p'}</Text>
-            </View>
-          </Button>
-        </View>
-      </View>
-    );
-  }, [viewModel.liveStreamData.resolution, viewModel.onSelectResolution]);
-
-  const renderFps = useCallback(() => {
-    return (
-      <View
-        direction={'row'}
-        alignItems={'center'}
-        marginHorizontal={'10'}
-        marginVertical={'15'}>
-        <View marginRight={'10'}>
-          <Text fontSize={12}>{i18n.t('frame')}</Text>
-        </View>
-        <View
-          flex={'1'}
-          direction={'row'}
-          alignItems={'center'}
-          justify={'end'}>
-          <Button
-            style={
-              viewModel.liveStreamData.fps === Fps.F30
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectFpsLiveStream.bind(
-              LiveStream,
-              Fps.F30.toString(),
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'30'}</Text>
-            </View>
-          </Button>
-          <View marginHorizontal={'10'} />
-          <Button
-            style={
-              viewModel.liveStreamData.fps === Fps.F60
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectFpsLiveStream.bind(
-              LiveStream,
-              Fps.F60.toString(),
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'60'}</Text>
-            </View>
-          </Button>
-        </View>
-      </View>
-    );
-  }, [viewModel.liveStreamData.fps, viewModel.onSelectFpsLiveStream]);
-
-  const renderBitrate = useCallback(() => {
-    return (
-      <View
-        direction={'row'}
-        alignItems={'center'}
-        marginHorizontal={'10'}
-        marginVertical={'15'}>
-        <View marginRight={'10'}>
-          <Text fontSize={12}>{i18n.t('bitrate')}</Text>
-        </View>
-        <View
-          flex={'1'}
-          direction={'row'}
-          alignItems={'center'}
-          justify={'end'}>
-          <Button
-            style={
-              viewModel.liveStreamData.bitrate === Bitrate.B5000
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectBitrateLiveStream.bind(
-              LiveStream,
-              Bitrate.B5000,
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'5000 kbps'}</Text>
-            </View>
-          </Button>
-          <View marginHorizontal={'10'} />
-          <Button
-            style={
-              viewModel.liveStreamData.bitrate === Bitrate.B9000
-                ? styles.selectedButton
-                : styles.button
-            }
-            onPress={viewModel.onSelectBitrateLiveStream.bind(
-              LiveStream,
-              Bitrate.B9000,
-            )}>
-            <View paddingHorizontal={'15'} paddingVertical={'10'}>
-              <Text>{'9000 kbps'}</Text>
-            </View>
-          </Button>
-        </View>
-      </View>
-    );
-  }, [viewModel.liveStreamData.bitrate, viewModel.onSelectBitrateLiveStream]);
+  const renderRow = useCallback((label: string, content: React.ReactNode) => (
+    <View style={styles.row}><Text color={'#A8A8A8'} style={styles.rowLabel}>{label}</Text><View style={styles.rowContent}>{content}</View></View>
+  ), []);
 
   return (
-    <View padding={'20'}>
-      {!props.configOnly ? (
-        <View marginHorizontal={'10'}>
-          <Text fontWeight={'bold'}>{i18n.t('cameraConfig')}</Text>
+    <View style={styles.root} padding={'20'}>
+      {!props.configOnly ? <Text color={'#FFFFFF'} style={styles.sectionTitle}>{i18n.t('cameraConfig')}</Text> : <View />}
+      {!props.configOnly ? renderRow(i18n.t('txtChooseOutputType'), <>
+        {renderChoice(i18n.t('local'), viewModel.liveStreamData.outputType===OutputType.local, () => viewModel.onSelectOutputTypeLocal('local'))}
+        {renderChoice(i18n.t('livestream'), viewModel.liveStreamData.outputType===OutputType.livestream, () => viewModel.onSelectOutputTypeLocal('livestream'))}
+      </>) : <View />}
+      {(props.configOnly || viewModel.liveStreamData.outputType===OutputType.livestream) ? (
+        <View style={styles.liveStreamConfigWrapper}>
+          <View style={styles.row}><Text color={'#A8A8A8'} style={styles.rowLabel}>{i18n.t('platform')}</Text><View style={[styles.rowContent,{justifyContent:'flex-start'}]}><Google liveStreamData={viewModel.liveStreamData} onUpdateYouTubeLiveStreamData={viewModel.onUpdateYouTubeLiveStreamData} /></View></View>
+          {renderRow(i18n.t('resolution'), <>
+            {renderChoice('720p', viewModel.liveStreamData.resolution===Resolution.HD, () => viewModel.onSelectResolution(Resolution.HD.toString()))}
+            {renderChoice('1080p', viewModel.liveStreamData.resolution===Resolution.FullHD, () => viewModel.onSelectResolution(Resolution.FullHD.toString()))}
+            {renderChoice('1440p', viewModel.liveStreamData.resolution===Resolution.QHD, () => viewModel.onSelectResolution(Resolution.QHD.toString()))}
+          </>)}
+          {renderRow(i18n.t('frame'), <>
+            {renderChoice('30', viewModel.liveStreamData.fps===Fps.F30, () => viewModel.onSelectFpsLiveStream(Fps.F30.toString()))}
+            {renderChoice('60', viewModel.liveStreamData.fps===Fps.F60, () => viewModel.onSelectFpsLiveStream(Fps.F60.toString()))}
+          </>)}
+          {renderRow(i18n.t('bitrate'), <>
+            {renderChoice('5000 kbps', viewModel.liveStreamData.bitrate===Bitrate.B5000, () => viewModel.onSelectBitrateLiveStream(Bitrate.B5000))}
+            {renderChoice('9000 kbps', viewModel.liveStreamData.bitrate===Bitrate.B9000, () => viewModel.onSelectBitrateLiveStream(Bitrate.B9000))}
+          </>)}
         </View>
-      ) : (
-        <View />
-      )}
-
-      {!props.configOnly ? renderOutput() : <View />}
-
-      {props.configOnly ||
-      viewModel.liveStreamData.outputType === OutputType.livestream ? (
-        <View style={styles.liveStreamConfigWrapper} padding={'10'}>
-          <View direction={'row'} alignItems={'center'} marginVertical={'10'}>
-            <View marginHorizontal={'10'}>
-              <Text fontSize={12}>{i18n.t('platform')}</Text>
-            </View>
-            <View flex={'1'} marginRight={'10'}>
-              <Google
-                liveStreamData={viewModel.liveStreamData}
-                onUpdateYouTubeLiveStreamData={
-                  viewModel.onUpdateYouTubeLiveStreamData
-                }
-              />
-            </View>
-          </View>
-
-          {renderResolution()}
-          {renderFps()}
-          {renderBitrate()}
-        </View>
-      ) : (
-        <View />
-      )}
-
-      {!props.configOnly ? (
-        <View direction={'row'} marginTop={'20'} marginHorizontal={'20'}>
-          <View
-            flex={'1'}
-            direction={'row'}
-            alignItems={'center'}
-            justify={'end'}>
-            <Button
-              disable={!viewModel.allowToSave}
-              onPress={viewModel.onSaveConfig}
-              style={styles.buttonSaveConfig}>
-              <Text>{i18n.t('saveConfig')}</Text>
-            </Button>
-          </View>
-        </View>
-      ) : (
-        <View />
-      )}
+      ) : <View />}
+      {!props.configOnly ? <View direction={'row'} justify={'end'} marginTop={'20'}>
+        <Button disable={!viewModel.allowToSave} onPress={viewModel.onSaveConfig} style={styles.buttonSaveConfig}>
+          <View paddingHorizontal={'5'}><Text color={'#FFFFFF'} style={styles.saveText}>{i18n.t('saveConfig')}</Text></View>
+        </Button>
+      </View> : <View />}
     </View>
   );
 };
-
 export default memo(LiveStream);

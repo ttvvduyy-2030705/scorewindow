@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import {isCaromGame, isPoolGame} from 'utils/game';
 import styles from './styles';
 import Webcam from '../webcam';
-import type {Camera} from 'react-native-vision-camera';
+import {Camera} from 'react-native-vision-camera';
 
 interface Props {
   isStarted: boolean;
@@ -41,12 +41,13 @@ const GameInfo = (props: Props) => {
         alignItems={'center'}
         justify={'center'}
         style={styles.pointWrapper}>
-        <Text fontSize={16}>{title}</Text>
-        <View
-          style={styles.valueWrapper}
-          direction={'row'}
-          alignItems={'center'}
-          marginLeft={'5'}>
+        <Text style={styles.pointLabel} fontSize={16}>
+          {title}
+        </Text>
+        <Text style={styles.pointColon} fontSize={16}>
+          :
+        </Text>
+        <View style={styles.valueWrapper}>
           <Text
             style={styles.valueText}
             fontSize={30}

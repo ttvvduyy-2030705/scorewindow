@@ -1,50 +1,34 @@
-if (!Array.prototype.toReversed) {
-  Object.defineProperty(Array.prototype, 'toReversed', {
-    value: function () {
-      return Array.from(this).reverse();
-    },
-    writable: true,
-    configurable: true,
-  });
-}
-
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
-const fs = require('fs');
 const path = require('path');
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 
-function normalizePathForRegex(value) {
-  return value
-    .replace(/[/\\]/g, '/')
-    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+const defaultConfig = getDefaultConfig(__dirname);
 
-const blockList = [
-  new RegExp(`${normalizePathForRegex(path.resolve(__dirname, 'windows'))}/.*`),
-  /.*\.ProjectImports\.zip/,
+const escape = p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const pathsToIgnore = [
+  path.resolve(__dirname, 'android/app/build'),
+  path.resolve(__dirname, 'android/build'),
+  path.resolve(__dirname, 'android/.gradle'),
+  path.resolve(__dirname, 'ios/build'),
+  path.resolve(__dirname, 'node_modules/react-native-vision-camera/android/build'),
 ];
 
-try {
-  const rnwPath = fs.realpathSync(
-    path.resolve(require.resolve('react-native-windows/package.json'), '..'),
-  );
-  blockList.push(new RegExp(`${normalizePathForRegex(rnwPath)}/build/.*`));
-  blockList.push(new RegExp(`${normalizePathForRegex(rnwPath)}/target/.*`));
-} catch (_error) {
-  // ignore before install
-}
+const blockList = pathsToIgnore.flatMap(p => {
+  const e = escape(p);
+  return [
+    new RegExp(`^${e}\\/.*`),
+    new RegExp(`^${e}\\\\.*`),
+  ];
+});
 
 const config = {
   resolver: {
+    ...defaultConfig.resolver,
+    extraNodeModules: {
+      path: require.resolve('path-browserify'),
+    },
     blockList,
-  },
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
   },
 };
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = mergeConfig(defaultConfig, config);

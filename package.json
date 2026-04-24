@@ -3,9 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
     "start": "react-native start",
-    "clean": "cd android && gradlew clean"
+    "android": "react-native run-android",
+    "clean": "cd android && gradlew clean",
+    "windows:init": "react-native init-windows --overwrite",
+    "windows": "react-native run-windows --arch x64",
+    "windows:release": "react-native run-windows --arch x64 --release --no-packager",
+    "windows:msbuild:release": "powershell -ExecutionPolicy Bypass -File ./scripts/build-windows-release.ps1"
   },
   "dependencies": {
     "@openspacelabs/react-native-zoomable-view": "^2.4.2",
@@ -42,6 +46,7 @@
     "react-native-video-trim": "^6.1.0",
     "react-native-vision-camera": "4.7.3",
     "react-native-webrtc": "118.0.7",
+    "react-native-windows": "0.75.20",
     "react-native-worklets-core": "^1.6.3",
     "react-redux": "^9.2.0",
     "realm": "^12.14.2",

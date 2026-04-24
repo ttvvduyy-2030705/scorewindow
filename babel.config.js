@@ -1,5 +1,6 @@
 const isProduction =
-  (process.env.BABEL_ENV || process.env.NODE_ENV || 'development') === 'production';
+  (process.env.BABEL_ENV || process.env.NODE_ENV || 'development') ===
+  'production';
 
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
@@ -9,26 +10,34 @@ module.exports = {
       {
         cwd: 'babelrc',
         root: ['./src'],
-        extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+        extensions: [
+          '.windows.tsx',
+          '.windows.ts',
+          '.windows.js',
+          '.ios.js',
+          '.android.js',
+          '.js',
+          '.ts',
+          '.tsx',
+          '.json'
+        ],
         alias: {
-          '': './src',
-        },
-      },
+          '': './src'
+        }
+      }
     ],
-
     ...(isProduction
       ? [
           [
             'transform-remove-console',
             {
-              exclude: ['error', 'warn'],
-            },
-          ],
+              exclude: ['error', 'warn']
+            }
+          ]
         ]
       : []),
-
     ['react-native-worklets-core/plugin'],
-    ['react-native-reanimated/plugin'],
+    ['react-native-reanimated/plugin']
   ],
-  sourceMaps: !isProduction,
+  sourceMaps: !isProduction
 };
